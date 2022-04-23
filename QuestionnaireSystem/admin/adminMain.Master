@@ -1,0 +1,60 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="adminMain.master.cs" Inherits="QuestionnaireSystem.admin.adminMain" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>問卷系統</title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+        <link rel="stylesheet" href="css/bootstrap.css" />
+    <style>
+        div {
+            border: 1px solid;
+            border-color: darkgray;
+        }
+
+        #RptrQtnir {
+            border: 1px;
+        }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="container-all">
+            <!-- 上區塊 -->
+            <div class="container-fluid">
+                <div id="up-area" class="row">
+                    <h1>後台-問卷管理</h1>
+                </div>
+            </div>
+
+            <!-- 下區塊 -->
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- 左列表 -->
+                    <div id="menuArea" class="col-3">
+                        問卷管理
+                        <br />
+                        常用問卷管理
+                        <br />
+                    </div>
+                    <!-- 主內容區 -->
+                    <div id="mainArea" class="col-9">
+                        <div class="row">
+                            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                            </asp:ContentPlaceHolder>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="js/popper.min.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/jquery.min.js"></script>
+        <script>
+</script>
+    </form>
+</body>
+</html>
