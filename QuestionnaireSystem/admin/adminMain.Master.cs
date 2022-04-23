@@ -11,7 +11,13 @@ namespace QuestionnaireSystem.admin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            #region//頁面橫幅顯示的標題文字
+            if (Request.FilePath == "/admin/MyQuestionnaire.aspx")
+                this.pageTitle.Text = "後台 - 問卷管理列表";
+            else if(Request.FilePath == "/admin/CommonQuest.aspx")
+                this.pageTitle.Text = "後台 - 常用問題管理";
 
+            #endregion
         }
     }
 }

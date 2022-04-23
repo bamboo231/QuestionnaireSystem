@@ -26,7 +26,7 @@
             <!-- 上區塊 -->
             <div class="container-fluid">
                 <div id="up-area" class="row">
-                    <h1>後台-問卷管理</h1>
+                    <asp:Label ID="pageTitle" runat="server" Text="pageTitle"></asp:Label>
                 </div>
             </div>
 
@@ -35,9 +35,9 @@
                 <div class="row">
                     <!-- 左列表 -->
                     <div id="menuArea" class="col-3">
-                        問卷管理
+                        <a href="MyQuestionnaire.aspx" target="_blank">問卷管理</a>
                         <br />
-                        常用問卷管理
+                        <a href="page.aspx?QuestionnaireID=link" target="_blank">常用問卷管理</a>
                         <br />
                     </div>
                     <!-- 主內容區 -->
