@@ -33,8 +33,9 @@ namespace QuestionnaireSystem.ORM
                 .IsUnicode(false);
 
             modelBuilder.Entity<BasicAnswer>()
-                .HasOptional(e => e.BasicAnswer1)
-                .WithRequired(e => e.BasicAnswer2);
+                .HasMany(e => e.Answers)
+                .WithRequired(e => e.BasicAnswer)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Questionnaire>()
                 .HasMany(e => e.BasicAnswers)
@@ -46,5 +47,7 @@ namespace QuestionnaireSystem.ORM
                 .WithRequired(e => e.Questionnaire)
                 .WillCascadeOnDelete(false);
         }
+
+
     }
 }

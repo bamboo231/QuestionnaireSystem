@@ -15,40 +15,40 @@ namespace QuestionnaireSystem.admin
     {
 
         /// <summary>
-        /// TextBox1 控制項。
+        /// srchQuestionnaire 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox1;
+        protected global::System.Web.UI.WebControls.TextBox srchQuestionnaire;
 
         /// <summary>
-        /// TextBox2 控制項。
+        /// srchBeginDateText 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox2;
+        protected global::System.Web.UI.WebControls.TextBox srchBeginDateText;
 
         /// <summary>
-        /// TextBox3 控制項。
+        /// srchEndDateText 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox3;
+        protected global::System.Web.UI.WebControls.TextBox srchEndDateText;
 
         /// <summary>
-        /// Button1 控制項。
+        /// srchBotton 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
+        protected global::System.Web.UI.WebControls.Button srchBotton;
 
         /// <summary>
         /// RptrQtnir 控制項。

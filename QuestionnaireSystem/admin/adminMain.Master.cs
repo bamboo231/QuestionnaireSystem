@@ -16,7 +16,8 @@ namespace QuestionnaireSystem.admin
                 this.pageTitle.Text = "後台 - 問卷管理列表";
             else if(Request.FilePath == "/admin/CommonQuest.aspx")
                 this.pageTitle.Text = "後台 - 常用問題管理";
-
+            else if (Request.FilePath == "/admin/EditQuestionnaire.aspx")
+                this.pageTitle.Text = "後台 - 編輯問卷";
             #endregion
         }
     }

@@ -15,8 +15,15 @@
             border-color: darkgray;
         }
 
-        #RptrQtnir {
+/*        #RptrQtnir {
             border: 1px;
+        }*/
+        #btnBasicDelete {
+float:right;
+        }
+
+        #btnBasicSummit {
+            float:right;
         }
     </style>
 </head>

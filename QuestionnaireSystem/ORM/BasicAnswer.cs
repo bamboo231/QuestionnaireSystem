@@ -9,7 +9,12 @@ namespace QuestionnaireSystem.ORM
     [Table("BasicAnswer")]
     public partial class BasicAnswer
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public BasicAnswer()
+        {
+            Answers = new HashSet<Answer>();
+        }
+
         public int BasicAnswerID { get; set; }
 
         public int QuestionnaireID { get; set; }
@@ -30,9 +35,8 @@ namespace QuestionnaireSystem.ORM
 
         public int Age { get; set; }
 
-        public virtual BasicAnswer BasicAnswer1 { get; set; }
-
-        public virtual BasicAnswer BasicAnswer2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Answer> Answers { get; set; }
 
         public virtual Questionnaire Questionnaire { get; set; }
     }

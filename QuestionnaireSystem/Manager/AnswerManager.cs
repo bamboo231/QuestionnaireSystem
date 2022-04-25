@@ -6,17 +6,17 @@ using QuestionnaireSystem.ORM;
 
 namespace QuestionnaireSystem.Manager
 {
-    public class QuestionnaireManager
+    public class AnswerManager
     {
         /// <summary>
-        /// 取得所有問卷List
+        /// 取得所有回覆問卷的List
         /// </summary>
         /// <returns>回傳值為List</returns>
-        public List<Questionnaire> GetQuestionnaireList()
-        { 
+        public List<BasicAnswer> GetBasicAnswerList()
+        {
             using (ContextModel contextModel = new ContextModel())
             {
-                return contextModel.Questionnaires.ToList();
+                return contextModel.BasicAnswers.ToList();
             }
         }
     }

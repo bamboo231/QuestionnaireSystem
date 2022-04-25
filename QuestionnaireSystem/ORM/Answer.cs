@@ -16,11 +16,13 @@ namespace QuestionnaireSystem.ORM
 
         [Key]
         [Column(Order = 1)]
-        [StringLength(20)]
-        public string QuestID { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int QuestID { get; set; }
 
         [Column("Answer")]
         [StringLength(500)]
         public string Answer1 { get; set; }
+
+        public virtual BasicAnswer BasicAnswer { get; set; }
     }
 }
