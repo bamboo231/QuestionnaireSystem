@@ -117,16 +117,20 @@
     <Compile Include="admin\MyQuestionnaire.aspx.designer.cs">
       <DependentUpon>MyQuestionnaire.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Helper\Logger.cs" />
     <Compile Include="Manager\AnswerManager.cs" />
+    <Compile Include="Manager\CheckInputManager.cs" />
     <Compile Include="Manager\CommonQuestManager.cs" />
     <Compile Include="Manager\QuestionnaireManager.cs" />
     <Compile Include="Manager\QuestManager.cs" />
+    <Compile Include="Manager\SearchManager.cs" />
     <Compile Include="ORM\Answer.cs" />
     <Compile Include="ORM\BasicAnswer.cs" />
     <Compile Include="ORM\CommonQuest.cs" />
     <Compile Include="ORM\ContextModel.cs" />
     <Compile Include="ORM\Question.cs" />
     <Compile Include="ORM\Questionnaire.cs" />
+    <Compile Include="ORM\WholeAnswer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

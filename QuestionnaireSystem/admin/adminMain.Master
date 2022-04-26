@@ -8,22 +8,22 @@
     <title>問卷系統</title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
-        <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/bootstrap.css" />
     <style>
         div {
             border: 1px solid;
             border-color: darkgray;
         }
 
-/*        #RptrQtnir {
+        /*        #RptrQtnir {
             border: 1px;
         }*/
         #btnBasicDelete {
-float:right;
+            float: right;
         }
 
         #btnBasicSummit {
-            float:right;
+            float: right;
         }
     </style>
 </head>
@@ -57,11 +57,13 @@ float:right;
                 </div>
             </div>
         </div>
-        <script src="js/popper.min.js"></script>
-        <script src="js/bootstrap.js"></script>
-        <script src="js/jquery.min.js"></script>
-        <script>
-</script>
+        <input id="adminMainMsg" name="adminMainMsg" runat="server" type="hidden" />
     </form>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script>
+
+</script>
 </body>
 </html>

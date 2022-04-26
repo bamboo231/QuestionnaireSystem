@@ -14,9 +14,9 @@ namespace QuestionnaireSystem.ORM
 
         public virtual DbSet<BasicAnswer> BasicAnswers { get; set; }
         public virtual DbSet<CommonQuest> CommonQuests { get; set; }
+        public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<Questionnaire> Questionnaires { get; set; }
         public virtual DbSet<Answer> Answers { get; set; }
-        public virtual DbSet<Question> Questions { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -47,7 +47,5 @@ namespace QuestionnaireSystem.ORM
                 .WithRequired(e => e.Questionnaire)
                 .WillCascadeOnDelete(false);
         }
-
-
     }
 }

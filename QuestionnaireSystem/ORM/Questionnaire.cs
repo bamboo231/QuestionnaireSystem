@@ -25,10 +25,13 @@ namespace QuestionnaireSystem.ORM
         [StringLength(500)]
         public string QuestionnaireContent { get; set; }
 
+        [Column(TypeName = "datetime2")]
         public DateTime BuildDate { get; set; }
 
+        [Column(TypeName = "datetime2")]
         public DateTime StartDate { get; set; }
 
+        [Column(TypeName = "datetime2")]
         public DateTime EndDate { get; set; }
 
         public bool VoidStatus { get; set; }

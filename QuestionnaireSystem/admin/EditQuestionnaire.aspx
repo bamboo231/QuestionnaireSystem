@@ -28,6 +28,7 @@
             <asp:Button runat="server" ID="bookmark1" class="nav-link" aria-selected="true" Text="問卷" OnClick="bookmark1_Click"></asp:Button>
             <asp:Button runat="server" ID="bookmark2" class="nav-link" aria-selected="false" Text="問題" OnClick="bookmark2_Click"></asp:Button>
             <asp:Button runat="server" ID="bookmark3" class="nav-link" aria-selected="false" Text="填寫資料" OnClick="bookmark3_Click"></asp:Button>
+            <asp:Button runat="server" ID="bookmark4" class="nav-link" aria-selected="false" Text="統計"></asp:Button>
         </div>
     </nav>
     <div id="nav-tabContent">
@@ -37,9 +38,9 @@
             <br />
             <div>描述內容<asp:TextBox ID="textQuestionnaireContent" runat="server"></asp:TextBox></div>
             <br />
-            <div>開始時間<asp:TextBox ID="textStartDate" runat="server"></asp:TextBox></div>
+            <div>開始時間<asp:TextBox ID="textStartDate" runat="server" TextMode="Date"></asp:TextBox></div>
             <br />
-            <div>結束時間<asp:TextBox ID="textEndDate" runat="server"></asp:TextBox></div>
+            <div>結束時間<asp:TextBox ID="textEndDate" runat="server" TextMode="Date"></asp:TextBox></div>
             <br />
             <asp:CheckBox ID="ChkBxVoidStatus" runat="server" Text="已啟用" /><br />
             <asp:Button ID="btnBasicCancel" Style="margin-left: 40%;" runat="server" Text="取消" OnClick="btnBasicCancel_Click" />
@@ -87,22 +88,32 @@
                 </HeaderTemplate>
                 <ItemTemplate>
                     <tr>
-                        <td><asp:CheckBox ID="chkBxQuest" runat="server" /></td>
+                        <td>
+                            <asp:TextBox ID="tbxTableName" runat="server" Text='<%# Eval("QuestOrder")%>' Style="display: none;" />
+                            <asp:CheckBox ID="chkBxQuest" runat="server" value='<%# Eval("QuestOrder")%>' />
+                        </td>
                         <td><%# Eval("QuestOrder")%></td>
                         <td><%# Eval("QuestContent")%></td>
                         <td><%# Eval("AnswerForm")%></td>
-                        <td><asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' /></td>
-                        <td><asp:LinkButton ID="lnkBtnEdit" runat="server">編輯</asp:LinkButton></td>
+                        <td>
+                            <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' /></td>
+                        <td>
+                            <asp:LinkButton ID="lnkBtnEdit" runat="server">編輯</asp:LinkButton></td>
                     </tr>
                 </ItemTemplate>
                 <AlternatingItemTemplate>
                     <tr>
-                        <td bgcolor="#CECECF"><asp:CheckBox ID="chkBxQuest" runat="server" /></td>
+                        <td bgcolor="#CECECF">
+                            <asp:TextBox ID="tbxTableName" runat="server" Text='<%# Eval("QuestOrder")%>' Style="display: none;" />
+                            <asp:CheckBox ID="chkBxQuest" runat="server" value='<%# Eval("QuestOrder")%>' />
+                        </td>
                         <td bgcolor="#CECECF"><%# Eval("QuestOrder")%></td>
                         <td bgcolor="#CECECF"><%# Eval("QuestContent")%></td>
                         <td bgcolor="#CECECF"><%# Eval("AnswerForm")%></td>
-                        <td bgcolor="#CECECF"><asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' /></td>
-                        <td bgcolor="#CECECF"><asp:LinkButton ID="lnkBtnEdit" runat="server">編輯</asp:LinkButton></td>
+                        <td bgcolor="#CECECF">
+                            <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' /></td>
+                        <td bgcolor="#CECECF">
+                            <asp:LinkButton ID="lnkBtnEdit" runat="server">編輯</asp:LinkButton></td>
                     </tr>
                 </AlternatingItemTemplate>
                 <FooterTemplate>
@@ -116,10 +127,10 @@
         <%--填寫資料--%>
         <asp:PlaceHolder ID="plhbookmark3" runat="server" Visible="false">
             <div>
-                <asp:Button ID="btnExport" runat="server" Text="匯出" />
+                <asp:Button ID="btnExport" runat="server" Text="匯出" OnClick="btnExport_Click" />
             </div>
             <%--繳回的列表--%>
-            <asp:PlaceHolder ID="doneList" runat="server">
+            <asp:PlaceHolder ID="plhdoneList" runat="server">
                 <asp:Repeater ID="RptrAnswerList" runat="server">
                     <HeaderTemplate>
                         <table border="1" width="90%" id="table2">
@@ -132,18 +143,18 @@
                     </HeaderTemplate>
                     <ItemTemplate>
                         <tr>
-                            <td>這裡計算總數後遞減</td>
+                            <td><%# Eval("BasicAnswerID")%></td>
                             <td><%# Eval("Nickname")%></td>
-                            <td><%# Eval("AnswerDate", "{0:yyyy/MM/dd}")%></td>
-                            <td><a href="page.aspx?QuestionnaireID=link" target="_blank">前往</a></td>
+                            <td><%# Eval("AnswerDate", "{0:yyyy/MM/dd HH:mm:ss}")%></td>
+                            <td><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&BsicAnsID=<%# Eval("BasicAnswerID")%>&targetplh=3" target="_blank">前往</a></td>
                         </tr>
                     </ItemTemplate>
                     <AlternatingItemTemplate>
                         <tr>
-                            <td bgcolor="#CECECF">這裡計算總數後遞減</td>
+                            <td bgcolor="#CECECF"><%# Eval("BasicAnswerID")%></td>
                             <td bgcolor="#CECECF"><%# Eval("Nickname")%></td>
-                            <td bgcolor="#CECECF"><%# Eval("AnswerDate", "{0:yyyy/MM/dd}")%></td>
-                            <td bgcolor="#CECECF"><a href="page.aspx?QuestionnaireID=link" target="_blank">前往</a></td>
+                            <td bgcolor="#CECECF"><%# Eval("AnswerDate", "{0:yyyy/MM/dd HH:mm:ss}")%></td>
+                            <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&BsicAnsID=<%# Eval("BasicAnswerID")%>&targetplh=3" target="_blank">前往</a></td>
                         </tr>
                     </AlternatingItemTemplate>
                     <FooterTemplate>
@@ -152,17 +163,25 @@
                 </asp:Repeater>
                 (分頁待補)
             </asp:PlaceHolder>
-            <%--繳回的詳細內頁--%>
-<%--            <asp:PlaceHolder ID="plhDoneDetail" runat="server">姓名<asp:TextBox ID="doneName" runat="server"></asp:TextBox>手機<asp:TextBox ID="donePhone" runat="server"></asp:TextBox>
-                Email<asp:TextBox ID="doneEmail" runat="server"></asp:TextBox>年齡<asp:TextBox ID="doneAge" runat="server"></asp:TextBox>
-                填寫時間<%# Eval("AnswerDate")%>
-                <asp:Repeater ID="Repeater1" runat="server">
-                    <ItemTemplate>
-                        <%# Eval("QuestOrder")%>.<%# Eval("QuestContent")%>
-                    </ItemTemplate>
-                </asp:Repeater>
-            </asp:PlaceHolder>--%>
-        </asp:PlaceHolder>
 
+            <%--繳回的詳細內頁--%>
+            <asp:PlaceHolder ID="plhDoneDetail" runat="server" Visible="false">
+                <asp:Label ID="Label1" runat="server" Text="姓名"></asp:Label>
+                <asp:TextBox ID="doneName" runat="server"></asp:TextBox>
+
+                <asp:Label ID="Label2" runat="server" Text="手機"></asp:Label>
+                <asp:TextBox ID="donePhone" runat="server"></asp:TextBox>
+
+                <asp:Label ID="Label3" runat="server" Text="Email"></asp:Label>
+                <asp:TextBox ID="doneEmail" runat="server"></asp:TextBox>
+
+                <asp:Label ID="Label4" runat="server" Text="年齡"></asp:Label>
+                <asp:TextBox ID="doneAge" runat="server"></asp:TextBox>
+
+                <asp:Label ID="Label5" runat="server" Text='填寫時間 <%# Eval("AnswerDate")%>'></asp:Label>
+                <asp:PlaceHolder ID="plhDynDetail" runat="server"></asp:PlaceHolder>
+            </asp:PlaceHolder>
+        </asp:PlaceHolder>
     </div>
+    <input id="EditPageMsg" name="EditPageMsg" runat="server" type="hidden" />
 </asp:Content>

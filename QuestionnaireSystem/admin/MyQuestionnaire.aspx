@@ -5,15 +5,17 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div id="srchArea">
         問卷標題
-            <asp:TextBox ID="srchQuestionnaire" runat="server"></asp:TextBox>
+            <asp:TextBox ID="srchKey" runat="server"></asp:TextBox>
         <br />
         開始/結束
-            <asp:TextBox ID="srchBeginDateText" runat="server"></asp:TextBox>
-           <%-- <asp:Calendar ID="srchBeginDateCalendar" runat="server"></asp:Calendar>--%>
-            <asp:TextBox ID="srchEndDateText" runat="server"></asp:TextBox>
-  <%--      <asp:Calendar ID="srchEendDate" runat="server"></asp:Calendar>--%>
-        <asp:Button ID="srchBotton" runat="server" Text="搜尋" />
+            <asp:TextBox ID="srchBeginDateText" runat="server" TextMode="Date"></asp:TextBox>
+        <asp:TextBox ID="srchEndDateText" runat="server" TextMode="Date"></asp:TextBox>
+        <asp:Button ID="srchButton" runat="server" Text="搜尋" OnClick="srchButton_Click" />
         <br />
+    </div>
+    <div>
+        <asp:ImageButton ID="ImageDelete" runat="server" ImageUrl="/images/deleteIcon.png" Width="20px" OnClick="ImageDelete_Click" />
+        <asp:ImageButton ID="ImageAdd" runat="server" ImageUrl="/images/addIcon.png" Width="20px" OnClick="ImageAdd_Click" />
     </div>
     <div id="ListArea">
         <%--問卷總列表--%>
@@ -34,25 +36,29 @@
                 <ItemTemplate>
                     <tr>
                         <td>
-                            <asp:CheckBox ID="CheckBox1" runat="server" /></td>
+                            <asp:TextBox ID="tbxTableName" runat="server" Text='<%# Eval("QuestionnaireID")%>' Style="display: none;" />
+                            <asp:CheckBox ID="ChkBxQnir" runat="server" value='<%# Eval("QuestionnaireID")%>' />
+                        </td>
                         <td><%# Eval("QuestionnaireID")%></td>
-                        <td><a href="page.aspx?QuestionnaireID=link" target="_blank"><%# Eval("Caption")%></a></td>
+                        <td><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&Targetplh=1" target="_blank"><%# Eval("Caption")%></a></td>
                         <td><%# Eval("VoidStatus")%></td>
                         <td><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                         <td><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
-                        <td><a href="page.aspx?QuestionnaireID=link" target="_blank">前往</a></td>
+                        <td><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&Targetplh=4" target="_blank">前往</a></td>
                     </tr>
                 </ItemTemplate>
                 <AlternatingItemTemplate>
                     <tr>
                         <td bgcolor="#CECECF">
-                            <asp:CheckBox ID="CheckBox1" runat="server" /></td>
+                            <asp:TextBox ID="tbxTableName2" runat="server" Text='<%# Eval("QuestionnaireID")%>' Style="display: none;" />
+                            <asp:CheckBox ID="ChkBxQnir2" runat="server" value='<%# Eval("QuestionnaireID")%>' />
+                        </td>
                         <td bgcolor="#CECECF"><%# Eval("QuestionnaireID")%></td>
-                        <td bgcolor="#CECECF"><a href="page.aspx?QuestionnaireID=link" target="_blank"><%# Eval("Caption")%></a></td>
+                        <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&Targetplh=1" target="_blank"><%# Eval("Caption")%></a></td>
                         <td bgcolor="#CECECF"><%# Eval("VoidStatus")%></td>
                         <td bgcolor="#CECECF"><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                         <td bgcolor="#CECECF"><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
-                        <td bgcolor="#CECECF"><a href="/admin/page.aspx?QuestionnaireID=<%# Eval("QuestionnaireID")%>" target="_blank">前往</a></td>
+                        <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&Targetplh=4" target="_blank">前往</a></td>
                     </tr>
                 </AlternatingItemTemplate>
                 <FooterTemplate>

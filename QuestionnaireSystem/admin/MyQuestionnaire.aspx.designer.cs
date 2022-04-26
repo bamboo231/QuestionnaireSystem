@@ -15,13 +15,13 @@ namespace QuestionnaireSystem.admin
     {
 
         /// <summary>
-        /// srchQuestionnaire 控制項。
+        /// srchKey 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox srchQuestionnaire;
+        protected global::System.Web.UI.WebControls.TextBox srchKey;
 
         /// <summary>
         /// srchBeginDateText 控制項。
@@ -42,13 +42,31 @@ namespace QuestionnaireSystem.admin
         protected global::System.Web.UI.WebControls.TextBox srchEndDateText;
 
         /// <summary>
-        /// srchBotton 控制項。
+        /// srchButton 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button srchBotton;
+        protected global::System.Web.UI.WebControls.Button srchButton;
+
+        /// <summary>
+        /// ImageDelete 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton ImageDelete;
+
+        /// <summary>
+        /// ImageAdd 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton ImageAdd;
 
         /// <summary>
         /// RptrQtnir 控制項。

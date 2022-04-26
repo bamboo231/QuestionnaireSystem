@@ -19,6 +19,7 @@ namespace QuestionnaireSystem.ORM
 
         public int QuestionnaireID { get; set; }
 
+        [Column(TypeName = "datetime2")]
         public DateTime AnswerDate { get; set; }
 
         [Required]
