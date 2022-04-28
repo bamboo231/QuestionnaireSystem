@@ -12,10 +12,11 @@ namespace QuestionnaireSystem.admin
 {
     public partial class EditQuestionnaire : System.Web.UI.Page
     {
-        private QuestionnaireManager _QtnirMgr = new QuestionnaireManager();    //問卷基本資料
-        private CommonQuestManager _CommonMgr = new CommonQuestManager();    //常用問題
-        private AnswerManager _AnswerMgr = new AnswerManager();    //填寫資料
-        private QuestManager _QuestMgr = new QuestManager();    //填寫資料
+        private QuestionnaireManager _QtnirMgr = new QuestionnaireManager();    //問卷基本資料管理
+        private CommonQuestManager _CommonMgr = new CommonQuestManager();    //常用問題管理
+        private AnswerManager _AnswerMgr = new AnswerManager();    //回覆管理
+        private QuestManager _QuestMgr = new QuestManager();    //問題管理
+        private Statistic _statisMgr = new Statistic();    //統計管理
 
         private static int addQuestTime = 0;//新增題目的次數
         private static Questionnaire basicQnir = new Questionnaire();//題目的基本資料
@@ -23,7 +24,7 @@ namespace QuestionnaireSystem.admin
         private static List<Answer> targetDoneID = new List<Answer>();//檢視特定作答詳細內容
 
 
-        //bug:刪除問題後回到此頁並顯示問題，並且順序號碼要重新整理、DB無法帶入(觀看細節)動態控制項
+        //bug:刪除問題後回到此頁並顯示問題，並且順序號碼要重新整理、DB無法帶入(觀看細節)動態控制項、統計頁數據有誤、統計缺%數
         //未做:提示、帶入常用問題、修改問題、分頁
         //待改善:頁籤事件改成enum
         //待問:ItemTemplate和AlternatingItemTemplate的控制項ID能不能相同
@@ -194,19 +195,138 @@ namespace QuestionnaireSystem.admin
                 this.plhbookmark2.Visible = false;
                 this.plhbookmark3.Visible = true;
             }
+            #region//後台統計頁
+            if (currentQnirID != null)
+            {
+                //顯示問卷題目及填寫的內容 
+                this.plhbookmark4.Controls.Clear();     //清空統計的placeHolder
+                                                        //題目的資料
+                List<Question> dispQuestion = _QuestMgr.GetQuestionList(currentQnirID);
 
-            //帶入常用問題至TEXTBOX
+                //取得統計的數量
+                Dictionary<int, int[]> allAmount = _statisMgr.getAllStatisticCount(currentQnirID);
+                foreach (Question item in dispQuestion)
+                {
 
+                    //動態新增控制項(題號&題目(5:單選/6:多選/其他:文字方塊))
+                    if (item.AnswerForm == 5)
+                    {
+                        Label dynLabel = new Label()//標題
+                        {
+                            ID = $"dynTitle{item.QuestID}",
+                            Text = $"{item.QuestID} . {item.QuestContent}",
+                        };
+                        Label lb = new Label() { ID = $"lb{item.QuestID}", Text = "<br>", }; //分行
+
+                        plhbookmark4.Controls.Add(dynLabel);
+                        plhbookmark4.Controls.Add(lb);
+                        string[] arrSelectItem = _QuestMgr.SplitSelectItem(item.SelectItem);
+
+
+                        //本題選項數量
+                        int selectionCount = _QuestMgr.SplitSelectItem(item.SelectItem).Count();
+                        for (int i = 0; i < selectionCount; i++)
+                        {
+                            Label dynSelection = new Label()
+                            {
+                                ID = $"Selection",
+                                Text = $"{arrSelectItem[i]}",
+                            };
+
+                            int count = 0;
+                            if (arrSelectItem[i] != null)
+                                count = arrSelectItem[i].Length;
+                            Label dynCount = new Label()
+                            {
+                                ID = $"Count",
+                                Text = $"({count})",
+                            };
+                            Label lb2 = new Label() { ID = $"lb{item.QuestID}_{i}", Text = "<br>", }; //分行
+
+                            plhbookmark4.Controls.Add(dynSelection);
+                            plhbookmark4.Controls.Add(dynCount);
+                            plhbookmark4.Controls.Add(lb2);
+
+                        }
+                        Label lb3 = new Label() { ID = $"lb{item.QuestID}_2", Text = "<br>", }; //分行
+                        plhbookmark4.Controls.Add(lb3);
+                    }
+                    else if (item.AnswerForm == 6)
+                    {
+                        Label lb = new Label() { ID = $"lb{item.QuestID}", Text = "<br>", }; //分行
+
+                        Label dynLabel = new Label()//標題
+                        {
+                            ID = $"dynTitle{item.QuestID}",
+                            Text = $"{item.QuestID} . {item.QuestContent}",
+                        };
+
+                        string[] arrSelectItem = _QuestMgr.SplitSelectItem(item.SelectItem);
+                        plhbookmark4.Controls.Add(dynLabel);
+                        plhbookmark4.Controls.Add(lb);
+
+                        //本題選項數量
+                        int selectionCount = _QuestMgr.SplitSelectItem(item.SelectItem).Count();
+                        for (int i = 0; i < selectionCount; i++)
+                        {
+
+                            Label dynSelection = new Label()
+                            {
+                                ID = $"Selection",
+                                Text = $"{arrSelectItem[i]}",
+                            };
+
+                            int count = 0;
+                            if (arrSelectItem[i] != null)
+                                count = arrSelectItem[i].Length;
+                            Label dynCount = new Label()
+                            {
+                                ID = $"Count",
+                                Text = $"({count})",
+                            };
+                            Label lb2 = new Label() { ID = $"lb{item.QuestID}_{i}", Text = "<br>", }; //分行
+
+                            plhbookmark4.Controls.Add(dynSelection);
+                            plhbookmark4.Controls.Add(dynCount);
+                            plhbookmark4.Controls.Add(lb2);
+                        }
+                        Label lb3 = new Label() { ID = $"lb{item.QuestID}_2", Text = "<br>", }; //分行
+                        plhbookmark4.Controls.Add(lb3);
+                    }
+                    else
+                    {
+                        Label dynLabel = new Label()
+                        {
+                            ID = $"dynTitle{item.QuestID}",
+                            Text = $"{item.QuestID} . {item.QuestContent}",
+                        };
+                        Label content = new Label()
+                        {
+                            ID = "noneDisplay",
+                            Text = "(-)",
+                        };
+                        Label lb = new Label() { ID = $"lb{item.QuestID}", Text = "<br>", }; //分行
+
+                        plhbookmark4.Controls.Add(dynLabel);
+                        plhbookmark4.Controls.Add(content);
+                        plhbookmark4.Controls.Add(lb);
+                        Label lb3 = new Label() { ID = $"lb{item.QuestID}_2", Text = "<br>", }; //分行
+                        plhbookmark4.Controls.Add(lb3);
+                    }
+                }
+            }
+            #endregion
+
+            //缺:帶入常用問題至TEXTBOX
         }
 
         //點擊分頁-問卷基本題目
         protected void bookmark1_Click(object sender, EventArgs e)
         {
-            bookmark1.Attributes.Add("class", "nav-link active");
             this.plhbookmark1.Visible = true;
-            bookmark1.Attributes.Remove("class");
             this.plhbookmark2.Visible = false;
             this.plhbookmark3.Visible = false;
+            this.plhbookmark4.Visible = false;
         }
         //點擊分頁-問題編輯
         protected void bookmark2_Click(object sender, EventArgs e)
@@ -214,6 +334,7 @@ namespace QuestionnaireSystem.admin
             this.plhbookmark1.Visible = false;
             this.plhbookmark2.Visible = true;
             this.plhbookmark3.Visible = false;
+            this.plhbookmark4.Visible = false;
         }
         //點擊分頁-填寫資料
         protected void bookmark3_Click(object sender, EventArgs e)
@@ -221,8 +342,16 @@ namespace QuestionnaireSystem.admin
             this.plhbookmark1.Visible = false;
             this.plhbookmark2.Visible = false;
             this.plhbookmark3.Visible = true;
+            this.plhbookmark4.Visible = false;
         }
-
+        //點擊分頁-統計
+        protected void bookmark4_Click(object sender, EventArgs e)
+        {
+            this.plhbookmark1.Visible = false;
+            this.plhbookmark2.Visible = false;
+            this.plhbookmark3.Visible = false;
+            this.plhbookmark4.Visible = true;
+        }
         //問卷基本資料送出按鈕
         protected void btnBasicSummit_Click(object sender, EventArgs e)
         {
@@ -290,20 +419,16 @@ namespace QuestionnaireSystem.admin
         //刪除題目按鈕
         protected void imgBtnDelete_Click(object sender, ImageClickEventArgs e)
         {
-            //逐筆取得repeater中被勾選的資料順序並刪除
+            //逐筆取得repeater中被勾選的資料列並刪除
             foreach (Control c in this.RptrQuest.Controls)
             {
                 CheckBox cbx = (CheckBox)c.FindControl("chkBxQuest");
                 TextBox tbx = (TextBox)c.FindControl("tbxTableName");
-                if (tbx != null)
-                {
-                    int QuestOrder = Int32.Parse(tbx.Text);
-                }
 
                 if (cbx != null && cbx.Checked == true)
                 {
                     //int QuestOrder = Int32.Parse(tbx.Text);
-                    //questSessionsList.RemoveAt(QuestOrder - 1);
+                    //questSessionsList.RemoveAt(QuestOrder);
                     //將刪除指定資料後的list排序重設，並存入Session
                     List<Question> newList = _QuestMgr.ReOrderQuestionList(questSessionsList);
                     HttpContext.Current.Session["setQuest"] = newList;
@@ -335,14 +460,14 @@ namespace QuestionnaireSystem.admin
             string currentQnirID = this.Request.QueryString["QnirID"];  //從URL取得當前所在的問卷ID
             string strCSV = "";
             //填寫者的基本資料List
-            List <BasicAnswer> allBasicAnswer = _AnswerMgr.GetDoneList(currentQnirID);
+            List<BasicAnswer> allBasicAnswer = _AnswerMgr.GetDoneList(currentQnirID);
             //每筆回答
             List<WholeAnswer> answersToExport = _AnswerMgr.GetWholeDoneList(currentQnirID);
             WholeAnswer firstItem = answersToExport.FirstOrDefault();
 
-            for(int i = 0; i < allBasicAnswer.Count; i++)
+            for (int i = 0; i < allBasicAnswer.Count; i++)
             {
-                strCSV+= $"{firstItem.Nickname},{firstItem.Phone},{firstItem.Email},{firstItem.Age}";
+                strCSV += $"{firstItem.Nickname},{firstItem.Phone},{firstItem.Email},{firstItem.Age}";
                 int basicID = allBasicAnswer.First().BasicAnswerID;
                 List<WholeAnswer> detailList = _AnswerMgr.GetTargetType(basicID);
                 foreach (WholeAnswer item in detailList)
@@ -356,5 +481,7 @@ namespace QuestionnaireSystem.admin
             File.WriteAllText("D:\\tryCSV.csv", strCSV.ToString());
             //缺:匯出完成提示
         }
+
+
     }
 }

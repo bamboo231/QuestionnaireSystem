@@ -13,13 +13,13 @@ namespace QuestionnaireSystem.ORM
         public string SelectItem { get; set; }
 
         public int QuestionnaireID { get; set; }
+        public int QuestOrder { get; set; }
         public string QuestContent { get; set; }
         public int BasicAnswerID { get; set; }
         public string Nickname { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
         public int Age { get; set; }
-
 
     }
 }

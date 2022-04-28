@@ -37,31 +37,15 @@ namespace QuestionnaireSystem.Manager
                 List<Question> questList = contextModel.Questions.ToList();
                 List<BasicAnswer> basicAnswerList = contextModel.BasicAnswers.ToList();
                 List<Answer> answerList = contextModel.Answers.ToList();
-
-                var listQAndB =
-                    from q in questList
-                    join b in basicAnswerList on q.QuestionnaireID equals b.QuestionnaireID
+                //bug:取得的問題(QuestContent)與回答(Answer)對不上
+                var listQAndB = 
+                    from b in basicAnswerList
+                    join a in answerList on b.BasicAnswerID equals a.BasicAnswerID
                     where b.QuestionnaireID == intQnirID
                     select new WholeAnswer
                     {
-                        QuestID = q.QuestID,
-                        QuestionnaireID = q.QuestionnaireID,
-                        QuestContent = q.QuestContent,
-                        BasicAnswerID = b.BasicAnswerID,
-                        Nickname = b.Nickname,
-                        Phone = b.Phone,
-                        Email = b.Email,
-                        Age = b.Age,
-                    };
-
-                var listQAndBAndA =
-                    from b in listQAndB
-                    join a in answerList on b.BasicAnswerID equals a.BasicAnswerID
-                    select new WholeAnswer
-                    {
-                        QuestID = b.QuestID,
+                        QuestID = a.QuestID,
                         QuestionnaireID = b.QuestionnaireID,
-                        QuestContent = b.QuestContent,
                         BasicAnswerID = b.BasicAnswerID,
                         Nickname = b.Nickname,
                         Phone = b.Phone,
@@ -70,6 +54,23 @@ namespace QuestionnaireSystem.Manager
                         Answer = a.Answer1,
                     };
 
+                var listQAndBAndA =
+                    from n in listQAndB
+                    join q in questList on n.QuestID equals q.QuestID
+                    select new WholeAnswer
+                    {
+                        QuestID = n.QuestID,
+                        QuestionnaireID = q.QuestionnaireID,
+                        QuestContent = q.QuestContent,
+                        BasicAnswerID = n.BasicAnswerID,
+                        Nickname = n.Nickname,
+                        Phone = n.Phone,
+                        Email = n.Email,
+                        Age = n.Age,
+                        Answer = n.Answer,
+                        QuestOrder = q.QuestOrder,
+                        SelectItem = q.SelectItem,
+                    };
 
                 List<WholeAnswer> newWholeAnswerstList = new List<WholeAnswer>(listQAndBAndA);
                 return newWholeAnswerstList;

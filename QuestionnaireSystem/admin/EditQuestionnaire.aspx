@@ -28,7 +28,7 @@
             <asp:Button runat="server" ID="bookmark1" class="nav-link" aria-selected="true" Text="問卷" OnClick="bookmark1_Click"></asp:Button>
             <asp:Button runat="server" ID="bookmark2" class="nav-link" aria-selected="false" Text="問題" OnClick="bookmark2_Click"></asp:Button>
             <asp:Button runat="server" ID="bookmark3" class="nav-link" aria-selected="false" Text="填寫資料" OnClick="bookmark3_Click"></asp:Button>
-            <asp:Button runat="server" ID="bookmark4" class="nav-link" aria-selected="false" Text="統計"></asp:Button>
+            <asp:Button runat="server" ID="bookmark4" class="nav-link" aria-selected="false" Text="統計" OnClick="bookmark4_Click"></asp:Button>
         </div>
     </nav>
     <div id="nav-tabContent">
@@ -105,7 +105,7 @@
                     <tr>
                         <td bgcolor="#CECECF">
                             <asp:TextBox ID="tbxTableName" runat="server" Text='<%# Eval("QuestOrder")%>' Style="display: none;" />
-                            <asp:CheckBox ID="chkBxQuest" runat="server" value='<%# Eval("QuestOrder")%>' />
+                            <asp:CheckBox ID="chkBxQuest" runat="server" Text='<%# Eval("QuestOrder")%>' />
                         </td>
                         <td bgcolor="#CECECF"><%# Eval("QuestOrder")%></td>
                         <td bgcolor="#CECECF"><%# Eval("QuestContent")%></td>
@@ -164,7 +164,7 @@
                 (分頁待補)
             </asp:PlaceHolder>
 
-            <%--繳回的詳細內頁--%>
+            <%--繳回的詳細內容--%>
             <asp:PlaceHolder ID="plhDoneDetail" runat="server" Visible="false">
                 <asp:Label ID="Label1" runat="server" Text="姓名"></asp:Label>
                 <asp:TextBox ID="doneName" runat="server"></asp:TextBox>
@@ -181,6 +181,9 @@
                 <asp:Label ID="Label5" runat="server" Text='填寫時間 <%# Eval("AnswerDate")%>'></asp:Label>
                 <asp:PlaceHolder ID="plhDynDetail" runat="server"></asp:PlaceHolder>
             </asp:PlaceHolder>
+        </asp:PlaceHolder>
+        <%--統計--%>
+        <asp:PlaceHolder ID="plhbookmark4" runat="server" Visible="false">
         </asp:PlaceHolder>
     </div>
     <input id="EditPageMsg" name="EditPageMsg" runat="server" type="hidden" />

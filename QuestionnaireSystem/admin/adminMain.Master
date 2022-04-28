@@ -44,7 +44,7 @@
                     <div id="menuArea" class="col-3">
                         <a href="MyQuestionnaire.aspx" target="_blank">問卷管理</a>
                         <br />
-                        <a href="page.aspx?QuestionnaireID=link" target="_blank">常用問卷管理</a>
+                        <a href="CommonQuestPage.aspx" target="_blank">常用問卷管理</a>
                         <br />
                     </div>
                     <!-- 主內容區 -->

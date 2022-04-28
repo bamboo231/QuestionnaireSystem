@@ -44,7 +44,7 @@ namespace QuestionnaireSystem.Manager
         /// <returns>回傳值為List<Question></returns>
         public List<Question> ReOrderQuestionList(List<Question> questionList)
         {
-            countIndex=0;
+            countIndex = 0;
             try
             {
                 //宣告空的List
@@ -73,9 +73,20 @@ namespace QuestionnaireSystem.Manager
         /// <returns>回傳值為字串陣列</returns>
         public string[] SplitSelectItem(string inpSelectItem)
         {
-            string[] splitArray = inpSelectItem.Split(';');
-            return splitArray;
+            if (inpSelectItem != null)
+            {
+                string[] splitArray = inpSelectItem.Split(';');
+                return splitArray;
+            }
+            else
+                return null;
         }
+
+        /// <summary>
+        /// 依問卷號取出題目的List
+        /// </summary>
+        /// <param name="questionnaireID"></param>
+        /// <returns></returns>
         public List<Question> GetQuestionList(string questionnaireID)
         {
             try
@@ -84,7 +95,9 @@ namespace QuestionnaireSystem.Manager
 
                 using (ContextModel contextModel = new ContextModel())
                 {
-                    return contextModel.Questions.Where(obj => obj.QuestionnaireID == intQnirID).ToList();
+                    List<Question> qList = contextModel.Questions.Where(obj => obj.QuestionnaireID == intQnirID).ToList();
+                    //缺:如果沒有任何人填問卷該怎麼處理
+                    return qList;
                 }
 
             }
