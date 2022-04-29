@@ -7,83 +7,65 @@
 // </自動產生>
 //------------------------------------------------------------------------------
 
-namespace QuestionnaireSystem.admin
+namespace QuestionnaireSystem
 {
 
 
-    public partial class adminMain
+    public partial class Index
     {
 
         /// <summary>
-        /// head 控制項。
+        /// srchKey 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder head;
+        protected global::System.Web.UI.WebControls.TextBox srchKey;
 
         /// <summary>
-        /// form1 控制項。
+        /// srchBeginDateText 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::System.Web.UI.WebControls.TextBox srchBeginDateText;
 
         /// <summary>
-        /// pageTitle 控制項。
+        /// srchEndDateText 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label pageTitle;
+        protected global::System.Web.UI.WebControls.TextBox srchEndDateText;
 
         /// <summary>
-        /// ContentPlaceHolder1 控制項。
+        /// srchButton 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder ContentPlaceHolder1;
+        protected global::System.Web.UI.WebControls.Button srchButton;
 
         /// <summary>
-        /// adminMainMsg 控制項。
+        /// RptrQtnir 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden adminMainMsg;
+        protected global::System.Web.UI.WebControls.Repeater RptrQtnir;
 
         /// <summary>
-        /// Hidden1 控制項。
+        /// Label1 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden Hidden1;
-
-        /// <summary>
-        /// Hidden2 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden Hidden2;
-
-        /// <summary>
-        /// MyQstnirMsg 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField MyQstnirMsg;
+        protected global::System.Web.UI.WebControls.Label Label1;
     }
 }

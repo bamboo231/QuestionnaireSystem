@@ -9,6 +9,21 @@ namespace QuestionnaireSystem.Manager
     public class AnswerManager
     {
         /// <summary>
+        /// 取得此問卷的基本資料
+        /// </summary>
+        /// <param name="QnirID">傳入值為問卷ID(string)</param>
+        /// <returns>回傳值為List<BasicAnswer></returns>
+        public BasicAnswer GetDoneData(string basicAnswerID)
+        {
+            int intbasicAnswerID = Int32.Parse(basicAnswerID);
+            using (ContextModel contextModel = new ContextModel())
+            {
+                BasicAnswer basicAnswer = contextModel.BasicAnswers.Where(obj => obj.BasicAnswerID == intbasicAnswerID).FirstOrDefault();
+                return basicAnswer;
+            }
+        }
+
+        /// <summary>
         /// 取得此問卷的所有回覆List
         /// </summary>
         /// <param name="QnirID">傳入值為問卷ID(string)</param>
@@ -56,7 +71,8 @@ namespace QuestionnaireSystem.Manager
 
                 var listQAndBAndA =
                     from n in listQAndB
-                    join q in questList on n.QuestID equals q.QuestID
+                    join q in questList  on n.QuestionnaireID equals q.QuestionnaireID
+                    where q.QuestionnaireID == intQnirID
                     select new WholeAnswer
                     {
                         QuestID = n.QuestID,
@@ -110,21 +126,46 @@ namespace QuestionnaireSystem.Manager
             using (ContextModel contextModel = new ContextModel())
             {
                 List<Question> questList = contextModel.Questions.ToList();
+                List<BasicAnswer> basicAnswerList = contextModel.BasicAnswers.ToList();
                 List<Answer> answerList = contextModel.Answers.ToList();
 
-                var newList =
-                    from q in questList
-                    join a in answerList on q.QuestID equals a.QuestID
-                    where a.BasicAnswerID == basicAnswerID
+                var listQAndB =
+                    from b in basicAnswerList
+                    join a in answerList on b.BasicAnswerID equals a.BasicAnswerID
+                    where b.BasicAnswerID == basicAnswerID
                     select new WholeAnswer
                     {
-                        QuestID = q.QuestID,
-                        AnswerForm = q.AnswerForm,
+                        QuestID = a.QuestID,
+                        QuestionnaireID = b.QuestionnaireID,
+                        BasicAnswerID = b.BasicAnswerID,
+                        Nickname = b.Nickname,
+                        Phone = b.Phone,
+                        Email = b.Email,
+                        Age = b.Age,
                         Answer = a.Answer1,
+                    };
+
+                var listQAndBAndA =
+                    from q in questList
+                    join n in listQAndB on q.QuestionnaireID equals n.QuestionnaireID
+                    where q.QuestID == n.QuestID
+                    select new WholeAnswer
+                    {
+                        QuestID = n.QuestID,
+                        QuestionnaireID = q.QuestionnaireID,
+                        QuestContent = q.QuestContent,
+                        BasicAnswerID = n.BasicAnswerID,
+                        Nickname = n.Nickname,
+                        Phone = n.Phone,
+                        Email = n.Email,
+                        Age = n.Age,
+                        Answer = n.Answer,
+                        QuestOrder = q.QuestOrder,
                         SelectItem = q.SelectItem,
                     };
-                List<WholeAnswer> newQstList = new List<WholeAnswer>(newList);
-                return newQstList;
+                List<WholeAnswer> newWholeAnswerstList = new List<WholeAnswer>(listQAndBAndA);
+
+                return newWholeAnswerstList;
             }
         }
 

@@ -35,7 +35,29 @@ namespace QuestionnaireSystem.Manager
                     return answer = 6;
             }
         }
-
+        /// <summary>
+        /// 將問題種類int轉換成string
+        /// </summary>
+        /// <param name="inpAnswerForm">傳入值為int</param>
+        /// <returns>回傳值為string</returns>
+        public string AnswerTextToInt(int inpAnswerForm)
+        {
+            switch (inpAnswerForm)
+            {
+                case 1:
+                    return "文字方塊";
+                case 2:
+                    return "數字";
+                case 3:
+                    return "Email";
+                case 4:
+                    return "日期";
+                case 5:
+                    return "單選方塊";
+                default:
+                    return "複選方塊";
+            }
+        }
 
         /// <summary>
         /// 重新排序List<Question>
@@ -70,23 +92,30 @@ namespace QuestionnaireSystem.Manager
         /// 將DB的問題選項切割成字串List
         /// </summary>
         /// <param name="inpSelectItem">傳入值為string</param>
-        /// <returns>回傳值為字串陣列</returns>
-        public string[] SplitSelectItem(string inpSelectItem)
+        public void SplitSelectItem(string inpSelectItem, out int amount, out string[] splitArray)
         {
-            if (inpSelectItem != null)
+            try
             {
-                string[] splitArray = inpSelectItem.Split(';');
-                return splitArray;
+                amount = 0;
+                splitArray = null;
+                if (inpSelectItem != null)
+                {
+                    splitArray = inpSelectItem.Split(';');
+                    amount = splitArray.Length;
+                }
             }
-            else
-                return null;
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuestManager.SplitSelectItem", ex);
+                throw;
+            }
         }
 
         /// <summary>
         /// 依問卷號取出題目的List
         /// </summary>
-        /// <param name="questionnaireID"></param>
-        /// <returns></returns>
+        /// <param name="questionnaireID">傳入值為string</param>
+        /// <returns>回傳值為List<Question></returns>
         public List<Question> GetQuestionList(string questionnaireID)
         {
             try
@@ -98,6 +127,80 @@ namespace QuestionnaireSystem.Manager
                     List<Question> qList = contextModel.Questions.Where(obj => obj.QuestionnaireID == intQnirID).ToList();
                     //缺:如果沒有任何人填問卷該怎麼處理
                     return qList;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuestManager.GetQuestionList", ex);
+                throw;
+            }
+        }
+        /// <summary>
+        /// 依問卷號取出題目的List
+        /// </summary>
+        /// <param name="questionnaireID">傳入值為int</param>
+        /// <returns>回傳值為List<Question></returns>
+        public List<Question> GetQuestionList(int questionnaireID)
+        {
+            try
+            {
+
+                using (ContextModel contextModel = new ContextModel())
+                {
+                    List<Question> qList = contextModel.Questions.Where(obj => obj.QuestionnaireID == questionnaireID).ToList();
+                    //缺:如果沒有任何人填問卷該怎麼處理
+                    return qList;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuestManager.GetQuestionList", ex);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 依問卷號取出題目
+        /// </summary>
+        /// <param name="questionnaireID">傳入值為int</param>
+        /// <returns>回傳值為Question類別<Question></returns>
+        public Question GetQuestion(int questionnaireID)
+        {
+            try
+            {
+
+                using (ContextModel contextModel = new ContextModel())
+                {
+                    Question qst = contextModel.Questions.Where(obj => obj.QuestionnaireID == questionnaireID).First();
+                    //缺:如果沒有任何人填問卷該怎麼處理
+                    return qst;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuestManager.GetQuestionList", ex);
+                throw;
+            }
+        }
+        /// <summary>
+        /// 依問卷號取出題目
+        /// </summary>
+        /// <param name="questionnaireID">傳入值為int</param>
+        /// <returns>回傳值為Question類別<Question></returns>
+        public Question GetQuestion(string questionnaireID)
+        {
+            int intQst = int.Parse(questionnaireID);
+            try
+            {
+
+                using (ContextModel contextModel = new ContextModel())
+                {
+                    Question qst = contextModel.Questions.Where(obj => obj.QuestionnaireID == intQst).First();
+                    //缺:如果沒有任何人填問卷該怎麼處理
+                    return qst;
                 }
 
             }

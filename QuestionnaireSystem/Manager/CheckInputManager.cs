@@ -47,7 +47,30 @@ namespace QuestionnaireSystem.Manager
 
             try
             {
-                bool isInclude = checkedData.Contains(inpText);  //checkString：輸入字串，BanWord：禁字
+                bool isInclude = checkedData.Contains(inpText);  //checkString：輸入字串
+
+                return isInclude;
+            }
+
+            catch (Exception ex)
+            {
+                Logger.WriteLog("CheckInputManager.IncludeText", ex);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 確認字串是否包含全形分號；
+        /// </summary>
+        /// <param name="checkedData">需要被確認的字串</param>
+        /// <returns>回傳值為boolean</returns>
+        public bool IsMistakeSemicolon(string checkedData)
+        {
+            string mistakeSemicolon = "；";
+
+            try
+            {
+                bool isInclude = checkedData.Contains(mistakeSemicolon);  //checkString：輸入字串，BanWord：禁字
 
                 return isInclude;
             }

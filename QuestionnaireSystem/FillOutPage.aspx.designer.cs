@@ -7,83 +7,92 @@
 // </自動產生>
 //------------------------------------------------------------------------------
 
-namespace QuestionnaireSystem.admin
+namespace QuestionnaireSystem
 {
 
 
-    public partial class adminMain
+    public partial class FillOutPage1
     {
 
         /// <summary>
-        /// head 控制項。
+        /// plhDoneDetail 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder head;
+        protected global::System.Web.UI.WebControls.PlaceHolder plhDoneDetail;
 
         /// <summary>
-        /// form1 控制項。
+        /// Label1 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::System.Web.UI.WebControls.Label Label1;
 
         /// <summary>
-        /// pageTitle 控制項。
+        /// doneName 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label pageTitle;
+        protected global::System.Web.UI.WebControls.TextBox doneName;
 
         /// <summary>
-        /// ContentPlaceHolder1 控制項。
+        /// Label2 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder ContentPlaceHolder1;
+        protected global::System.Web.UI.WebControls.Label Label2;
 
         /// <summary>
-        /// adminMainMsg 控制項。
+        /// donePhone 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden adminMainMsg;
+        protected global::System.Web.UI.WebControls.TextBox donePhone;
 
         /// <summary>
-        /// Hidden1 控制項。
+        /// Label3 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden Hidden1;
+        protected global::System.Web.UI.WebControls.Label Label3;
 
         /// <summary>
-        /// Hidden2 控制項。
+        /// doneEmail 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden Hidden2;
+        protected global::System.Web.UI.WebControls.TextBox doneEmail;
 
         /// <summary>
-        /// MyQstnirMsg 控制項。
+        /// Label5 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField MyQstnirMsg;
+        protected global::System.Web.UI.WebControls.Label Label5;
+
+        /// <summary>
+        /// doneAge 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox doneAge;
     }
 }

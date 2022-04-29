@@ -17,36 +17,48 @@ namespace QuestionnaireSystem.Manager
         /// </summary>
         /// <param name="QnirID">指定問卷編號，傳入值為string</param>
         /// <returns>回傳值為Dictionary<int, int[]></returns>
-        public Dictionary<int, int[]> getAllStatisticCount(string QnirID)
+        public Dictionary<string, int[]> getAllStatisticCount(string QnirID)
         {
-            Dictionary<int, int[]> countEachSelectionInQuest = new Dictionary<int, int[]>();
+            Dictionary<string, int[]> countEachSelectionInQuest = new Dictionary<string, int[]>();
 
             List<WholeAnswer> allData = _AnswerMgr.GetWholeDoneList(QnirID);//集合(數量為每張問卷*所有問題筆數)
             int answerAmount = _QuestMgr.GetQuestionList(QnirID).Count();//該問卷的總題數
 
             for (int i = 0; i < answerAmount; i++)
             {
-                //依序取出每道題所有人的作答資料
+                //所有回答這道題的筆數
                 List<WholeAnswer> allThisQuestData = allData.Where(obj => obj.QuestOrder == i + 1).ToList();
-                //依序取出每道題的選項
-                WholeAnswer QuestOrderInThisQnir = allThisQuestData.First();
-                try
+                if (allThisQuestData.Count != 0)
                 {
-                    string[] arrString = _QuestMgr.SplitSelectItem(QuestOrderInThisQnir.SelectItem);
+                    //這道題的選項(字串陣列)
+                    WholeAnswer QuestOrderInThisQnir = allThisQuestData.First();
+                    string[] arrString = null;
+                    int selectionAmount = 0;
+                    _QuestMgr.SplitSelectItem(QuestOrderInThisQnir.SelectItem, out selectionAmount, out arrString);
+
+
                     //依序取出每道題目的選項數目
-                    int selectionAmount = arrString.Count();
-
-                    //陣列容納該道題每個選項的數量
-                    int[] ddd = new int[selectionAmount];
-                    for (int j = 0; j < selectionAmount; j++)
+                    if (arrString != null)
                     {
-                        ddd[j] = allThisQuestData.Where(obj => obj.Answer == arrString[j]).Count();
+                        //陣列容納該道題每個選項的數量
+                        int[] arrAllAmountInThisQuest = new int[selectionAmount];
+                        for (int j = 0; j < selectionAmount; j++)
+                        {
+                            arrAllAmountInThisQuest[j] = allThisQuestData.Where(obj => obj.Answer == arrString[j]).Count();
+                        }
+                        int a = i+1;
+                            countEachSelectionInQuest.Add(a.ToString(), arrAllAmountInThisQuest);
                     }
-                    countEachSelectionInQuest.Add(i + 1, ddd);
+                    else//如果不是單選或多選
+                    {
+                        int a = i + 1;
+                        countEachSelectionInQuest.Add(a.ToString(), null);
+                    }
                 }
-                catch {
-                    countEachSelectionInQuest.Add(i + 1, null);
-
+                else//如果沒人做答
+                {
+                    int a = i + 1;
+                    countEachSelectionInQuest.Add(a.ToString(), null);
                 }
             }
             return countEachSelectionInQuest;

@@ -50,8 +50,8 @@
                 <AlternatingItemTemplate>
                     <tr>
                         <td bgcolor="#CECECF">
-                            <asp:TextBox ID="tbxTableName2" runat="server" Text='<%# Eval("QuestionnaireID")%>' Style="display: none;" />
-                            <asp:CheckBox ID="ChkBxQnir2" runat="server" value='<%# Eval("QuestionnaireID")%>' />
+                            <asp:TextBox ID="tbxTableName" runat="server" Text='<%# Eval("QuestionnaireID")%>' Style="display: none;" />
+                            <asp:CheckBox ID="ChkBxQnir" runat="server" value='<%# Eval("QuestionnaireID")%>' />
                         </td>
                         <td bgcolor="#CECECF"><%# Eval("QuestionnaireID")%></td>
                         <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&Targetplh=1" target="_blank"><%# Eval("Caption")%></a></td>
@@ -65,7 +65,7 @@
                     </table>
                 </FooterTemplate>
             </asp:Repeater>
-
+            <asp:Label ID="Label1" runat="server" Text="(查無資料)" Visible="false"></asp:Label>
 
         </div>
     </div>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using QuestionnaireSystem.Helper;
 using QuestionnaireSystem.ORM;
 
 namespace QuestionnaireSystem.Manager
@@ -20,7 +21,7 @@ namespace QuestionnaireSystem.Manager
             }
         }
 
-
+        //要改
         /// <summary>
         /// 取得所有問卷List
         /// </summary>
@@ -56,6 +57,53 @@ namespace QuestionnaireSystem.Manager
                 context.SaveChanges();
             }
         }
+
+
+        //有問題要改
+        public void Updateuestionnaire(Questionnaire addQnir, List<Question> questionList)
+        {
+            try
+            {
+                using (var context = new ORM.ContextModel())
+                {
+                    var targetQnir = context.Questionnaires.Where(obj => obj.QuestionnaireID == addQnir.QuestionnaireID).FirstOrDefault();
+
+                    targetQnir.Caption = addQnir.Caption;
+                    targetQnir.QuestionnaireContent = addQnir.QuestionnaireContent;
+                    targetQnir.StartDate = addQnir.StartDate;
+                    targetQnir.EndDate = addQnir.EndDate;
+                    targetQnir.VoidStatus = addQnir.VoidStatus;
+
+                    var targetQst = context.Questions.Where(obj => obj.QuestionnaireID == addQnir.QuestionnaireID).ToList();
+                    int i = 0;
+                    for (i = 0; i < targetQst.Count; i++)
+                    {
+                        var targetDate = targetQst.Where(obj => obj.QuestOrder == i).FirstOrDefault();
+
+                        targetDate.QuestContent = questionList[i].QuestContent;
+                        targetDate.AnswerForm = questionList[i].AnswerForm;
+                        targetDate.SelectItem = questionList[i].SelectItem;
+                        targetDate.Required = questionList[i].Required;
+                    }
+                    //如果新的資料列比舊的多，
+                    if(questionList.Count> targetQst.Count)
+                    {
+                        for(i=0;i<questionList.Count;i++)
+                        { 
+                        context.Questions.Add(questionList[i]);
+                        }
+                    }
+                    //如果題目被刪掉了，就刪掉題目順序
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuestionnaireManager.Updateuestionnaire", ex);
+                throw;
+            }
+        }
+
 
         public Questionnaire GetQuestionnaire(string questionnaireID)
         {
