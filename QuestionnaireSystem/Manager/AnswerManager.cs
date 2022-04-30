@@ -8,6 +8,8 @@ namespace QuestionnaireSystem.Manager
 {
     public class AnswerManager
     {
+        private CheckInputManager _checksMgr = new CheckInputManager();    //統計管理
+
         /// <summary>
         /// 取得此問卷的基本資料
         /// </summary>
@@ -166,6 +168,35 @@ namespace QuestionnaireSystem.Manager
                 List<WholeAnswer> newWholeAnswerstList = new List<WholeAnswer>(listQAndBAndA);
 
                 return newWholeAnswerstList;
+            }
+        }
+
+        /// <summary>
+        /// 儲存填寫問卷的基本資料
+        /// </summary>
+        /// <param name="basicQnir">傳入BasicAnswer</param>
+        public void SaveBasicQnir(BasicAnswer basicQnir)
+        {
+            using (ContextModel contextModel = new ContextModel())
+            {
+                contextModel.BasicAnswers.Add(basicQnir);
+                contextModel.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 儲存填寫問卷的問題內容
+        /// </summary>
+        /// <param name="AnswerList">傳入List<Answer></param>
+        public void SaveAnswer(List<Answer> AnswerList)
+        {
+            using (ContextModel contextModel = new ContextModel())
+            {
+                foreach(Answer answer in AnswerList)
+                { 
+                contextModel.Answers.Add(answer);
+                }
+                contextModel.SaveChanges();
             }
         }
 

@@ -434,7 +434,7 @@ namespace QuestionnaireSystem.admin
             else
             {
 
-                if (this.textCaption.Text == null || this.textQuestionnaireContent == null || this.textStartDate.Text == null || this.textEndDate.Text == null)
+                if (this.textCaption.Text == null || this.textQuestionnaireContent.Text == null || this.textStartDate.Text == null || this.textEndDate.Text == null)
                 {
                     HttpContext.Current.Session["EditQstnirMsg"] = "此頁面皆為必填項目。";
                 }

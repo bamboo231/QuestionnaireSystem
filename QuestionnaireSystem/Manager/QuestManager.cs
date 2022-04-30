@@ -211,5 +211,31 @@ namespace QuestionnaireSystem.Manager
             }
         }
 
+        /// <summary>
+        /// 取得必填問題
+        /// </summary>
+        /// <param name="QstnirID"></param>
+        /// <returns></returns>
+        public List<Question> GetRequiredQuest(int QstnirID)
+        {
+            using (ContextModel contextModel = new ContextModel())
+            {
+
+                var questList = contextModel.Questions.Where(obj => obj.QuestionnaireID == QstnirID).ToList();
+                var focusQuest = questList.Where(obj => obj.Required == true).ToList();
+                return focusQuest;
+            }
+        }
+        public List<Question> GetRequiredQuest(string strQstnirID)
+        {
+            int QstnirID = int.Parse(strQstnirID);
+            using (ContextModel contextModel = new ContextModel())
+            {
+
+                var questList = contextModel.Questions.Where(obj => obj.QuestionnaireID == QstnirID).ToList();
+                var focusQuest = questList.Where(obj => obj.Required == true).ToList();
+                return focusQuest;
+            }
+        }
     }
 }

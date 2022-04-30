@@ -4,10 +4,12 @@
 
 <html>
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
+    <link rel="stylesheet" href="css/bootstrap.css" />
+
 </head>
 <body>
     <form id="form1" runat="server">
@@ -23,7 +25,26 @@
                 </asp:ContentPlaceHolder>
             </div>
         </div>
-
+        <input id="callManager" name="callManager" runat="server" type="hidden" />
+        <input id="IndexMsg" name="MainMsg" runat="server" type="hidden" />
     </form>
+        <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            //藉由預存session跳出視窗的功能
+            if (MainMsg.value != "") {
+                alert(MainMsg.value);
+                MainMsg.value = "";
+            }
+            if (callManager.value != "") {
+                alert(callManager.value);
+                callManager.value = "";
+            }
+        });
+    </script>
 </body>
 </html>

@@ -34,28 +34,28 @@
                     <ItemTemplate>
                         <tr>
                             <td><%# Eval("QuestionnaireID")%></td>
-                            <td><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&Targetplh=1" target="_blank"><%# Eval("Caption")%></a></td>
+                            <td><a href="FillOutPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank"><%# Eval("Caption")%></a></td>
                             <td><%# Eval("VoidStatus")%></td>
                             <td><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                             <td><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
-                            <td><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&Targetplh=4" target="_blank">前往</a></td>
+                            <td><a href="FillOutPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank">前往</a></td>
                         </tr>
                     </ItemTemplate>
                     <AlternatingItemTemplate>
                         <tr>
                             <td bgcolor="#CECECF"><%# Eval("QuestionnaireID")%></td>
-                            <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&Targetplh=1" target="_blank"><%# Eval("Caption")%></a></td>
+                            <td bgcolor="#CECECF"><a href="FillOutPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank"><%# Eval("Caption")%></a></td>
                             <td bgcolor="#CECECF"><%# Eval("VoidStatus")%></td>
                             <td bgcolor="#CECECF"><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                             <td bgcolor="#CECECF"><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
-                            <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&Targetplh=4" target="_blank">前往</a></td>
+                            <td bgcolor="#CECECF"><a href="FillOutPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank">前往</a></td>
                         </tr>
                     </AlternatingItemTemplate>
                     <FooterTemplate>
                         </table>
                     </FooterTemplate>
                 </asp:Repeater>
-                <asp:Label ID="Label1" runat="server" Text="(查無資料)" Visible="false"></asp:Label>
+                <asp:Label ID="Label1" runat="server" Text="(現在沒有問卷)" Visible="false"></asp:Label>
 
             </div>
         </div>

@@ -18,7 +18,7 @@ namespace QuestionnaireSystem
         {
             if (!IsPostBack)
             {
-                List<Questionnaire> QtnirList = _QtnirMgr.GetQuestionnaireList();
+                List<Questionnaire> QtnirList = _QtnirMgr.GetEnableQstnir();
                 this.RptrQtnir.DataSource = QtnirList;
                 this.RptrQtnir.DataBind();
             }
@@ -34,16 +34,16 @@ namespace QuestionnaireSystem
             List<Questionnaire> srchQuestionnaireList = _QtnirMgr.GetQuestionnaireList();   //取得DB裡所有問卷
             if (srchKey == "" || srchBeginDate == "" || srchEndDate == "")
             {
-                HttpContext.Current.Session["MyQstnirMsg"] = "輸入的關鍵字或日期不可為空。";
+                HttpContext.Current.Session["IndexMsg"] = "輸入的關鍵字或日期不可為空。";
             }
             else
             {
 
-                DateTime DTBeginDate = Convert.ToDateTime(this.srchBeginDateText.Text);
-                DateTime DTEndDate = Convert.ToDateTime(this.srchEndDateText.Text);
+                DateTime DTBeginDate = Convert.ToDateTime(srchBeginDate);
+                DateTime DTEndDate = Convert.ToDateTime(srchEndDate);
                 if (DTBeginDate > DTEndDate)
                 {
-                    HttpContext.Current.Session["MyQstnirMsg"] = "開始日期不能晚於結束日期。";
+                    HttpContext.Current.Session["IndexMsg"] = "開始日期不能晚於結束日期。";
                 }
                 else
                 {

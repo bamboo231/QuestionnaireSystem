@@ -17,13 +17,28 @@ namespace QuestionnaireSystem.Manager
         {
             using (ContextModel contextModel = new ContextModel())
             {
-                return contextModel.Questionnaires.ToList();
+                var srchList = contextModel.Questionnaires.ToList();
+                srchList = srchList.OrderByDescending(obj => obj.BuildDate).ToList();
+                return srchList;
+            }
+        }
+        /// <summary>
+        /// 取得所有問卷List
+        /// </summary>
+        /// <returns>回傳值為List</returns>
+        public List<Questionnaire> GetEnableQstnir()
+        {
+            using (ContextModel contextModel = new ContextModel())
+            {
+                var srchList = contextModel.Questionnaires.Where(obj => obj.VoidStatus == true).ToList();
+                srchList = srchList.OrderByDescending(obj => obj.BuildDate).ToList();
+                return srchList;
             }
         }
 
         //要改
         /// <summary>
-        /// 取得所有問卷List
+        /// 刪除某筆問卷
         /// </summary>
         public void DeleteQuestionnaire(int QnirID)
         {
@@ -38,6 +53,8 @@ namespace QuestionnaireSystem.Manager
                 context.SaveChanges();
             }
         }
+
+
 
         /// <summary>
         /// 新增問卷
@@ -59,7 +76,6 @@ namespace QuestionnaireSystem.Manager
         }
 
 
-        //有問題要改
         public void Updateuestionnaire(Questionnaire addQnir, List<Question> questionList)
         {
             try
@@ -112,6 +128,69 @@ namespace QuestionnaireSystem.Manager
             using (ContextModel contextModel = new ContextModel())
             {
                 return contextModel.Questionnaires.Where(obj => obj.QuestionnaireID== intQnirID).First();
+            }
+        }
+
+        /// <summary>
+        /// 取得問卷題目
+        /// </summary>
+        /// <param name="strCurrentQnirID">傳入值為string</param>
+        /// <returns></returns>
+        public List<WholeAnswer> GetWholeQuestioniar(string strCurrentQnirID)
+        {
+            int currentQnirID = int.Parse( strCurrentQnirID);
+            using (ContextModel contextModel = new ContextModel())
+            {
+                List<Questionnaire> QuestionnaireList = contextModel.Questionnaires.ToList();
+                List<Question> questList = contextModel.Questions.ToList();
+
+                var newList =
+                    from qstnir in QuestionnaireList
+                    join qst in questList on qstnir.QuestionnaireID equals qst.QuestionnaireID
+                    where qstnir.QuestionnaireID == currentQnirID
+                    select new WholeAnswer
+                    {
+                        QuestionnaireID = qstnir.QuestionnaireID,
+                        Caption = qstnir.Caption,
+                        QuestionnaireContent = qstnir.QuestionnaireContent,
+                        QuestOrder = qst.QuestOrder,
+                        QuestContent =qst.QuestContent,
+                        AnswerForm = qst.AnswerForm,
+                        SelectItem = qst.SelectItem,
+                        Required = qst.Required,
+                    };
+                List<WholeAnswer> wholeQuestionnaire = new List<WholeAnswer>(newList).ToList();
+                return wholeQuestionnaire;
+            }
+        }
+
+        /// <summary>
+        /// 取得問卷題目
+        /// </summary>
+        /// <param name="currentQnirID">傳入值為int</param>
+        /// <returns></returns>
+        public List<WholeAnswer> GetWholeQuestioniar(int currentQnirID)
+        {
+            using (ContextModel contextModel = new ContextModel())
+            {
+                List<Questionnaire> QuestionnaireList = contextModel.Questionnaires.ToList();
+                List<Question> questList = contextModel.Questions.ToList();
+
+                var newList =
+                    from qstnir in QuestionnaireList
+                    join qst in questList on qstnir.QuestionnaireID equals qst.QuestionnaireID
+                    where qstnir.QuestionnaireID == currentQnirID
+                    select new WholeAnswer
+                    {
+                        QuestionnaireID = qstnir.QuestionnaireID,
+                        QuestOrder = qst.QuestOrder,
+                        QuestContent = qst.QuestContent,
+                        AnswerForm = qst.AnswerForm,
+                        SelectItem = qst.SelectItem,
+                        Required = qst.Required,
+                    };
+                List<WholeAnswer> wholeQuestionnaire = new List<WholeAnswer>(newList).ToList();
+                return wholeQuestionnaire;
             }
         }
     }
