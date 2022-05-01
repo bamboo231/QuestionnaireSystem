@@ -7,13 +7,8 @@ using System.Web.UI.WebControls;
 
 namespace QuestionnaireSystem
 {
-    public partial class Main : System.Web.UI.MasterPage, FrontIGetable
+    public partial class WebForm1 : System.Web.UI.Page
     {
-        //接收來自子版頁面的訊息，然後傳入HTML
-        public HiddenField GetMsg()
-        {
-            return this.MyQstnirMsg;
-        }
         protected void Page_Load(object sender, EventArgs e)
         {
 

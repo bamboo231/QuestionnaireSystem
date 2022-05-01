@@ -7,38 +7,29 @@
 // </自動產生>
 //------------------------------------------------------------------------------
 
-namespace QuestionnaireSystem
+namespace WebApplication1
 {
 
 
-    public partial class StatisticPage
+    public partial class WebForm1
     {
 
         /// <summary>
-        /// PlhDym 控制項。
+        /// form1 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder PlhDym;
+        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// Image1 控制項。
+        /// img 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image Image1;
-
-        /// <summary>
-        /// currentID 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden currentID;
+        protected global::System.Web.UI.HtmlControls.HtmlImage img;
     }
 }

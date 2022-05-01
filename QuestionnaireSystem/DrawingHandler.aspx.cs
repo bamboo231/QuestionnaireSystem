@@ -2,18 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.SessionState;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace QuestionnaireSystem
 {
-    public partial class Main : System.Web.UI.MasterPage, FrontIGetable
+    public partial class DrawingHandler : IRequiresSessionState
     {
-        //接收來自子版頁面的訊息，然後傳入HTML
-        public HiddenField GetMsg()
-        {
-            return this.MyQstnirMsg;
-        }
         protected void Page_Load(object sender, EventArgs e)
         {
 

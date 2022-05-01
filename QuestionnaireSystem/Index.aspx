@@ -38,7 +38,7 @@
                             <td><%# Eval("VoidStatus")%></td>
                             <td><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                             <td><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
-                            <td><a href="FillOutPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank">前往</a></td>
+                            <td><a href="StatisticPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank">前往</a></td>
                         </tr>
                     </ItemTemplate>
                     <AlternatingItemTemplate>
@@ -48,7 +48,7 @@
                             <td bgcolor="#CECECF"><%# Eval("VoidStatus")%></td>
                             <td bgcolor="#CECECF"><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                             <td bgcolor="#CECECF"><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
-                            <td bgcolor="#CECECF"><a href="FillOutPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank">前往</a></td>
+                            <td bgcolor="#CECECF"><a href="StatisticPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank">前往</a></td>
                         </tr>
                     </AlternatingItemTemplate>
                     <FooterTemplate>

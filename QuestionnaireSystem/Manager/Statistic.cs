@@ -1,6 +1,7 @@
 ﻿using QuestionnaireSystem.ORM;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 
@@ -64,7 +65,30 @@ namespace QuestionnaireSystem.Manager
             return countEachSelectionInQuest;
         }
 
+        public Bitmap GetChart(int numerator)
+        {
+            Bitmap B = new Bitmap(numerator,20);
+            Graphics G = Graphics.FromImage(B);
+            //Color BrushColor = ColorTranslator.FromHtml("#00cccb");
+
+            int pPixel = 2;
+            Pen frame = new Pen(Color.Black, pPixel) ;
+            G.DrawRectangle(frame,0,0, numerator, 20);//矩形
+
+            //SolidBrush MyBrush = new SolidBrush(BrushColor);
+            //G.FillRectangle(MyBrush, 0, numerator, 5, numerator);
+            return B;
+        }
 
 
+        public static void RenderImage(string assembly, string image, HttpContext context)
+        {
+            using (System.Drawing.Image img = (System.Drawing.Image)HttpContext.GetGlobalResourceObject(assembly, image))
+            {
+                context.Response.ClearContent();
+                context.Response.ContentType = "image/gif";
+                img.Save(context.Response.OutputStream, System.Drawing.Imaging.ImageFormat.Gif);
+            }
+        }
     }
 }

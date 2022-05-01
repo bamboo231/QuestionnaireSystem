@@ -25,8 +25,11 @@
                 </asp:ContentPlaceHolder>
             </div>
         </div>
+        <input id="FillOutMsg" name="FillOutMsg" runat="server" type="hidden" />
         <input id="callManager" name="callManager" runat="server" type="hidden" />
         <input id="IndexMsg" name="MainMsg" runat="server" type="hidden" />
+        <asp:HiddenField ID="MyQstnirMsg" runat="server" />
+
     </form>
         <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.js"></script>

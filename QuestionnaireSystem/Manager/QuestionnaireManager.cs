@@ -151,6 +151,7 @@ namespace QuestionnaireSystem.Manager
                     select new WholeAnswer
                     {
                         QuestionnaireID = qstnir.QuestionnaireID,
+                        QuestID = qst.QuestID,
                         Caption = qstnir.Caption,
                         QuestionnaireContent = qstnir.QuestionnaireContent,
                         QuestOrder = qst.QuestOrder,
