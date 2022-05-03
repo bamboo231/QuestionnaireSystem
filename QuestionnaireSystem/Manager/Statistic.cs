@@ -138,16 +138,17 @@ namespace QuestionnaireSystem.Manager
             float preLongCount =(float)numerator / sumTOTAL;
             float longCount = preLongCount * 600;
 
-            Bitmap B = new Bitmap(600, 30);
+            Bitmap B = new Bitmap(600, 20);
             Graphics G = Graphics.FromImage(B);
             G.Clear(Color.White);
 
             int pPixel = 2;
-            Pen myPen = new Pen(Color.Black, pPixel);
-            G.DrawRectangle(myPen, 0, 0, 600, 30);//矩形外框
 
             SolidBrush mySolidBrush = new SolidBrush(Color.SteelBlue);
-            G.FillRectangle(mySolidBrush, 0, 0, longCount, 40);//矩形填色
+            G.FillRectangle(mySolidBrush, 0, 0, longCount, 20);//矩形填色
+
+            Pen myPen = new Pen(Color.Black, pPixel);
+            G.DrawRectangle(myPen, 0, 0, 600, 20);//矩形外框
 
             return B;
         }
