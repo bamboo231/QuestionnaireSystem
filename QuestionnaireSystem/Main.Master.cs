@@ -12,11 +12,19 @@ namespace QuestionnaireSystem
         //接收來自子版頁面的訊息，然後傳入HTML
         public HiddenField GetMsg()
         {
-            return this.MyQstnirMsg;
+            return this.MainMsg;
         }
         protected void Page_Load(object sender, EventArgs e)
         {
 
+        }
+        protected void Page_Prerender(object sender, EventArgs e)
+        {
+            if (Session["MainMsg"] != null)
+            {
+                this.MainMsg.Value = Session["MainMsg"] as string;
+                Session.Remove("MainMsg");
+            }
         }
     }
 }

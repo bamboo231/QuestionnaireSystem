@@ -90,7 +90,6 @@
     <Content Include="admin\MyQuestionnaire.aspx" />
     <Content Include="css\bootstrap.css" />
     <Content Include="css\bootstrap.min.css" />
-    <Content Include="DrawingHandler.aspx" />
     <Content Include="FillOutPage.aspx" />
     <Content Include="Index.aspx" />
     <Content Include="js\bootstrap.js" />
@@ -101,7 +100,6 @@
     <Content Include="js\showdown.js" />
     <Content Include="StatisticPage.aspx" />
     <Content Include="Web.config" />
-    <Content Include="WebForm1.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="admin\adminMain.Master.cs">
@@ -132,12 +130,6 @@
     </Compile>
     <Compile Include="admin\MyQuestionnaire.aspx.designer.cs">
       <DependentUpon>MyQuestionnaire.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="DrawingHandler.aspx.cs">
-      <DependentUpon>DrawingHandler.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="DrawingHandler.aspx.designer.cs">
-      <DependentUpon>DrawingHandler.aspx</DependentUpon>
     </Compile>
     <Compile Include="FillOutPage.aspx.cs">
       <DependentUpon>FillOutPage.aspx</DependentUpon>
@@ -183,13 +175,6 @@
     </Compile>
     <Compile Include="StatisticPage.aspx.designer.cs">
       <DependentUpon>StatisticPage.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="WebForm1.aspx.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="WebForm1.aspx.designer.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

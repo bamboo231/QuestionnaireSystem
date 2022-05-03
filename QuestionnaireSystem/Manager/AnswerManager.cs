@@ -45,7 +45,7 @@ namespace QuestionnaireSystem.Manager
         /// </summary>
         /// <param name="QnirID">傳入值為問卷ID(string)</param>
         /// <returns>回傳值為List<BasicAnswer></returns>
-        public List<WholeAnswer> GetWholeDoneList(string QnirID)
+        public List<WholeAnswer> GetWholeDoneList(string QnirID)//不要改
         {
             int intQnirID = Int32.Parse(QnirID);
             //使用者資訊、每個問題、每個問題的答案
@@ -55,7 +55,7 @@ namespace QuestionnaireSystem.Manager
                 List<BasicAnswer> basicAnswerList = contextModel.BasicAnswers.ToList();
                 List<Answer> answerList = contextModel.Answers.ToList();
                 //bug:取得的問題(QuestContent)與回答(Answer)對不上
-                var listQAndB = 
+                var listQAndB =
                     from b in basicAnswerList
                     join a in answerList on b.BasicAnswerID equals a.BasicAnswerID
                     where b.QuestionnaireID == intQnirID
@@ -73,7 +73,7 @@ namespace QuestionnaireSystem.Manager
 
                 var listQAndBAndA =
                     from n in listQAndB
-                    join q in questList  on n.QuestionnaireID equals q.QuestionnaireID
+                    join q in questList on n.QuestionnaireID equals q.QuestionnaireID
                     where q.QuestionnaireID == intQnirID
                     select new WholeAnswer
                     {
@@ -88,6 +88,57 @@ namespace QuestionnaireSystem.Manager
                         Answer = n.Answer,
                         QuestOrder = q.QuestOrder,
                         SelectItem = q.SelectItem,
+                    };
+
+                List<WholeAnswer> newWholeAnswerstList = new List<WholeAnswer>(listQAndBAndA);
+                return newWholeAnswerstList;
+            }
+        }
+        public List<WholeAnswer> GetWholeDoneList2(string QnirID)
+        {
+            int intQnirID = Int32.Parse(QnirID);
+            //使用者資訊、每個問題、每個問題的答案
+            using (ContextModel contextModel = new ContextModel())
+            {
+                List<Question> questList = contextModel.Questions.ToList();
+                List<BasicAnswer> basicAnswerList = contextModel.BasicAnswers.ToList();
+                List<Answer> answerList = contextModel.Answers.ToList();
+                //bug:取得的問題(QuestContent)與回答(Answer)對不上
+                var listQAndB =
+                    from a in answerList
+                    join b in basicAnswerList on a.BasicAnswerID equals b.BasicAnswerID
+                    where b.QuestionnaireID == intQnirID
+                    select new WholeAnswer
+                    {
+                        QuestID = a.QuestID,
+                        QuestionnaireID = b.QuestionnaireID,
+                        BasicAnswerID = b.BasicAnswerID,
+                        Nickname = b.Nickname,
+                        Phone = b.Phone,
+                        Email = b.Email,
+                        Age = b.Age,
+                        Answer = a.Answer1,
+                    };
+
+                var listQAndBAndA =
+                    from n in listQAndB
+                    join q in questList on n.QuestID equals q.QuestID
+                    where q.QuestionnaireID == intQnirID
+                    select new WholeAnswer
+                    {
+                        QuestID = n.QuestID,
+                        QuestionnaireID = q.QuestionnaireID,
+                        QuestContent = q.QuestContent,
+                        BasicAnswerID = n.BasicAnswerID,
+                        Nickname = n.Nickname,
+                        Phone = n.Phone,
+                        Email = n.Email,
+                        Age = n.Age,
+                        Answer = n.Answer,
+                        QuestOrder = q.QuestOrder,
+                        SelectItem = q.SelectItem,
+                        AnswerForm = q.AnswerForm,
+
                     };
 
                 List<WholeAnswer> newWholeAnswerstList = new List<WholeAnswer>(listQAndBAndA);
@@ -185,16 +236,32 @@ namespace QuestionnaireSystem.Manager
         }
 
         /// <summary>
+        /// 取得新增的基本資料號
+        /// </summary>
+        /// <param name="basicQnir">傳入BasicAnswer</param>
+        public int GetBasicQnir()
+        {
+            using (ContextModel contextModel = new ContextModel())
+            {
+                List<BasicAnswer> basicAnswerList = contextModel.BasicAnswers.ToList();
+                int newNumber = basicAnswerList.Count() + 1;
+                return newNumber;
+            }
+        }
+
+        /// <summary>
         /// 儲存填寫問卷的問題內容
         /// </summary>
         /// <param name="AnswerList">傳入List<Answer></param>
         public void SaveAnswer(List<Answer> AnswerList)
         {
+
+            int newNumber = GetBasicQnir();
             using (ContextModel contextModel = new ContextModel())
             {
-                foreach(Answer answer in AnswerList)
-                { 
-                contextModel.Answers.Add(answer);
+                foreach (Answer answer in AnswerList)
+                {
+                    contextModel.Answers.Add(answer);
                 }
                 contextModel.SaveChanges();
             }

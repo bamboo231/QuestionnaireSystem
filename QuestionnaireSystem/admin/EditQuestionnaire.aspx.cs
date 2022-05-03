@@ -190,7 +190,7 @@ namespace QuestionnaireSystem.admin
                     List<Question> dispQuestion = _QuestMgr.GetQuestionList(currentQnirID);
 
                     //取得統計的數量
-                    Dictionary<string, int[]> allAmount = _statisMgr.getAllStatisticCount(currentQnirID);
+                    Dictionary<string, int[]> allAmount = _statisMgr.getAllStatisticCount(currentQnirID);//空的統計
                     int questID = 0;
                     foreach (Question item in dispQuestion)
                     {
@@ -203,6 +203,11 @@ namespace QuestionnaireSystem.admin
                         //動態新增控制項(題號&題目(5:單選/6:多選/其他:文字方塊))
                         if (item.AnswerForm == 5)
                         {
+                            //+++
+
+
+
+                            //+++
                             Label dynLabel = new Label()//標題
                             {
                                 ID = $"dynTitle{item.QuestOrder}",
@@ -225,7 +230,7 @@ namespace QuestionnaireSystem.admin
                                 };
 
                                 int count = 0;
-                                if (arrSelectItem[i] != null)
+                                if (arrSelectItem[i] != null || arrAllThisQuestAmount!= null)
                                     count = arrAllThisQuestAmount[i];
                                 Label dynCount = new Label()
                                 {

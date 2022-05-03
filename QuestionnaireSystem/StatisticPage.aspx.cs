@@ -14,23 +14,13 @@ namespace QuestionnaireSystem
 {
     public partial class StatisticPage : System.Web.UI.Page
     {
-        private QuestionnaireManager _QtnirMgr = new QuestionnaireManager();    //問卷基本資料管理
-        private CommonQuestManager _CommonMgr = new CommonQuestManager();    //常用問題管理
-        private AnswerManager _AnswerMgr = new AnswerManager();    //回覆管理
         private QuestManager _QuestMgr = new QuestManager();    //問題管理
         private Statistic _statisMgr = new Statistic();    //統計管理
-        private CheckInputManager _checksMgr = new CheckInputManager();    //統計管理
         protected void Page_Load(object sender, EventArgs e)
         {
             string currentQnirID = this.Request.QueryString["QnirID"];  //從URL取得當前所在的問卷ID
-            string QuestOrder = this.Request.QueryString["QuestOrder"];  //從URL取得當前所在的問卷ID
-            string currentBsicAnsID = this.Request.QueryString["BsicAnsID"];//從URL取得當前查看的問卷細節
-            string targetplh = this.Request.QueryString["Targetplh"];//從URL取得要查看的頁籤
 
             this.currentID.Value = currentQnirID;
-
-
-
 
             #region//後台統計頁
             if (currentQnirID != null)
@@ -41,7 +31,7 @@ namespace QuestionnaireSystem
                 List<Question> dispQuestion = _QuestMgr.GetQuestionList(currentQnirID);
 
                 //取得統計的數量
-                Dictionary<string, int[]> allAmount = _statisMgr.getAllStatisticCount(currentQnirID);
+                Dictionary<string, int[]> allAmount = _statisMgr.getAllStatisticCount2(currentQnirID);
                 int questID = 0;
                 foreach (Question item in dispQuestion)
                 {
@@ -49,33 +39,35 @@ namespace QuestionnaireSystem
 
                     string stringQuestID = questID.ToString();
 
-                    int[] arrAllThisQuestAmount = allAmount[stringQuestID];
+                    int[] arrAllThisQuestAmount = allAmount[stringQuestID];//取出該題的票數陣列
+                    int allThisQst = 0;
+                    if (arrAllThisQuestAmount !=null)
+                    {
+                        for (int i = 0; i < arrAllThisQuestAmount.Length; i++)
+                            allThisQst = allThisQst + arrAllThisQuestAmount[i];
+                    }
 
                     //動態新增控制項(題號&題目(5:單選/6:多選/其他:文字方塊))
                     if (item.AnswerForm == 5)
                     {
+
                         Label dynLabel = new Label()//標題
                         {
                             ID = $"dynTitle{item.QuestOrder}",
                             Text = $"{item.QuestOrder} . {item.QuestContent}",
                         };
-                        Label lb = new Label() { ID = $"lb{item.QuestOrder}", Text = "<br>", }; //分行
-
                         PlhDym.Controls.Add(dynLabel);
-                        PlhDym.Controls.Add(lb);
-                        string[] arrSelectItem = null;
-                        int selectionCount = 0;
-                        _QuestMgr.SplitSelectItem(item.SelectItem, out selectionCount, out arrSelectItem);//本題選項數量,本題選項陣列
 
+                        Label lb = new Label() { ID = $"lb{item.QuestOrder}", Text = "<br>", }; //分行
+                        PlhDym.Controls.Add(lb);
+
+
+                        _QuestMgr.SplitSelectItem(item.SelectItem, out int selectionCount, out string[]  arrSelectItem);//本題選項數量,本題選項陣列
                         int sumVoid = 0;
                         for (int i = 0; i < selectionCount; i++)//用來算同一題的票數總數
                         {
-                            int count = 0;
-                            if (arrSelectItem[i] != null)
-                                count = arrAllThisQuestAmount[i];
-                            sumVoid += count;
+                            sumVoid = sumVoid + arrAllThisQuestAmount[i];
                         }
-
 
                         for (int i = 0; i < selectionCount; i++)
                         {
@@ -84,49 +76,64 @@ namespace QuestionnaireSystem
                                 ID = $"Selection",
                                 Text = $"{arrSelectItem[i]}",
                             };
+                            PlhDym.Controls.Add(dynSelection);
+                            Label lb2 = new Label() { ID = $"lb{item.QuestID}", Text = "<br>", }; //分行
+                            PlhDym.Controls.Add(lb2);
 
-                            int count = 0;
-                            if (arrSelectItem[i] != null)
-                                count = arrAllThisQuestAmount[i];
-                            int percentVoid = count / sumVoid;
-                            string barChart = $"<div class=\"progress\">< div class=\"progress-bar\" role=\"progressbar\" style=\'width: {percentVoid} %\' aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div></div>";
-                            Literal ltlbarChart = new Literal()//長條圖
+                            //GDI+圖形
+                            byte[] imgBytes = null;
+                            Bitmap barChart = _statisMgr.GetChart(arrAllThisQuestAmount[i], sumVoid);
+
+                            using (var stream = new MemoryStream())
                             {
-                                Text = barChart,
+                                barChart.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                                imgBytes = stream.ToArray();
+                            }
+                            System.Web.UI.WebControls.Image img = new System.Web.UI.WebControls.Image()
+                            {
+                                ImageUrl = "Data:Image/png;base64," + Convert.ToBase64String(imgBytes),
                             };
+                            PlhDym.Controls.Add(img);//圖形
+
+
+                            float floPecentCount = (float)arrAllThisQuestAmount[i] / allThisQst;
+                            string strPecent = floPecentCount.ToString("P1");
+                            Label pecentCount = new Label()//百分比
+                            {
+                                ID = $"PecentCount",
+                                Text = $"{strPecent}",
+                            };
+                            PlhDym.Controls.Add(pecentCount);//百分比
+
+
                             Label dynCount = new Label()//數量
                             {
                                 ID = $"Count",
-                                Text = $"({count})",
+                                Text = $"({arrAllThisQuestAmount[i]})",
                             };
-
-                            Label lb2 = new Label() { ID = $"lb{item.QuestID}_{i}", Text = "<br>", }; //分行
-
-                            PlhDym.Controls.Add(dynSelection);//題目文字
-                            PlhDym.Controls.Add(ltlbarChart);//長條圖
                             PlhDym.Controls.Add(dynCount);//數量
-                            PlhDym.Controls.Add(lb2);//分行
+
+                            Label lb3 = new Label() { ID = $"lb{item.QuestID}_{i}", Text = "<br>", }; //分行
+                            PlhDym.Controls.Add(lb3);//分行
 
                         }
-                        Label lb3 = new Label() { ID = $"lb{item.QuestID}_2", Text = "<br>", }; //分行
-                        PlhDym.Controls.Add(lb3);
+                        Label lb4 = new Label() { ID = $"lb{item.QuestID}_2", Text = "<br>", }; //分行
+                        PlhDym.Controls.Add(lb4);
                     }
                     else if (item.AnswerForm == 6)
                     {
-                        Label lb = new Label() { ID = $"lb{item.QuestID}", Text = "<br>", }; //分行
 
                         Label dynLabel = new Label()//標題
                         {
                             ID = $"dynTitle{item.QuestOrder}",
                             Text = $"{item.QuestOrder} . {item.QuestContent}",
                         };
-
                         PlhDym.Controls.Add(dynLabel);
+
+                        Label lb = new Label() { ID = $"lb{item.QuestID}", Text = "<br>", }; //分行
                         PlhDym.Controls.Add(lb);
 
-                        string[] arrSelectItem = null;
-                        int selectionCount = 0;
-                        _QuestMgr.SplitSelectItem(item.SelectItem, out selectionCount, out arrSelectItem);  //選項的數量,選項的陣列
+                        _QuestMgr.SplitSelectItem(item.SelectItem, out int selectionCount, out string[] arrSelectItem);  //選項的數量,選項的陣列
 
                         int sumVoid = 0;
                         for (int i = 0; i < selectionCount; i++)//用來算同一題的票數總數
@@ -141,40 +148,57 @@ namespace QuestionnaireSystem
                         for (int i = 0; i < selectionCount; i++)
                         {
 
-                            Label dynSelection = new Label()
+                            Label dynSelection = new Label()//題目
                             {
                                 ID = $"Selection",
                                 Text = $"{arrSelectItem[i]}",
                             };
+                            PlhDym.Controls.Add(dynSelection);
+                            Label lb2 = new Label() { ID = $"lb{item.QuestID}_{i}", Text = "<br>", };//分行
+                            PlhDym.Controls.Add(lb2);
+
 
                             int count = 0;
                             if (arrSelectItem[i] != null)
-                                count = arrAllThisQuestAmount[i];
+                                count = arrAllThisQuestAmount[i];//單題票數
 
+                            //GDI+圖形
+                            byte[] imgBytes = null;
+                            //Bitmap chart2 = new Bitmap(600, 30);
+                            Bitmap chart2 = _statisMgr.GetChart(count, allThisQst);
 
-                            //+++
-                            Bitmap chart2 = _statisMgr.GetChart(100);
-                            MemoryStream ms = new MemoryStream();
-                            chart2.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                            //System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
-                            System.Web.UI.WebControls.Image image = new System.Web.UI.WebControls.Image()
+                            //Bitmap bitmap = new Bitmap(600, 30);
+                            using (var stream = new MemoryStream())
                             {
-                                ID = $"img{arrSelectItem[i]}",
-                                ImageUrl = "DrawingHandler.aspx",
+                                chart2.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                                imgBytes = stream.ToArray();
+                            }
+                            System.Web.UI.WebControls.Image img = new System.Web.UI.WebControls.Image()
+                            {
+                                ImageUrl = "Data:Image/png;base64," + Convert.ToBase64String(imgBytes),
                             };
-                            
+                            PlhDym.Controls.Add(img);//圖形
 
-                            Label dynCount = new Label()//數量
+
+                            float floPecentCount = (float)count / allThisQst;
+                            string strPecent = floPecentCount.ToString("P1");
+                            Label pecentCount = new Label()//百分比
+                            {
+                                ID = $"PecentCount",
+                                Text = $"{strPecent}",
+                            };
+                            PlhDym.Controls.Add(pecentCount);//百分比
+
+
+                            Label dynCount = new Label()//票數
                             {
                                 ID = $"Count",
                                 Text = $"({count})",
                             };
-                            Label lb2 = new Label() { ID = $"lb{item.QuestID}_{i}", Text = "<br>", }; //分行
-
-                            PlhDym.Controls.Add(dynSelection);
-                            PlhDym.Controls.Add(image);
-                            PlhDym.Controls.Add(dynCount);
-                            PlhDym.Controls.Add(lb2);
+                            PlhDym.Controls.Add(dynCount);//票數
+                            //分行
+                            Label lb2_2 = new Label() { ID = $"lb{item.QuestID}_{i}", Text = "<br>", };
+                            PlhDym.Controls.Add(lb2_2);
                         }
                         Label lb3 = new Label() { ID = $"lb{item.QuestID}_2", Text = "<br>", }; //分行
                         PlhDym.Controls.Add(lb3);
@@ -206,5 +230,11 @@ namespace QuestionnaireSystem
             }
             #endregion
         }
+        protected void Page_Init(object sender, EventArgs e)
+        {
+
+        }
+
+
     }
 }

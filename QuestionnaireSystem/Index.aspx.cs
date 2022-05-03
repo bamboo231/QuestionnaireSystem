@@ -34,7 +34,7 @@ namespace QuestionnaireSystem
             List<Questionnaire> srchQuestionnaireList = _QtnirMgr.GetQuestionnaireList();   //取得DB裡所有問卷
             if (srchKey == "" || srchBeginDate == "" || srchEndDate == "")
             {
-                HttpContext.Current.Session["IndexMsg"] = "輸入的關鍵字或日期不可為空。";
+                HttpContext.Current.Session["MainMsg"] = "輸入的關鍵字或日期不可為空。";
             }
             else
             {
@@ -43,7 +43,7 @@ namespace QuestionnaireSystem
                 DateTime DTEndDate = Convert.ToDateTime(srchEndDate);
                 if (DTBeginDate > DTEndDate)
                 {
-                    HttpContext.Current.Session["IndexMsg"] = "開始日期不能晚於結束日期。";
+                    HttpContext.Current.Session["MainMsg"] = "開始日期不能晚於結束日期。";
                 }
                 else
                 {

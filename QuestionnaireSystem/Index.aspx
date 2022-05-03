@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-    <div class="container" >
+    <div class="container">
         <div id="srchArea" width="60%">
             問卷標題
             <asp:TextBox ID="srchKey" runat="server"></asp:TextBox>
@@ -15,7 +15,7 @@
             <asp:Button ID="srchButton" runat="server" Text="搜尋" OnClick="srchButton_Click" />
             <br />
         </div>
-
+        <br />
         <div id="ListArea">
             <%--問卷總列表--%>
             <div id="QuestionnaireList">
@@ -56,7 +56,6 @@
                     </FooterTemplate>
                 </asp:Repeater>
                 <asp:Label ID="Label1" runat="server" Text="(現在沒有問卷)" Visible="false"></asp:Label>
-
             </div>
         </div>
     </div>

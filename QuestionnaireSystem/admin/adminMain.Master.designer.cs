@@ -60,24 +60,6 @@ namespace QuestionnaireSystem.admin
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden adminMainMsg;
 
         /// <summary>
-        /// Hidden1 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden Hidden1;
-
-        /// <summary>
-        /// Hidden2 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden Hidden2;
-
-        /// <summary>
         /// MyQstnirMsg 控制項。
         /// </summary>
         /// <remarks>

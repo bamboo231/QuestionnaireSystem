@@ -17,9 +17,7 @@
         .toRight{
              float: right;
         }
-        /*        #RptrQtnir {
-            border: 1px;
-        }*/
+
         #btnBasicDelete {
             float: right;
         }
@@ -63,9 +61,6 @@
             </div>
         </div>
         <input id="adminMainMsg" name="adminMainMsg" runat="server" type="hidden" />
-        <input id="Hidden1" name="MyQstnirMsg" runat="server" type="hidden" />
-        <input id="Hidden2" name="EditQstnirMsg" runat="server" type="hidden" />
-
         <asp:HiddenField ID="MyQstnirMsg" runat="server" />
     </form>
     <script src="js/popper.min.js"></script>

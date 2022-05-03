@@ -9,34 +9,41 @@
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
     <link rel="stylesheet" href="css/bootstrap.css" />
+    <style>
+        .toRight {
+            float: right;
+        }
 
+        #pageTitle {
+            font-size: 28px;
+        }
+    </style>
 </head>
 <body>
     <form id="form1" runat="server">
         <div class="container-all">
             <!-- 上區塊 -->
             <div class="container-fluid">
-                <asp:Label ID="pageTitle" runat="server" Text="前台"></asp:Label>
-            </div>
-            <div>
+                <div>
+                    <asp:Label ID="pageTitle" class="col-1" runat="server" Text="前台"></asp:Label>
+                </div>
+<%--                <div class="position-absolute top-0 end-0">
+                    <span><a href="admin/MyQuestionnaire.aspx" target="_blank">後台</a></span>
+                </div>--%>
 
-
-                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
-                </asp:ContentPlaceHolder>
+                <div>
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
             </div>
         </div>
-        <input id="FillOutMsg" name="FillOutMsg" runat="server" type="hidden" />
-        <input id="callManager" name="callManager" runat="server" type="hidden" />
-        <input id="IndexMsg" name="MainMsg" runat="server" type="hidden" />
-        <asp:HiddenField ID="MyQstnirMsg" runat="server" />
-
+        <asp:HiddenField ID="MainMsg" runat="server" />
     </form>
-        <script src="js/popper.min.js"></script>
+    <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.js"></script>
     <script src="js/jquery.min.js"></script>
 
     <script>
-
         $(document).ready(function () {
             //藉由預存session跳出視窗的功能
             if (MainMsg.value != "") {
