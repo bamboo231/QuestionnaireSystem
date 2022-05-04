@@ -9,6 +9,7 @@ namespace QuestionnaireSystem.ORM
     {
         public int QuestID { get; set; }
         public int AnswerForm { get; set; }
+        public string strAnswerForm { get; set; }
         public string Answer { get; set; }
         public string SelectItem { get; set; }
 
@@ -24,6 +25,7 @@ namespace QuestionnaireSystem.ORM
         public string Email { get; set; }
         public int Age { get; set; }
         public bool Required { get; set; }
+        public int CommonQuestID { get; set; }
 
 
     }

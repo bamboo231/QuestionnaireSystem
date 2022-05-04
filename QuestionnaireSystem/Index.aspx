@@ -1,5 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="QuestionnaireSystem.Index" %>
 
+<%@ Register Src="~/ShareControls/ucPager.ascx" TagPrefix="uc1" TagName="ucPager" %>
+
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -55,7 +58,9 @@
                         </table>
                     </FooterTemplate>
                 </asp:Repeater>
+                <uc1:ucPager runat="server" id="ucPager1"  PageSize="10"/>
                 <asp:Label ID="Label1" runat="server" Text="(現在沒有問卷)" Visible="false"></asp:Label>
+
             </div>
         </div>
     </div>

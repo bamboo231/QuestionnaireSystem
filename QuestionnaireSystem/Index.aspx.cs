@@ -13,13 +13,25 @@ namespace QuestionnaireSystem
     {
         private QuestionnaireManager _QtnirMgr = new QuestionnaireManager();    //主問卷的Manager
         private SearchManager _srchMgr = new SearchManager();    //主問卷資訊
+        private const int _pageSize = 10;  //每頁10筆資料
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            string pageIndexText = this.Request.QueryString["Page"];
+            int pageIndex =
+                (string.IsNullOrWhiteSpace(pageIndexText))
+                    ? 1
+                    : Convert.ToInt32(pageIndexText);
             if (!IsPostBack)
             {
+
                 List<Questionnaire> QtnirList = _QtnirMgr.GetEnableQstnir();
-                this.RptrQtnir.DataSource = QtnirList;
+
+                var list = this._QtnirMgr.TakeEnableQstnir( _pageSize, pageIndex, out int totalRows);
+                this.ucPager1.TotalRows = totalRows;
+                this.ucPager1.PageIndex = pageIndex;
+
+                this.RptrQtnir.DataSource = list;
                 this.RptrQtnir.DataBind();
             }
         }
@@ -57,7 +69,6 @@ namespace QuestionnaireSystem
                         this.Label1.Visible = true;
                 }
             }
-
 
         }
 

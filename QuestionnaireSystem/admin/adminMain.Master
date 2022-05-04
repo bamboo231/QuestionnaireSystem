@@ -14,8 +14,9 @@
             border: 1px solid;
             border-color: darkgray;
         }
-        .toRight{
-             float: right;
+
+        .toRight {
+            float: right;
         }
 
         #btnBasicDelete {
@@ -25,10 +26,14 @@
         #btnBasicSummit {
             float: right;
         }
-        #pageTitle{
-            font-size:28px;
+
+        #pageTitle {
+            font-size: 28px;
         }
     </style>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery.min.js"></script>
 
 </head>
 <body>
@@ -36,8 +41,8 @@
         <div class="container-all">
             <!-- 上區塊 -->
             <div class="container-fluid">
-                    <asp:Label ID="pageTitle" runat="server" Text="pageTitle"></asp:Label>
-                    <span><a class="toRight" href="~/Index.aspx" target="_blank">前台</a></span>
+                <asp:Label ID="pageTitle" runat="server" Text="pageTitle"></asp:Label>
+                <span><a class="toRight" href="../Index.aspx" target="_blank">前台</a></span>
             </div>
 
             <!-- 下區塊 -->
@@ -45,9 +50,9 @@
                 <div class="row">
                     <!-- 左列表 -->
                     <div id="menuArea" class="col-3">
-                        <a href="MyQuestionnaire.aspx" >問卷管理</a>
+                        <a href="MyQuestionnaire.aspx">問卷管理</a>
                         <br />
-                        <a  href="CommonQuestPage.aspx" target="_blank">常用問卷管理</a>
+                        <a href="CommonQuestPage.aspx" target="_blank">常用問卷管理</a>
                         <br />
                     </div>
                     <!-- 主內容區 -->
@@ -63,19 +68,7 @@
         <input id="adminMainMsg" name="adminMainMsg" runat="server" type="hidden" />
         <asp:HiddenField ID="MyQstnirMsg" runat="server" />
     </form>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="js/jquery.min.js"></script>
 
-    <script>
 
-        $(document).ready(function () {
-            //藉由預存session跳出視窗的功能
-            if (MyQstnirMsg.value != "") {
-                alert(MyQstnirMsg.value);
-                MyQstnirMsg.value = "";
-            }
-        });
-    </script>
 </body>
 </html>

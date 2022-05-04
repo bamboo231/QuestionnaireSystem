@@ -32,22 +32,20 @@
         <%--撰寫問卷問題頁--%>
         <asp:PlaceHolder ID="plhbookmark2" runat="server" Visible="false">
             <%--撰寫問題--%>
-            <div>
-                種類<asp:DropDownList ID="setQuestType" runat="server">
-                    <asp:ListItem>自訂問題</asp:ListItem>
-                </asp:DropDownList>
+            <div id="CommonDropDownList">
+                種類
             </div>
             <div>
                 問題<asp:TextBox ID="setQuest" runat="server"></asp:TextBox>
                 <asp:DropDownList ID="setQuestForm" runat="server">
-                    <asp:ListItem>文字方塊</asp:ListItem>
-                    <asp:ListItem>數字</asp:ListItem>
-                    <asp:ListItem>Email</asp:ListItem>
-                    <asp:ListItem>日期</asp:ListItem>
-                    <asp:ListItem>單選方塊</asp:ListItem>
-                    <asp:ListItem>複選方塊</asp:ListItem>
+                    <asp:ListItem Value="1">文字方塊</asp:ListItem>
+                    <asp:ListItem Value="2">數字</asp:ListItem>
+                    <asp:ListItem Value="3">Email</asp:ListItem>
+                    <asp:ListItem Value="4">日期</asp:ListItem>
+                    <asp:ListItem Value="5">單選方塊</asp:ListItem>
+                    <asp:ListItem Value="6">複選方塊</asp:ListItem>
                 </asp:DropDownList>
-                <asp:CheckBox ID="IsRequired" runat="server" Text="必填" />
+                <asp:CheckBox ID="IsRequired" runat="server" Text="必填" Checked="false" />
             </div>
             <div>
                 回答<asp:TextBox ID="textSelectItem" runat="server"></asp:TextBox>(多個答案以,分隔)
@@ -72,13 +70,13 @@
                     <tr>
                         <td>
                             <asp:TextBox ID="tbxTableName" runat="server" Text='<%# Eval("QuestOrder")%>' Style="display: none;" />
-                            <asp:CheckBox ID="A" runat="server" value='<%# Eval("QuestOrder")%>' />
+                            <asp:CheckBox ID="A" runat="server" />
                         </td>
                         <td><%# Eval("QuestOrder")%></td>
                         <td><%# Eval("QuestContent")%></td>
-                        <td><%# Eval("AnswerForm")%></td>
+                        <td><%# Eval("strAnswerForm")%></td>
                         <td>
-                            <%--<asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' />--%></td>
+                            <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' /></td>
                         <td>
                             <a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&updateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
                         </td>
@@ -88,13 +86,13 @@
                     <tr>
                         <td bgcolor="#CECECF">
                             <asp:TextBox ID="tbxTableName2" runat="server" Text='<%# Eval("QuestOrder")%>' Style="display: none;" />
-                            <asp:CheckBox ID="A" runat="server" Text='<%# Eval("QuestOrder")%>' />
+                            <asp:CheckBox ID="A" runat="server" />
                         </td>
                         <td bgcolor="#CECECF"><%# Eval("QuestOrder")%></td>
                         <td bgcolor="#CECECF"><%# Eval("QuestContent")%></td>
-                        <td bgcolor="#CECECF"><%# Eval("AnswerForm")%></td>
+                        <td bgcolor="#CECECF"><%# Eval("strAnswerForm")%></td>
                         <td bgcolor="#CECECF">
-                            <%--<asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' />--%></td>
+                            <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' /></td>
                         <td bgcolor="#CECECF">
                             <a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&updateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
                     </tr>
@@ -147,7 +145,9 @@
                         </table>
                     </FooterTemplate>
                 </asp:Repeater>
+                <div id="NoneDATA" runat="server" visible="false">(查無資料)</div>
                 (分頁待補)
+
             </asp:PlaceHolder>
 
             <%--繳回的詳細內容--%>
@@ -191,5 +191,86 @@
         </asp:PlaceHolder>
         <%--統計--%>
         <asp:PlaceHolder ID="plhbookmark4" runat="server" Visible="false"></asp:PlaceHolder>
+        <asp:Label ID="NAStatistic" runat="server" Text="(查無資料)" Visible="false"></asp:Label>
     </div>
+
+
+    <script>
+        $(document).ready(function () {
+            //藉由預存session跳出視窗的功能
+            if (MyQstnirMsg.value != "") {
+                alert(MyQstnirMsg.value);
+                MyQstnirMsg.value = "";
+            }
+            //取得常用問題
+            GetCommon();
+
+            $("#CommonDropDownList").on('click', "option[class*=mdl-menu__item]", function () {
+                var parentDiv = $(this).closest("div");
+                var item = parentDiv.find("select.setQuestType");
+                var selection = { "QuestContent": item.val() };
+
+                $.ajax({
+                    url: "/API/CommonHandler.ashx?Action=ChangeSelect",
+                    method: "POST",
+                    data: selection,
+                    dataType: "text",
+                    success: function (jsonText) {
+                        console.log(jsonText);
+                        jsonText = jsonText.replace("\\", "");
+                        var jsonObj = JSON.parse(jsonText);
+                        for (var item of jsonObj) {
+                            var txtQuestContent = `${item.QuestContent}`;
+                            var strAnswerForm = `${item.AnswerForm}`;
+                            var intAnswerForm = Number(strAnswerForm);
+                            var isRequired = item.Required;
+                            var txtQuestSelectItem = `${item.SelectItem}`;
+
+                            $("#ContentPlaceHolder1_setQuest").val(txtQuestContent);//問題題目描述
+                                $("#ContentPlaceHolder1_IsRequired").prop('checked', isRequired);//是否必填
+
+                            if (item.SelectItem != null) 
+                                $("#ContentPlaceHolder1_textSelectItem").val(txtQuestSelectItem);
+
+                            var osel = $("#ContentPlaceHolder1_setQuestForm"); //得到select的ID
+                            var opts = osel.val(intAnswerForm).selected=true;//得到陣列option
+                            
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                        alert("通訊失敗，請聯絡管理員。")
+                    }
+                });
+
+            });
+
+
+        });
+        function GetCommon() {
+            $.ajax({
+                url: "/API/CommonHandler.ashx",
+                method: "GET",
+                dataType: "JSON",
+                success: function (jsonText) {
+                    var rowsText = "";
+                    rowsText = `<select id="setQuestType" class="setQuestType" name="setQuestType" width="60%">`;
+                    for (var item of jsonText) {
+                        rowsText += `<option class="mdl-menu__item " value="${item.QuestContent}">${item.QuestContent}</option> `;
+                    }
+                    rowsText += `</select >`;
+
+                    $("#CommonDropDownList").append(rowsText);
+
+                    console.log(jsonText);
+                },
+                error: function (msg) {
+                    console.log(msg);
+                    alert("常用問題載入失敗，請聯絡管理員。");
+                }
+            });
+
+        }
+
+    </script>
 </asp:Content>

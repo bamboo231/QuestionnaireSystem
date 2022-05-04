@@ -32,12 +32,21 @@ namespace QuestionnaireSystem.Manager
         /// <returns>回傳值為List<BasicAnswer></returns>
         public List<BasicAnswer> GetDoneList(string QnirID)
         {
-            int intQnirID = Int32.Parse(QnirID);
-            using (ContextModel contextModel = new ContextModel())
+            if (QnirID == "")
             {
-                List<BasicAnswer> basicAnswerList = contextModel.BasicAnswers.Where(obj => obj.QuestionnaireID == intQnirID).ToList();
-                return basicAnswerList;
+                List<BasicAnswer> noDATA = new List<BasicAnswer>();
+                return noDATA;
             }
+            else
+            {
+                int intQnirID = Int32.Parse(QnirID);
+                using (ContextModel contextModel = new ContextModel())
+                {
+                    List<BasicAnswer> basicAnswerList = contextModel.BasicAnswers.Where(obj => obj.QuestionnaireID == intQnirID).ToList();
+                    return basicAnswerList;
+                }
+            }
+
         }
 
         /// <summary>
