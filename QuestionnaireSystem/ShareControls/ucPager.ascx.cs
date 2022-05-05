@@ -27,6 +27,20 @@ namespace QuestionnaireSystem.ShareControls
             get
             {
                 if (this._url == null)
+                    return Request.RawUrl;
+                else
+                    return this._url;
+            }
+            set
+            {
+                this._url = value;
+            }
+        }
+        public string Url2
+        {
+            get
+            {
+                if (this._url == null)
                     return Request.Url.LocalPath;
                 else
                     return this._url;
@@ -36,7 +50,6 @@ namespace QuestionnaireSystem.ShareControls
                 this._url = value;
             }
         }
-
         public void Bind()
         {
             NameValueCollection collection = new NameValueCollection();
@@ -56,7 +69,7 @@ namespace QuestionnaireSystem.ShareControls
             if ((this.TotalRows % this.PageSize) > 0)
                 pageCount += 1;
 
-            string url = this.Url;
+            string url = this.Url2;
             string qsText = this.BuildQueryString(collection);
 
             this.aLinkFirst.HRef = url + "?Page=1" + qsText;

@@ -1,5 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/admin/adminMain.Master" AutoEventWireup="true" CodeBehind="MyQuestionnaire.aspx.cs" Inherits="QuestionnaireSystem.admin.MyQuestionnaire" %>
 
+<%@ Register Src="~/ShareControls/ucPager.ascx" TagPrefix="uc1" TagName="ucPager" %>
+
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -40,7 +43,7 @@
                             <asp:CheckBox ID="ChkBxQnir" runat="server" value='<%# Eval("QuestionnaireID")%>' />
                         </td>
                         <td><%# Eval("QuestionnaireID")%></td>
-                        <td><a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&Targetplh=1" target="_blank"><%# Eval("Caption")%></a></td>
+                        <td><a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>" target="_blank"><%# Eval("Caption")%></a></td>
                         <td><%# Eval("OpenOrNot")%></td>
                         <td><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                         <td><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
@@ -54,7 +57,7 @@
                             <asp:CheckBox ID="ChkBxQnir" runat="server" value='<%# Eval("QuestionnaireID")%>' />
                         </td>
                         <td bgcolor="#CECECF"><%# Eval("QuestionnaireID")%></td>
-                        <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&Targetplh=1" target="_blank"><%# Eval("Caption")%></a></td>
+                        <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>" target="_blank"><%# Eval("Caption")%></a></td>
                         <td bgcolor="#CECECF"><%# Eval("OpenOrNot")%></td>
                         <td bgcolor="#CECECF"><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                         <td bgcolor="#CECECF"><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
@@ -66,7 +69,7 @@
                 </FooterTemplate>
             </asp:Repeater>
             <asp:Label ID="Label1" runat="server" Text="(查無資料)" Visible="false"></asp:Label>
-
+            <uc1:ucPager runat="server" ID="ucPager" PageSize="10" />
         </div>
     </div>
 </asp:Content>

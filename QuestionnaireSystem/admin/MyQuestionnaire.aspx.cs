@@ -14,11 +14,16 @@ namespace QuestionnaireSystem.admin
         private QuestionnaireManager _QtnirMgr = new QuestionnaireManager();    //主問卷的Manager
         private SearchManager _srchMgr = new SearchManager();    //主問卷資訊
         private transWholeAnswerManager _transMgr = new transWholeAnswerManager();    //轉換WholeAnswer
+        private CheckInputManager _checksMgr = new CheckInputManager();    //統計管理
+        private const int _pageSize = 10;
 
-        //未做
-        //更改問卷內容
         protected void Page_Load(object sender, EventArgs e)
         {
+            string pageIndexText = this.Request.QueryString["Page"];
+            int pageIndex =
+                (string.IsNullOrWhiteSpace(pageIndexText))
+                    ? 1
+                    : Convert.ToInt32(pageIndexText);
             if (!IsPostBack)
             {
                 List<Questionnaire> QtnirList = _QtnirMgr.GetQuestionnaireList();
@@ -30,7 +35,14 @@ namespace QuestionnaireSystem.admin
                     else
                         item.OpenOrNot = "已關閉";
                 }
-                this.RptrQtnir.DataSource = wholeList;
+                int totalRows = 0;
+                List<WholeAnswer> list = this._checksMgr.TakePageData(wholeList, _pageSize, pageIndex, out totalRows);
+
+                this.ucPager.TotalRows = totalRows;
+                this.ucPager.PageIndex = pageIndex;
+                this.ucPager.Bind();
+
+                this.RptrQtnir.DataSource = list;
                 this.RptrQtnir.DataBind();
             }
 
@@ -74,7 +86,15 @@ namespace QuestionnaireSystem.admin
                     srchQuestionnaireList = _srchMgr.GetIncludeTextList(srchKey, srchQuestionnaireList);
                     //篩選出於時間範圍內的資料
                     srchQuestionnaireList = _srchMgr.GetIncludeDate(srchBeginDate, srchEndDate, srchQuestionnaireList);
-                    this.RptrQtnir.DataSource = srchQuestionnaireList;
+                    List<WholeAnswer> wholeList = _transMgr.QstnirToWholeList(srchQuestionnaireList);
+                    foreach (WholeAnswer item in wholeList)
+                    {
+                        if (item.VoidStatus == true)
+                            item.OpenOrNot = "開放";
+                        else
+                            item.OpenOrNot = "已關閉";
+                    }
+                    this.RptrQtnir.DataSource = wholeList;
                     this.RptrQtnir.DataBind();
                     if(srchQuestionnaireList.Count==0)
                         this.Label1.Visible = true;

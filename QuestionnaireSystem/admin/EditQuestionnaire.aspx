@@ -1,5 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/admin/adminMain.Master" AutoEventWireup="true" CodeBehind="EditQuestionnaire.aspx.cs" Inherits="QuestionnaireSystem.admin.EditQuestionnaire" %>
 
+<%@ Register Src="~/ShareControls/ucPager.ascx" TagPrefix="uc1" TagName="ucPager" %>
+
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
         #nav-tabContent {
@@ -159,8 +162,8 @@
                     </FooterTemplate>
                 </asp:Repeater>
                 <div id="NoneDATA" runat="server" visible="false">(查無資料)</div>
-                (分頁待補)
 
+                <uc1:ucPager runat="server" ID="ucPager" PageSize="10" />
             </asp:PlaceHolder>
 
             <%--繳回的詳細內容--%>
@@ -234,7 +237,8 @@
                             var intAnswerForm = Number(strAnswerForm);
                             var isRequired = item.Required;
                             var txtQuestSelectItem = `${item.SelectItem}`;
-                            if (`${item.SelectItem}` == null) { txtQuestSelectItem = ""; }
+
+                            if (`${item.SelectItem}` == null || `${item.SelectItem}`=="") { txtQuestSelectItem = ""; }
                             if (intAnswerForm != 5 || intAnswerForm != 6) { isRequired = true }
                             $("#ContentPlaceHolder1_setQuest").val(txtQuestContent);//問題題目描述
                             $("#ContentPlaceHolder1_IsRequired").prop('checked', isRequired);//是否必填

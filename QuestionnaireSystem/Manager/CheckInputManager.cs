@@ -126,5 +126,27 @@ namespace QuestionnaireSystem.Manager
             }
         }
 
+
+        public List<BasicAnswer> TakePageData(List<BasicAnswer> allData, int pageSize, int pageIndex, out int totalRows)
+        {
+            int skip = pageSize * (pageIndex - 1);  // 計算跳頁數
+            if (skip < 0)
+                skip = 0;
+
+            List<BasicAnswer> takeList = allData.Take(pageSize * pageIndex).Skip(skip).ToList();
+            totalRows = takeList.Count();
+            return takeList;
+        }
+
+        public List<WholeAnswer> TakePageData(List<WholeAnswer> allData, int pageSize, int pageIndex, out int totalRows)
+        {
+            int skip = pageSize * (pageIndex - 1);  // 計算跳頁數
+            if (skip < 0)
+                skip = 0;
+
+            List<WholeAnswer> takeList = allData.Take(pageSize * pageIndex).Skip(skip).ToList();
+            totalRows = allData.Count();
+            return takeList;
+        }
     }
 }
