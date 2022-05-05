@@ -28,16 +28,17 @@ namespace QuestionnaireSystem.Manager
         /// <returns></returns>
         public int GetNextQuestionnaireID()
         {
-            try { 
-            List<Questionnaire> allQstnir = GetQuestionnaireList();
-            int[] arrQstnirID = new int[allQstnir.Count];
-            for (int i = 0; i < allQstnir.Count; i++)
+            try
             {
-                arrQstnirID[i] = allQstnir[i].QuestionnaireID;
-            }
-            int maxQstnir = arrQstnirID.Max();
-            int nextID = maxQstnir + 1;
-            return nextID;
+                List<Questionnaire> allQstnir = GetQuestionnaireList();
+                int[] arrQstnirID = new int[allQstnir.Count];
+                for (int i = 0; i < allQstnir.Count; i++)
+                {
+                    arrQstnirID[i] = allQstnir[i].QuestionnaireID;
+                }
+                int maxQstnir = arrQstnirID.Max();
+                int nextID = maxQstnir + 1;
+                return nextID;
             }
             catch (Exception ex)
             {
@@ -167,11 +168,19 @@ namespace QuestionnaireSystem.Manager
 
         public Questionnaire GetQuestionnaire(string questionnaireID)
         {
-            int intQnirID = Int32.Parse(questionnaireID);
-
-            using (ContextModel contextModel = new ContextModel())
+            try
             {
-                return contextModel.Questionnaires.Where(obj => obj.QuestionnaireID == intQnirID).First();
+                int intQnirID = Int32.Parse(questionnaireID);
+
+                using (ContextModel contextModel = new ContextModel())
+                {
+                    return contextModel.Questionnaires.Where(obj => obj.QuestionnaireID == intQnirID).First();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuestionnaireManager.GetQuestionnaire", ex);
+                throw;
             }
         }
 

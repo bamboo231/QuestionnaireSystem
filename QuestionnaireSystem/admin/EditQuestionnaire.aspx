@@ -6,7 +6,7 @@
 
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <asp:Button runat="server" ID="bookmark1" class="nav-link" aria-selected="true" Text="問卷" OnClick="bookmark1_Click"></asp:Button>
+            <asp:Button runat="server" ID="bookmark1" class="nav-link active" aria-selected="true" data-bs-toggle="tab" role="tab" Text="問卷" OnClick="bookmark1_Click"></asp:Button>
             <asp:Button runat="server" ID="bookmark2" class="nav-link" aria-selected="false" Text="問題" OnClick="bookmark2_Click"></asp:Button>
             <asp:Button runat="server" ID="bookmark3" class="nav-link" aria-selected="false" Text="填寫資料" OnClick="bookmark3_Click"></asp:Button>
             <asp:Button runat="server" ID="bookmark4" class="nav-link" aria-selected="false" Text="統計" OnClick="bookmark4_Click"></asp:Button>
@@ -198,12 +198,12 @@
 
 
     <script>
-        $(document).ready(function () {
-            //藉由預存session跳出視窗的功能
-            if (adminMainMsg.value != "") {
-                alert(adminMainMsg.value);
-                adminMainMsg.value = "";
-            }
+        //$(document).ready(function () {
+        //    //藉由預存session跳出視窗的功能
+        //    if (adminMainMsg.value != "") {
+        //        alert(adminMainMsg.value);
+        //        adminMainMsg.value = "";
+        //    }
             //取得常用問題
             GetCommon();
 

@@ -28,15 +28,15 @@ namespace QuestionnaireSystem.admin
         }
         protected void Page_Prerender(object sender, EventArgs e)
         {
-            if (Session["sessionQuestOrder"] != null)
+            if (Session["AdminMainMsg"] != null)
             {
-                this.adminMainMsg.Value = Session["sessionQuestOrder"] as string;
-                Session.Remove("adminMainMsg");
+                this.adminMainMsg1.Value = Session["AdminMainMsg"] as string;
+                Session.Remove("AdminMainMsg");
             }
-            if (Session["sessionQuestOrder"] != null)
+            if (Session["MyQstnirMsg"] != null)
             {
-                this.adminMainMsg.Value = Session["adminMainMsg"] as string;
-                Session.Remove("adminMainMsg");
+                this.adminMainMsg1.Value = Session["MyQstnirMsg"] as string;
+                Session.Remove("MyQstnirMsg");
             }
         }
     }

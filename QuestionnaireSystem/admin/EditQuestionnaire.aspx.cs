@@ -604,7 +604,11 @@ namespace QuestionnaireSystem.admin
                 HttpContext.Current.Session["AdminMainMsg"] = "資料尚未儲存，請繼續編輯問題後送出。";
                 HttpContext.Current.Session["Targetplh"] = "2";
                 string qstnirID = this.Request.QueryString["QstnirID"];
-                this.Response.Redirect($"/admin/MyQuestionnaire.aspx?QstnirID={qstnirID}&Targetplh=2");
+                if (qstnirID != null)
+                    this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={qstnirID}&Targetplh=2");
+                else
+                    this.Response.Redirect($"/admin/EditQuestionnaire.aspx?Targetplh=2");
+
             }
         }
 
