@@ -66,7 +66,8 @@
             </div>
         </div>
         <input id="adminMainMsg" name="adminMainMsg" runat="server" type="hidden" />
-        <asp:HiddenField ID="MyQstnirMsg" runat="server" />
+        <asp:HiddenField ID="sessionQuestOrder" runat="server" />
+        <asp:HiddenField ID="AdminMainMsg" runat="server" />
     </form>
 
 

@@ -9,6 +9,8 @@ namespace QuestionnaireSystem.Manager
 {
     public class QuestManager
     {
+        private transWholeAnswerManager _transMgr = new transWholeAnswerManager();    //轉換WholeAnswer
+
         static int countIndex;   //排序問題list時，計數用
 
         /// <summary>
@@ -18,21 +20,29 @@ namespace QuestionnaireSystem.Manager
         /// <returns>回傳值為int</returns>
         public int AnswerTextToInt(string inpAnswerForm)
         {
-            int answer = 0;
-            switch (inpAnswerForm)
+            try
             {
-                case "文字方塊":
-                    return answer = 1;
-                case "數字":
-                    return answer = 2;
-                case "Email":
-                    return answer = 3;
-                case "日期":
-                    return answer = 4;
-                case "單選方塊":
-                    return answer = 5;
-                default:
-                    return answer = 6;
+                int answer = 0;
+                switch (inpAnswerForm)
+                {
+                    case "文字方塊":
+                        return answer = 1;
+                    case "數字":
+                        return answer = 2;
+                    case "Email":
+                        return answer = 3;
+                    case "日期":
+                        return answer = 4;
+                    case "單選方塊":
+                        return answer = 5;
+                    default:
+                        return answer = 6;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuestManager.AnswerTextToInt", ex);
+                throw;
             }
         }
         /// <summary>
@@ -42,22 +52,64 @@ namespace QuestionnaireSystem.Manager
         /// <returns>回傳值為string</returns>
         public string AnswerTextToInt(int inpAnswerForm)
         {
-            switch (inpAnswerForm)
+            try
             {
-                case 1:
-                    return "文字方塊";
-                case 2:
-                    return "數字";
-                case 3:
-                    return "Email";
-                case 4:
-                    return "日期";
-                case 5:
-                    return "單選方塊";
-                default:
-                    return "複選方塊";
+                switch (inpAnswerForm)
+                {
+                    case 1:
+                        return "文字方塊";
+                    case 2:
+                        return "數字";
+                    case 3:
+                        return "Email";
+                    case 4:
+                        return "日期";
+                    case 5:
+                        return "單選方塊";
+                    default:
+                        return "複選方塊";
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuestManager.AnswerTextToInt", ex);
+                throw;
             }
         }
+
+        /// <summary>
+        /// 修改其中一筆問題
+        /// </summary>
+        /// <param name="inpQuest">記憶體中的問題列表(傳入值為List<WholeAnswer>)</param>
+        /// <param name="UpdateDATA">更新的資料(傳入值為WholeAnswer)</param>
+        /// <returns></returns>
+        public List<WholeAnswer> UpdateQuest(List<WholeAnswer> inpQuest, WholeAnswer UpdateDATA)
+        {
+            try
+            {
+                //題號
+                int updateOrder = UpdateDATA.QuestOrder;
+
+                //修改List內的該筆資料
+                var item = inpQuest.Skip(updateOrder - 1).FirstOrDefault();
+                item.QuestID = UpdateDATA.QuestID;
+                item.QuestionnaireID = UpdateDATA.QuestionnaireID;
+                item.QuestContent = UpdateDATA.QuestContent;
+                item.AnswerForm = UpdateDATA.AnswerForm;
+                item.SelectItem = UpdateDATA.SelectItem;
+                item.Required = UpdateDATA.Required;
+                return inpQuest;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuestManager.UpdateQuest", ex);
+                throw;
+            }
+        }
+
+
+
+
 
         /// <summary>
         /// 重新排序List<Question>
@@ -74,10 +126,11 @@ namespace QuestionnaireSystem.Manager
                 //逐筆將原List資料修改順序後塞進新List
                 foreach (WholeAnswer question in questionList)
                 {
-                    WholeAnswer Quest = question;
+                    WholeAnswer a = new WholeAnswer();
                     countIndex++;
-                    Quest.QuestOrder = countIndex;
-                    newList.Add(Quest);
+                    question.QuestOrder = countIndex;
+                    a=question;
+                    newList.Add(a);
                 }
                 return newList; //回傳新的List
             }
@@ -172,6 +225,7 @@ namespace QuestionnaireSystem.Manager
                             QuestContent = QuestionList[i].QuestContent,
                             AnswerForm = QuestionList[i].AnswerForm,
                             Required = QuestionList[i].Required,
+                            SelectItem = QuestionList[i].SelectItem,
                         };
                         newList.Add(newWhole);
                     }

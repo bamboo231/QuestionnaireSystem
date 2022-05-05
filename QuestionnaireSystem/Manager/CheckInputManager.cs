@@ -95,7 +95,7 @@ namespace QuestionnaireSystem.Manager
             bool isInclude = false;
             try
             {
-                if(beginDate < checkedData && checkedData < endDate)
+                if (beginDate < checkedData && checkedData < endDate)
                 {
                     return isInclude = true;
                 }
@@ -109,6 +109,22 @@ namespace QuestionnaireSystem.Manager
             }
         }
 
+        public bool IsEmail(string inpEmail)
+        {
+            try
+            {
+                bool isEmail = true;
+                if (inpEmail.IndexOf("@") == -1 || inpEmail.IndexOf(".") == -1 || inpEmail.IndexOf("@") > inpEmail.IndexOf("."))
+                     isEmail = false;
+                return isEmail;
+
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("CheckInputManager.IsEmail", ex);
+                throw;
+            }
+        }
 
     }
 }

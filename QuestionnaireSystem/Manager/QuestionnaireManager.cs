@@ -22,10 +22,28 @@ namespace QuestionnaireSystem.Manager
                 return srchList;
             }
         }
+        /// <summary>
+        /// 從DB取得最大ID，並回傳下一個問卷的ID
+        /// </summary>
+        /// <returns></returns>
         public int GetNextQuestionnaireID()
         {
-          int lastID=  GetQuestionnaireList().Count;
-            return lastID+1;
+            try { 
+            List<Questionnaire> allQstnir = GetQuestionnaireList();
+            int[] arrQstnirID = new int[allQstnir.Count];
+            for (int i = 0; i < allQstnir.Count; i++)
+            {
+                arrQstnirID[i] = allQstnir[i].QuestionnaireID;
+            }
+            int maxQstnir = arrQstnirID.Max();
+            int nextID = maxQstnir + 1;
+            return nextID;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuestionnaireManager.GetNextQuestionnaireID", ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -43,7 +61,7 @@ namespace QuestionnaireSystem.Manager
         }
 
 
-        public List<Questionnaire> TakeEnableQstnir( int pageSize, int pageIndex, out int totalRows)
+        public List<Questionnaire> TakeEnableQstnir(int pageSize, int pageIndex, out int totalRows)
         {
             int skip = pageSize * (pageIndex - 1);  // 計算跳頁數
             if (skip < 0)
@@ -56,7 +74,7 @@ namespace QuestionnaireSystem.Manager
                 var srchList = contextModel.Questionnaires.Where(obj => obj.VoidStatus == true).ToList();
                 srchList = srchList.OrderByDescending(obj => obj.BuildDate).ToList();
                 //取得前{pageSize}*{pageIndex}拿掉前{skip}筆資料
-                var takeList =(List<Questionnaire>) srchList.Take(pageSize * pageIndex).Skip(skip);
+                var takeList = (List<Questionnaire>)srchList.Take(pageSize * pageIndex).Skip(skip);
                 totalRows = GetEnableQstnir().Count;
                 return takeList;
             }

@@ -69,32 +69,34 @@
                 <ItemTemplate>
                     <tr>
                         <td>
-                            <asp:TextBox ID="tbxTableName" runat="server" Text='<%# Eval("QuestOrder")%>' Style="display: none;" />
-                            <asp:CheckBox ID="A" runat="server" />
+                            <asp:Label ID="lblText" runat="server" Text='<%# Eval("QuestOrder")%>' Style="display: none;"></asp:Label>
+                            <asp:CheckBox ID="A" runat="server"></asp:CheckBox>
                         </td>
                         <td><%# Eval("QuestOrder")%></td>
                         <td><%# Eval("QuestContent")%></td>
                         <td><%# Eval("strAnswerForm")%></td>
                         <td>
-                            <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' /></td>
+                            <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>'></asp:CheckBox>
+                        </td>
                         <td>
-                            <a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&updateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
+                            <a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&UpdateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
                         </td>
                     </tr>
                 </ItemTemplate>
                 <AlternatingItemTemplate>
                     <tr>
                         <td bgcolor="#CECECF">
-                            <asp:TextBox ID="tbxTableName2" runat="server" Text='<%# Eval("QuestOrder")%>' Style="display: none;" />
-                            <asp:CheckBox ID="A" runat="server" />
+                            <asp:Label ID="lblText" runat="server" Text='<%# Eval("QuestOrder")%>' Style="display: none;"></asp:Label>
+                            <asp:CheckBox ID="A" runat="server"></asp:CheckBox>
                         </td>
                         <td bgcolor="#CECECF"><%# Eval("QuestOrder")%></td>
                         <td bgcolor="#CECECF"><%# Eval("QuestContent")%></td>
                         <td bgcolor="#CECECF"><%# Eval("strAnswerForm")%></td>
                         <td bgcolor="#CECECF">
-                            <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' /></td>
+                            <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>'></asp:CheckBox>
+                        </td>
                         <td bgcolor="#CECECF">
-                            <a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&updateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
+                            <a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&UpdateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
                     </tr>
                 </AlternatingItemTemplate>
                 <FooterTemplate>
@@ -130,7 +132,7 @@
                             <td><%# Eval("BasicAnswerID")%></td>
                             <td><%# Eval("Nickname")%></td>
                             <td><%# Eval("AnswerDate", "{0:yyyy/MM/dd HH:mm:ss}")%></td>
-                            <td><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&BsicAnsID=<%# Eval("BasicAnswerID")%>&targetplh=3">前往</a></td>
+                            <td><a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&BsicAnsID=<%# Eval("BasicAnswerID")%>&Targetplh=3">前往</a></td>
                         </tr>
                     </ItemTemplate>
                     <AlternatingItemTemplate>
@@ -138,7 +140,7 @@
                             <td bgcolor="#CECECF"><%# Eval("BasicAnswerID")%></td>
                             <td bgcolor="#CECECF"><%# Eval("Nickname")%></td>
                             <td bgcolor="#CECECF"><%# Eval("AnswerDate", "{0:yyyy/MM/dd HH:mm:ss}")%></td>
-                            <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&BsicAnsID=<%# Eval("BasicAnswerID")%>&targetplh=3">前往</a></td>
+                            <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&BsicAnsID=<%# Eval("BasicAnswerID")%>&Targetplh=3">前往</a></td>
                         </tr>
                     </AlternatingItemTemplate>
                     <FooterTemplate>
@@ -198,9 +200,9 @@
     <script>
         $(document).ready(function () {
             //藉由預存session跳出視窗的功能
-            if (MyQstnirMsg.value != "") {
-                alert(MyQstnirMsg.value);
-                MyQstnirMsg.value = "";
+            if (adminMainMsg.value != "") {
+                alert(adminMainMsg.value);
+                adminMainMsg.value = "";
             }
             //取得常用問題
             GetCommon();
@@ -227,14 +229,13 @@
                             var txtQuestSelectItem = `${item.SelectItem}`;
 
                             $("#ContentPlaceHolder1_setQuest").val(txtQuestContent);//問題題目描述
-                                $("#ContentPlaceHolder1_IsRequired").prop('checked', isRequired);//是否必填
+                            $("#ContentPlaceHolder1_IsRequired").prop('checked', isRequired);//是否必填
 
-                            if (item.SelectItem != null) 
+                            if (item.SelectItem != null)
                                 $("#ContentPlaceHolder1_textSelectItem").val(txtQuestSelectItem);
 
                             var osel = $("#ContentPlaceHolder1_setQuestForm"); //得到select的ID
-                            var opts = osel.val(intAnswerForm).selected=true;//得到陣列option
-                            
+                            var opts = osel.val(intAnswerForm).selected = true;//得到陣列option
                         }
                     },
                     error: function (msg) {

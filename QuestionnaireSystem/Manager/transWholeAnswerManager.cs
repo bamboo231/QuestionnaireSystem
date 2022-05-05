@@ -49,12 +49,18 @@ namespace QuestionnaireSystem.Manager
             }
         }
 
+        /// <summary>
+        /// 將Question轉換成WholeAnswer
+        /// </summary>
+        /// <param name="question">傳入值為Question</param>
+        /// <returns>傳出值為WholeAnswer</returns>
         public WholeAnswer QstToWhole(Question question)
         {
             try
             {
                 WholeAnswer wholeToDisplay = new WholeAnswer();
-                if (question.QuestionnaireID == 0)
+
+                if (question.QuestionnaireID == 0)//如果是新的問卷，取得新的ID給他
                     wholeToDisplay.QuestionnaireID = _QtnirMgr.GetNextQuestionnaireID();//賦予新的ID
                 else
                     wholeToDisplay.QuestionnaireID = question.QuestionnaireID;//存進舊的ID
@@ -111,6 +117,9 @@ namespace QuestionnaireSystem.Manager
                 throw;
             }
         }
+
+
+
         /// <summary>
         /// 將舊的值轉進新的List(除了QuestionnaireID)
         /// </summary>

@@ -12,7 +12,7 @@ namespace QuestionnaireSystem.admin
         //接收來自子版頁面的訊息，然後傳入HTML
         public HiddenField GetMsg()
         {
-            return this.MyQstnirMsg;
+            return this.AdminMainMsg;
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -28,7 +28,12 @@ namespace QuestionnaireSystem.admin
         }
         protected void Page_Prerender(object sender, EventArgs e)
         {
-            if (Session["adminMainMsg"] != null)
+            if (Session["sessionQuestOrder"] != null)
+            {
+                this.adminMainMsg.Value = Session["sessionQuestOrder"] as string;
+                Session.Remove("adminMainMsg");
+            }
+            if (Session["sessionQuestOrder"] != null)
             {
                 this.adminMainMsg.Value = Session["adminMainMsg"] as string;
                 Session.Remove("adminMainMsg");
