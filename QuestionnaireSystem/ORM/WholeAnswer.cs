@@ -26,7 +26,10 @@ namespace QuestionnaireSystem.ORM
         public int Age { get; set; }
         public bool Required { get; set; }
         public int CommonQuestID { get; set; }
-
-
+        public DateTime BuildDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public bool VoidStatus { get; set; }
+        public string OpenOrNot { get; set; }
     }
 }

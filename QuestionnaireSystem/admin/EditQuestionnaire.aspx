@@ -1,15 +1,25 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/admin/adminMain.Master" AutoEventWireup="true" CodeBehind="EditQuestionnaire.aspx.cs" Inherits="QuestionnaireSystem.admin.EditQuestionnaire" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style>
+        #nav-tabContent {
+            border: 1px solid #00000030;
+            border-top: none;
+            padding: 20px;
+            padding-top: 25px;
+            max-width: 97.7%;
+            margin-left: 12px;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <asp:Button runat="server" ID="bookmark1" class="nav-link active" aria-selected="true" data-bs-toggle="tab" role="tab" Text="問卷" OnClick="bookmark1_Click"></asp:Button>
-            <asp:Button runat="server" ID="bookmark2" class="nav-link" aria-selected="false" Text="問題" OnClick="bookmark2_Click"></asp:Button>
-            <asp:Button runat="server" ID="bookmark3" class="nav-link" aria-selected="false" Text="填寫資料" OnClick="bookmark3_Click"></asp:Button>
-            <asp:Button runat="server" ID="bookmark4" class="nav-link" aria-selected="false" Text="統計" OnClick="bookmark4_Click"></asp:Button>
+            <asp:Button runat="server" ID="bookmark2" class="nav-link active" aria-selected="false" data-bs-toggle="tab" role="tab" Text="問題" OnClick="bookmark2_Click"></asp:Button>
+            <asp:Button runat="server" ID="bookmark3" class="nav-link active" aria-selected="false" data-bs-toggle="tab" role="tab" Text="填寫資料" OnClick="bookmark3_Click"></asp:Button>
+            <asp:Button runat="server" ID="bookmark4" class="nav-link active" aria-selected="false" data-bs-toggle="tab" role="tab" Text="統計" OnClick="bookmark4_Click"></asp:Button>
         </div>
     </nav>
     <div id="nav-tabContent">
@@ -112,11 +122,12 @@
 
         <%--填寫資料--%>
         <asp:PlaceHolder ID="plhbookmark3" runat="server" Visible="false">
-            <div>
-                <asp:Button ID="btnExport" runat="server" Text="匯出" OnClick="btnExport_Click" />
-            </div>
+
             <%--繳回的列表--%>
             <asp:PlaceHolder ID="plhdoneList" runat="server">
+                <div>
+                    <asp:Button ID="btnExport" runat="server" Text="匯出" OnClick="btnExport_Click" />
+                </div>
                 <asp:Repeater ID="RptrAnswerList" runat="server">
                     <HeaderTemplate>
                         <table border="1" width="90%" id="table2">
@@ -192,8 +203,9 @@
             </asp:PlaceHolder>
         </asp:PlaceHolder>
         <%--統計--%>
-        <asp:PlaceHolder ID="plhbookmark4" runat="server" Visible="false"></asp:PlaceHolder>
-        <asp:Label ID="NAStatistic" runat="server" Text="(查無資料)" Visible="false"></asp:Label>
+        <asp:PlaceHolder ID="plhbookmark4" runat="server" Visible="false">
+            <asp:Label ID="NAStatistic" runat="server" Text="(查無資料)" Visible="false"></asp:Label>
+        </asp:PlaceHolder>
     </div>
 
 
@@ -222,7 +234,8 @@
                             var intAnswerForm = Number(strAnswerForm);
                             var isRequired = item.Required;
                             var txtQuestSelectItem = `${item.SelectItem}`;
-
+                            if (`${item.SelectItem}` == null) { txtQuestSelectItem = ""; }
+                            if (intAnswerForm != 5 || intAnswerForm != 6) { isRequired = true }
                             $("#ContentPlaceHolder1_setQuest").val(txtQuestContent);//問題題目描述
                             $("#ContentPlaceHolder1_IsRequired").prop('checked', isRequired);//是否必填
 

@@ -10,6 +10,7 @@ namespace QuestionnaireSystem.ORM
     public partial class Question
     {
         [Key]
+        [Column(Order = 0)]
         public int QuestID { get; set; }
 
         public int QuestionnaireID { get; set; }

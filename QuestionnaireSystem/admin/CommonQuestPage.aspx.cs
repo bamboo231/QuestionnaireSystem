@@ -17,12 +17,13 @@ namespace QuestionnaireSystem.admin
         private AnswerManager _AnswerMgr = new AnswerManager();    //回覆管理
         private QuestManager _QuestMgr = new QuestManager();    //問題管理
         private Statistic _statisMgr = new Statistic();    //統計管理
+        private transWholeAnswerManager _transMgr = new transWholeAnswerManager();    //轉換WholeAnswer
+        private CheckInputManager _checksMgr = new CheckInputManager();    //統計管理
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            List<CommonQuest> commonList = _CommonMgr.GetCommonQuestList();
-            this.RptrCommonQuest.DataSource = commonList;
-            this.RptrCommonQuest.DataBind();
-            //若答案的種類沒有選項，禁止他輸入文字
+
+
 
         }
         protected void Page_Prerender(object sender, EventArgs e)
@@ -38,23 +39,58 @@ namespace QuestionnaireSystem.admin
                 if (targetCommonQuest.SelectItem != null)
                     this.textSelectItem.Text = targetCommonQuest.SelectItem.ToString();
             }
+            List<CommonQuest> commonList = _CommonMgr.GetCommonQuestList();
+            commonList.RemoveAt(0);
+            List<WholeAnswer> wholeList = _transMgr.CommonToWholeList(commonList);
+            this.RptrCommonQuest.DataSource = wholeList;
+            this.RptrCommonQuest.DataBind();
         }
         //新增常用問題
         protected void btnAddToQuest_Click(object sender, EventArgs e)
         {
-
-            //將問題種類轉換成數字
-            int intQuestForm = _QuestMgr.AnswerTextToInt(this.setQuestForm.Text);
-            //將題目新增至List
+            #region//定義題目屬性
+            string questContent = this.setQuest.Text;                               //問題描述
+            string strQuestForm = this.setQuestForm.Text;                           //問題種類
+            int intQuestForm = _QuestMgr.AnswerTextToInt(strQuestForm);            //問題種類
+            bool required = this.IsRequired.Checked;                                //是否必填
+            string selectItem = this.textSelectItem.Text;                           //選項
+            #endregion
+            #region//檢查輸入值
+            if (questContent == null)//驗證是否有輸入問題
+            {
+                HttpContext.Current.Session["EditMsg"] = "請輸入問題。";
+                return;
+            }
+            if (intQuestForm == 5 || intQuestForm == 6)//驗證選擇題是否有輸入選項
+            {
+                if (selectItem == null || _checksMgr.IsMistakeSemicolon(selectItem))
+                {
+                    HttpContext.Current.Session["EditMsg"] = "請設置單選及多選方塊的選項，(以半形;符號區分)。";
+                    return;
+                }
+                if (intQuestForm == 5 && !required)//如果選擇題沒有輸入選項
+                {
+                    HttpContext.Current.Session["EditMsg"] = "單選題必須為必選。";
+                    return;
+                }
+            }
+            else
+            {
+                if (selectItem != "")
+                {
+                    HttpContext.Current.Session["EditMsg"] = "選擇題以外的題目不需輸入選項。";
+                    return;
+                }
+            }
+            #endregion
             CommonQuest newCommonQuest = new CommonQuest()
             {
-                QuestContent = this.setQuest.Text,
+                QuestContent = questContent,
                 AnswerForm = intQuestForm,
-                SelectItem = this.textSelectItem.Text,
-                Required = this.IsRequired.Checked
+                SelectItem = selectItem,
+                Required = required
             };
             _CommonMgr.AddCommonQuest(newCommonQuest);
-            Response.Redirect(Request.RawUrl);
         }
         //刪除常用問題
         protected void imgBtnDelete_Click(object sender, ImageClickEventArgs e)
@@ -77,7 +113,7 @@ namespace QuestionnaireSystem.admin
                 }
             }
             _CommonMgr.DeleteQuestionnaire(newList);
-            Response.Redirect(Request.RawUrl);
+
         }
         //返回列表
         protected void btnEditsOver_Click(object sender, EventArgs e)
@@ -86,40 +122,5 @@ namespace QuestionnaireSystem.admin
         }
 
 
-        protected void rpt_ItemDataBound(object sender, RepeaterItemEventArgs e)
-        {
-
-        }
-
-        protected void Button1_Click(object sender, EventArgs e)
-        {
-            List<CommonQuest> newList = new List<CommonQuest>();//即將被刪除的List
-            CheckBox checkbox = new CheckBox();
-            //逐筆取得repeater中被勾選的資料
-            for (int i = 0; i < this.RptrCommonQuest.Items.Count; i++)
-            //foreach (RepeaterItem c in this.RptrQuest.Items)
-            {
-                checkbox = (CheckBox)RptrCommonQuest.Items[i].FindControl("chkBxQuest");//取對象
-                HtmlInputCheckBox chkDisplayTitle = (HtmlInputCheckBox)RptrCommonQuest.Items[i].FindControl($"chkBxQuest{i}");
-                if (chkDisplayTitle != null && chkDisplayTitle.Checked)
-                {
-                    //HERE IS YOUR VALUE: chkAddressSelected.Value
-                }
-                //CheckBox cbx = (CheckBox)RptrQuest.Items[].FindControl("chkBxQuest");
-                CheckBox cbx = (CheckBox)RptrCommonQuest.Items[i].FindControl("chkBxQuest");
-                TextBox tbx = (TextBox)RptrCommonQuest.Items[i].FindControl("tbxTableName");
-
-                int deletedID = 0;
-                if (cbx != null && cbx.Checked == true)
-                    deletedID = Int32.Parse(tbx.Text);
-                if (deletedID != 0)
-                {
-                    CommonQuest deletedCommonQuest = new CommonQuest() { CommonQuestID = deletedID };
-                    newList.Add(deletedCommonQuest);
-                }
-            }
-            _CommonMgr.DeleteQuestionnaire(newList);
-            Response.Redirect(Request.RawUrl);
-        }
     }
 }

@@ -116,6 +116,7 @@ namespace QuestionnaireSystem.Manager
                 {
                     context.Questions.Add(question);
                 }
+
                 context.SaveChanges();
             }
         }
@@ -139,7 +140,7 @@ namespace QuestionnaireSystem.Manager
                     int i = 0;
                     for (i = 0; i < targetQst.Count; i++)
                     {
-                        var targetDate = targetQst.Where(obj => obj.QuestOrder == i).FirstOrDefault();
+                        var targetDate = targetQst.Where(obj => obj.QuestOrder == i+1).FirstOrDefault();
 
                         targetDate.QuestContent = questionList[i].QuestContent;
                         targetDate.AnswerForm = questionList[i].AnswerForm;
@@ -149,7 +150,7 @@ namespace QuestionnaireSystem.Manager
                     //如果新的資料列比舊的多，
                     if (questionList.Count > targetQst.Count)
                     {
-                        for (i = 0; i < questionList.Count; i++)
+                        for (i = targetQst.Count; i < questionList.Count; i++)
                         {
                             context.Questions.Add(questionList[i]);
                         }

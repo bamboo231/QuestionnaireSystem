@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -30,7 +31,6 @@ namespace QuestionnaireSystem.admin
         //待改善:頁籤事件改成enum
         protected void Page_Load(object sender, EventArgs e)
         {
-
             string updateOrder = this.Request.QueryString["UpdateOrder"];  //當前正在編輯的題目
             string currentBsicAnsID = this.Request.QueryString["BsicAnsID"];//當前查看的問卷細節
             string targetplh = this.Request.QueryString["Targetplh"];//要查看的頁籤
@@ -42,7 +42,11 @@ namespace QuestionnaireSystem.admin
                     if (HttpContext.Current.Session["QstnirID"] == null)//不是由列表按新增進入
                     {
                         if (this.Request.QueryString["QstnirID"] != null)
+                        {
                             _currentQnirID = int.Parse(this.Request.QueryString["QstnirID"]);
+                            HttpContext.Current.Session["IsNewQstnir"] = null;
+                            HttpContext.Current.Session["QstnirID"] = null;
+                        }
                         else
                         {
                             HttpContext.Current.Session["EditMsg"] = "請由問卷列表頁進入編輯頁面。";
@@ -57,6 +61,11 @@ namespace QuestionnaireSystem.admin
                         HttpContext.Current.Session["QstnirID"] = null;
                     }
                 }
+                else
+                {
+                    _isNewQstnir = false;
+                    _currentQnirID = int.Parse(this.Request.QueryString["QstnirID"]);
+                }
                 #endregion
 
                 #region//繳回的填寫列表
@@ -65,6 +74,8 @@ namespace QuestionnaireSystem.admin
                     List<BasicAnswer> doneList = _AnswerMgr.GetDoneList(_currentQnirID, _isNewQstnir);//既有問卷才帶入DB繳回問卷列表
                     this.RptrAnswerList.DataSource = doneList;
                     this.RptrAnswerList.DataBind();
+                    if (doneList.Count == 0)
+                        this.NoneDATA.Visible = true;
                 }
                 #endregion
 
@@ -236,10 +247,6 @@ namespace QuestionnaireSystem.admin
                                 };
                                 plhbookmark4.Controls.Add(dynLabel);
 
-                                Label lb = new Label() { ID = $"lb{item.QuestOrder}", Text = "<br>", }; //分行
-                                plhbookmark4.Controls.Add(lb);
-
-
                                 _QuestMgr.SplitSelectItem(item.SelectItem, out int selectionCount, out string[] arrSelectItem);//本題選項數量,本題選項陣列
                                 int sumVoid = 0;
                                 if (arrAllThisQuestAmount != null)
@@ -295,9 +302,6 @@ namespace QuestionnaireSystem.admin
                                     Text = $"{item.QuestOrder} . {item.QuestContent}",
                                 };
                                 plhbookmark4.Controls.Add(dynLabel);
-
-                                Label lb = new Label() { ID = $"lb{item.QuestID}", Text = "<br>", }; //分行
-                                plhbookmark4.Controls.Add(lb);
 
                                 _QuestMgr.SplitSelectItem(item.SelectItem, out int selectionCount, out string[] arrSelectItem);  //選項的數量,選項的陣列
 
@@ -389,12 +393,12 @@ namespace QuestionnaireSystem.admin
                     this.textStartDate.Text = questionnaire.EndDate.ToString("yyyy-MM-dd");
                     this.textEndDate.Text = questionnaire.EndDate.ToString("yyyy-MM-dd");
                     this.ChkBxVoidStatus.Checked = questionnaire.VoidStatus;
+                    _basicQstnir = questionnaire;
 
                     //第一次帶入DB
                     List<WholeAnswer> qstsWithIntAnswerForm = new List<WholeAnswer>();
                     qstsWithIntAnswerForm = _QuestMgr.GetWholeQuestionList(_currentQnirID, _isNewQstnir);
                     _currentQuestList = _transMgr.WholeToWholeList2(qstsWithIntAnswerForm);//將問題類型轉成字串
-
                 }
                 #endregion
             }
@@ -621,10 +625,10 @@ namespace QuestionnaireSystem.admin
                 _basicQstnir.StartDate = Convert.ToDateTime(this.textStartDate.Text);
                 _basicQstnir.EndDate = Convert.ToDateTime(this.textEndDate.Text);
                 _basicQstnir.VoidStatus = this.ChkBxVoidStatus.Checked;
+                _basicQstnir.QuestionnaireID = _currentQnirID;
+                _basicQstnir.BuildDate = DateTime.Now;
                 HttpContext.Current.Session["EditMsg"] = "資料尚未儲存，請繼續編輯問題後送出。";
-                Changebookmark2();//試試看
-
-                //this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={_currentQnirID}&Targetplh=2");
+                this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={_currentQnirID}&Targetplh=2");
 
             }
         }
@@ -674,8 +678,10 @@ namespace QuestionnaireSystem.admin
             else
             {
                 if (selectItem != "")
+                {
                     HttpContext.Current.Session["EditMsg"] = "選擇題以外的題目不需輸入選項。";
-                return;
+                    return;
+                }
             }
             #endregion
 
@@ -758,8 +764,10 @@ namespace QuestionnaireSystem.admin
         protected void btnQuestSummit_Click(object sender, EventArgs e)
         {
             List<Question> saveQstList = _transMgr.WholeToQstList(_currentQuestList, _currentQnirID);//記憶體的題目列表
-
-            this._QstnirMgr.Updateuestionnaire(_basicQstnir, saveQstList);//存進DB
+            if (_isNewQstnir)
+                this._QstnirMgr.AddQuestionnaire(_basicQstnir, saveQstList);//存進DB
+            else
+                this._QstnirMgr.Updateuestionnaire(_basicQstnir, saveQstList);//存進DB
             HttpContext.Current.Session.Abandon();      //清除所有session並返回
             HttpContext.Current.Session["EditMsg"] = "問卷已更新。";
             this.Response.Redirect("/admin/MyQuestionnaire.aspx");
@@ -802,8 +810,7 @@ namespace QuestionnaireSystem.admin
                     }
                     strCSV += "\r\n";
                 }
-                System.Text.UTF8Encoding utf8 = new System.Text.UTF8Encoding(false);
-                File.WriteAllText("C:\\tryCSV.csv", strCSV.ToString(), utf8);
+                File.WriteAllText("C:\\tryCSV.csv", strCSV, Encoding.UTF8);
                 HttpContext.Current.Session["EditMsg"] = "預設路徑在C槽最外層，檔案匯出成功。(注意：不包含尚在變更中的問卷。)";
             }
         }

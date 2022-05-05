@@ -13,6 +13,7 @@ namespace QuestionnaireSystem.admin
     {
         private QuestionnaireManager _QtnirMgr = new QuestionnaireManager();    //主問卷的Manager
         private SearchManager _srchMgr = new SearchManager();    //主問卷資訊
+        private transWholeAnswerManager _transMgr = new transWholeAnswerManager();    //轉換WholeAnswer
 
         //未做
         //更改問卷內容
@@ -21,7 +22,15 @@ namespace QuestionnaireSystem.admin
             if (!IsPostBack)
             {
                 List<Questionnaire> QtnirList = _QtnirMgr.GetQuestionnaireList();
-                this.RptrQtnir.DataSource = QtnirList;
+                List<WholeAnswer> wholeList=_transMgr.QstnirToWholeList(QtnirList);
+                foreach (WholeAnswer item in wholeList)
+                {
+                    if (item.VoidStatus == true)
+                        item.OpenOrNot= "開放";
+                    else
+                        item.OpenOrNot = "已關閉";
+                }
+                this.RptrQtnir.DataSource = wholeList;
                 this.RptrQtnir.DataBind();
             }
 

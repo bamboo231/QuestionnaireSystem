@@ -10,10 +10,10 @@
     </asp:ContentPlaceHolder>
     <link rel="stylesheet" href="css/bootstrap.css" />
     <style>
-        div {
+/*        div {
             border: 1px solid;
             border-color: darkgray;
-        }
+        }*/
 
         .toRight {
             float: right;
@@ -49,14 +49,14 @@
             <div class="container-fluid">
                 <div class="row">
                     <!-- 左列表 -->
-                    <div id="menuArea" class="col-3">
+                    <div id="menuArea" class="col-2">
                         <a href="MyQuestionnaire.aspx">問卷管理</a>
                         <br />
                         <a href="CommonQuestPage.aspx" target="_blank">常用問卷管理</a>
                         <br />
                     </div>
                     <!-- 主內容區 -->
-                    <div id="mainArea" class="col-9">
+                    <div id="mainArea" class="col-10">
                         <div class="row">
                             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
                             </asp:ContentPlaceHolder>

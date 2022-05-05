@@ -48,6 +48,31 @@ namespace QuestionnaireSystem.Manager
                 throw;
             }
         }
+        public List<WholeAnswer> QstnirToWholeList(List<Questionnaire> qstnirs)
+        {
+            try
+            {
+                List<WholeAnswer> QstListToDisplay = new List<WholeAnswer>();
+                for (int i = 0; i < qstnirs.Count; i++)
+                {
+                    WholeAnswer newItem = new WholeAnswer();
+                    newItem.QuestionnaireID = qstnirs[i].QuestionnaireID; 
+                    newItem.Caption = qstnirs[i].Caption; 
+                    newItem.QuestionnaireContent = qstnirs[i].QuestionnaireContent; 
+                    newItem.BuildDate = qstnirs[i].BuildDate; 
+                    newItem.StartDate = qstnirs[i].StartDate;
+                    newItem.EndDate = qstnirs[i].EndDate;
+                    newItem.VoidStatus = qstnirs[i].VoidStatus;
+                    QstListToDisplay.Add(newItem);
+                }
+                return QstListToDisplay;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("transWholeAnswer.QstToWholeList", ex);
+                throw;
+            }
+        }
 
         /// <summary>
         /// 將Question轉換成WholeAnswer
@@ -98,11 +123,15 @@ namespace QuestionnaireSystem.Manager
                 List<Question> newQstList = new List<Question>();
                 for (int i = 0; i < wholeAnswers.Count; i++)
                 {
-                    newQstList[i].QuestionnaireID = currentQnirID;//存進舊的ID
-                    newQstList[i].QuestContent = wholeAnswers[i].QuestContent;//存進舊的ID
-                    newQstList[i].Required = wholeAnswers[i].Required;//存進舊的ID
-                    newQstList[i].AnswerForm = wholeAnswers[i].AnswerForm;//存進舊的ID
-                    newQstList[i].SelectItem = wholeAnswers[i].SelectItem;//存進舊的ID
+                    Question question = new Question();
+                    question.QuestionnaireID = currentQnirID;//存進舊的ID
+                    question.QuestContent = wholeAnswers[i].QuestContent;//存進舊的ID
+                    question.QuestOrder = wholeAnswers[i].QuestOrder;//存進舊的ID
+                    question.Required = wholeAnswers[i].Required;//存進舊的ID
+                    question.AnswerForm = wholeAnswers[i].AnswerForm;//存進舊的ID
+                    question.SelectItem = wholeAnswers[i].SelectItem;//存進舊的ID
+
+                    newQstList.Add( question);//存進舊的ID
 
                 }
                 return newQstList;

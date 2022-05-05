@@ -17,12 +17,11 @@
         <asp:CheckBox ID="IsRequired" runat="server" Text="必填" />
     </div>
     <div>
-        回答<asp:TextBox ID="textSelectItem" runat="server"></asp:TextBox>(多個答案以,分隔)
+        回答<asp:TextBox ID="textSelectItem" runat="server"></asp:TextBox>(多個答案以「;」分隔)
             <asp:Button ID="btnAddToQuest" runat="server" Text="加入" OnClick="btnAddToQuest_Click" />
     </div>
     <br />
     <div>
-        <asp:Button ID="Button1" runat="server" Text="Button" Onclick="Button1_Click"/>
         <asp:ImageButton ID="imgBtnDelete" runat="server" ImageUrl="/images/deleteIcon.png" Width="20px" OnClick="imgBtnDelete_Click" />
     </div>
     <%--問題列表--%>
@@ -47,9 +46,9 @@
                 </td>
                 <td><%# Eval("CommonQuestID")%></td>
                 <td><%# Eval("QuestContent")%></td>
-                <td><%# Eval("AnswerForm")%></td>
+                <td><%# Eval("strAnswerForm")%></td>
                 <td>
-                    <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' />
+                    <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' Enabled="false"/>
                 </td>
                 <td>
                     <a href="CommonQuestPage.aspx?CommonQuestID=<%# Eval("CommonQuestID")%>">編輯</a>
@@ -65,9 +64,9 @@
                 </td>
                 <td bgcolor="#CECECF"><%# Eval("CommonQuestID")%></td>
                 <td bgcolor="#CECECF"><%# Eval("QuestContent")%></td>
-                <td bgcolor="#CECECF"><%# Eval("AnswerForm")%></td>
+                <td bgcolor="#CECECF"><%# Eval("strAnswerForm")%></td>
                 <td bgcolor="#CECECF">
-                    <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' />
+                    <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>' Enabled="false" />
                 </td>
                 <td bgcolor="#CECECF">
                     <a href="CommonQuestPage.aspx?CommonQuestID=<%# Eval("CommonQuestID")%>">編輯</a>
