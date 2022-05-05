@@ -166,15 +166,21 @@ namespace QuestionnaireSystem.Manager
         }
 
 
-        public Questionnaire GetQuestionnaire(string questionnaireID)
+        public Questionnaire GetQuestionnaire(int questionnaireID, bool isNewQstnir)
         {
             try
             {
-                int intQnirID = Int32.Parse(questionnaireID);
-
-                using (ContextModel contextModel = new ContextModel())
+                if (isNewQstnir)
                 {
-                    return contextModel.Questionnaires.Where(obj => obj.QuestionnaireID == intQnirID).First();
+                    Questionnaire questionnaire = new Questionnaire();
+                    return questionnaire;
+                }
+                else
+                {
+                    using (ContextModel contextModel = new ContextModel())
+                    {
+                        return contextModel.Questionnaires.Where(obj => obj.QuestionnaireID == questionnaireID).First();
+                    }
                 }
             }
             catch (Exception ex)
@@ -184,6 +190,21 @@ namespace QuestionnaireSystem.Manager
             }
         }
 
+        public Questionnaire GetQuestionnaire(int questionnaireID)
+        {
+            try
+            {
+                using (ContextModel contextModel = new ContextModel())
+                {
+                    return contextModel.Questionnaires.Where(obj => obj.QuestionnaireID == questionnaireID).First();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuestionnaireManager.GetQuestionnaire", ex);
+                throw;
+            }
+        }
         /// <summary>
         /// 取得問卷題目
         /// </summary>

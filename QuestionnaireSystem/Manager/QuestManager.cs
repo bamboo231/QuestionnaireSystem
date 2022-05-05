@@ -129,7 +129,7 @@ namespace QuestionnaireSystem.Manager
                     WholeAnswer a = new WholeAnswer();
                     countIndex++;
                     question.QuestOrder = countIndex;
-                    a=question;
+                    a = question;
                     newList.Add(a);
                 }
                 return newList; //回傳新的List
@@ -164,6 +164,8 @@ namespace QuestionnaireSystem.Manager
             }
         }
 
+
+
         /// <summary>
         /// 依問卷號取出題目的List
         /// </summary>
@@ -196,24 +198,26 @@ namespace QuestionnaireSystem.Manager
                 throw;
             }
         }
+
         /// <summary>
         /// 依問卷號取出題目的List
         /// </summary>
-        /// <param name="questionnaireID">傳入值為string</param>
+        /// <param name="questionnaireID">傳入值為int</param>
+        /// <param name="_isNewQstnir">傳入值為bool</param>
         /// <returns>回傳值為List<WholeAnswer></returns>
-        public List<WholeAnswer> GetWholeQuestionList(string questionnaireID)
+        public List<WholeAnswer> GetWholeQuestionList(int questionnaireID, bool _isNewQstnir)
         {
             try
             {
                 List<WholeAnswer> newList = new List<WholeAnswer>();
 
-                if (questionnaireID == null)
-                { }
+                if (_isNewQstnir)
+                {
+                    return newList;
+                }
                 else
                 {
                     List<Question> QuestionList = GetQuestionList(questionnaireID);
-                    int intQnirID = Int32.Parse(questionnaireID);
-
 
                     for (int i = 0; i < QuestionList.Count; i++)
                     {
@@ -239,6 +243,8 @@ namespace QuestionnaireSystem.Manager
                 throw;
             }
         }
+
+
         /// <summary>
         /// 依問卷號取出題目的List
         /// </summary>
@@ -263,7 +269,36 @@ namespace QuestionnaireSystem.Manager
                 throw;
             }
         }
-
+        /// <summary>
+        /// 依問卷號取出題目的List
+        /// </summary>
+        /// <param name="questionnaireID">傳入值為int</param>
+        /// <returns>回傳值為List<Question></returns>
+        public List<Question> GetQuestionList(int questionnaireID, bool isNewQstnir)
+        {
+            try
+            {
+                if (isNewQstnir)
+                {
+                    List<Question> qList = new List<Question>();
+                    return qList;
+                }
+                else
+                {
+                    using (ContextModel contextModel = new ContextModel())
+                    {
+                        List<Question> qList = contextModel.Questions.Where(obj => obj.QuestionnaireID == questionnaireID).ToList();
+                        //缺:如果沒有任何人填問卷該怎麼處理
+                        return qList;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuestManager.GetQuestionList", ex);
+                throw;
+            }
+        }
         /// <summary>
         /// 依問卷號取出題目
         /// </summary>

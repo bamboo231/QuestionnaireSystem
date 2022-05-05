@@ -31,7 +31,7 @@ namespace QuestionnaireSystem
                 List<Question> dispQuestion = _QuestMgr.GetQuestionList(currentQnirID);
 
                 //取得統計的數量
-                Dictionary<string, int[]> allAmount = _statisMgr.getAllStatisticCount2(currentQnirID);
+                Dictionary<string, int[]> allAmount = _statisMgr.getAllStatisticCount(currentQnirID);
                 if (allAmount.Count() == 0)
                 {
                     this.NAStatistic.Visible = true;

@@ -20,38 +20,56 @@ namespace QuestionnaireSystem.admin
         private CheckInputManager _checksMgr = new CheckInputManager();    //統計管理
         private transWholeAnswerManager _transMgr = new transWholeAnswerManager();    //轉換WholeAnswer
 
-        private static Questionnaire _basicQnir = new Questionnaire();//問卷的基本資料
+        private static Questionnaire _basicQstnir = new Questionnaire();//問卷的基本資料
         private static List<WholeAnswer> _currentQuestList = new List<WholeAnswer>();//題目的List
-
+        private static bool _isNewQstnir = false;
+        private static int _currentQnirID = 0;
 
         //bug:刪除問題後回到此頁並顯示問題，並且順序號碼要重新整理、DB無法帶入(觀看細節)動態控制項、統計頁數據有誤、統計缺%數、
         //未做:提示、帶入常用問題、修改問題、分頁
         //待改善:頁籤事件改成enum
-        //待問:
-
         protected void Page_Load(object sender, EventArgs e)
         {
-            string currentQnirID = this.Request.QueryString["QstnirID"];  //從URL取得當前所在的問卷ID
-            string updateOrder = this.Request.QueryString["UpdateOrder"];  //從URL取得當前正在編輯的題目
-            string currentBsicAnsID = this.Request.QueryString["BsicAnsID"];//從URL取得當前查看的問卷細節
-            string targetplh = this.Request.QueryString["Targetplh"];//從URL取得要查看的頁籤
 
+            string updateOrder = this.Request.QueryString["UpdateOrder"];  //當前正在編輯的題目
+            string currentBsicAnsID = this.Request.QueryString["BsicAnsID"];//當前查看的問卷細節
+            string targetplh = this.Request.QueryString["Targetplh"];//要查看的頁籤
             if (!IsPostBack)
             {
+                #region//_currentQnirID的值
+                if (_currentQnirID == 0)
+                {
+                    if (HttpContext.Current.Session["QstnirID"] == null)//不是由列表按新增進入
+                    {
+                        if (this.Request.QueryString["QstnirID"] != null)
+                            _currentQnirID = int.Parse(this.Request.QueryString["QstnirID"]);
+                        else
+                        {
+                            HttpContext.Current.Session["EditMsg"] = "請由問卷列表頁進入編輯頁面。";
+                            this.Response.Redirect($"/admin/MyQuestionnaire.aspx");
+                        }
+                    }
+                    else
+                    {
+                        _isNewQstnir = (bool)HttpContext.Current.Session["IsNewQstnir"];
+                        _currentQnirID = (int)HttpContext.Current.Session["QstnirID"];
+                        HttpContext.Current.Session["IsNewQstnir"] = null;
+                        HttpContext.Current.Session["QstnirID"] = null;
+                    }
+                }
+                #endregion
 
                 #region//繳回的填寫列表
-                if (currentQnirID != null)
+                if (!_isNewQstnir)
                 {
-                    List<BasicAnswer> doneList = _AnswerMgr.GetDoneList(currentQnirID);//既有問卷才帶入DB繳回問卷列表
-
+                    List<BasicAnswer> doneList = _AnswerMgr.GetDoneList(_currentQnirID, _isNewQstnir);//既有問卷才帶入DB繳回問卷列表
                     this.RptrAnswerList.DataSource = doneList;
                     this.RptrAnswerList.DataBind();
                 }
-
                 #endregion
 
                 #region//繳回的問卷細節
-                if (currentQnirID != null && currentBsicAnsID != null)
+                if (!_isNewQstnir && currentBsicAnsID != null)//不是新問卷且有指定哪一張回填，顯示填寫的細節
                 {
                     this.plhdoneList.Visible = false;
                     this.plhDoneDetail.Visible = true;
@@ -66,8 +84,8 @@ namespace QuestionnaireSystem.admin
                     plhDynDetail.Controls.Add(br0);
                     Label br1 = new Label() { ID = "br1", Text = "<br/>", }; //分行
                     plhDynDetail.Controls.Add(br1);
-                    #endregion
-                    #region//繳回的問卷的細節
+
+                    #region//繳回的問卷的細節的繫節
                     //顯示問卷題目及填寫的內容 
                     this.plhDynDetail.Controls.Clear();     //rptDoneDetail:訪客填問卷的細節的繫節
                     List<WholeAnswer> personWholeAnswers = _AnswerMgr.GetTargetType(currentBsicAnsID);//基本資料
@@ -173,16 +191,19 @@ namespace QuestionnaireSystem.admin
                     #endregion
                 }
 
+                #endregion
+
+
                 #region//後台統計頁
-                if (currentQnirID != null && currentQnirID != "")
+                if (!_isNewQstnir)
                 {
                     //顯示問卷題目及填寫的內容 
                     this.plhbookmark4.Controls.Clear();     //清空統計的placeHolder
 
-                    List<Question> dispQuestion = _QuestMgr.GetQuestionList(currentQnirID);//題目的資料
+                    List<Question> dispQuestion = _QuestMgr.GetQuestionList(_currentQnirID, _isNewQstnir);//題目的資料
 
                     //取得統計的數量
-                    Dictionary<string, int[]> allAmount = _statisMgr.getAllStatisticCount2(currentQnirID);
+                    Dictionary<string, int[]> allAmount = _statisMgr.getAllStatisticCount(_currentQnirID, _isNewQstnir);
                     if (allAmount.Count() == 0)
                     {
                         this.NAStatistic.Visible = true;
@@ -360,9 +381,9 @@ namespace QuestionnaireSystem.admin
                 #endregion
 
                 #region//如果是既有問卷把舊資料帶入
-                if (this.Request.QueryString["QstnirID"] != null)
+                if (!_isNewQstnir)
                 {
-                    Questionnaire questionnaire = _QstnirMgr.GetQuestionnaire(currentQnirID);
+                    Questionnaire questionnaire = _QstnirMgr.GetQuestionnaire(_currentQnirID, _isNewQstnir);
                     this.textCaption.Text = questionnaire.Caption;
                     this.textQuestionnaireContent.Text = questionnaire.QuestionnaireContent;
                     this.textStartDate.Text = questionnaire.EndDate.ToString("yyyy-MM-dd");
@@ -371,7 +392,7 @@ namespace QuestionnaireSystem.admin
 
                     //第一次帶入DB
                     List<WholeAnswer> qstsWithIntAnswerForm = new List<WholeAnswer>();
-                    qstsWithIntAnswerForm = _QuestMgr.GetWholeQuestionList(currentQnirID);
+                    qstsWithIntAnswerForm = _QuestMgr.GetWholeQuestionList(_currentQnirID, _isNewQstnir);
                     _currentQuestList = _transMgr.WholeToWholeList2(qstsWithIntAnswerForm);//將問題類型轉成字串
 
                 }
@@ -382,10 +403,15 @@ namespace QuestionnaireSystem.admin
         }
         protected void Page_Prerender(object sender, EventArgs e)
         {
-            string currentQnirID = this.Request.QueryString["QstnirID"];  //從URL取得當前所在的問卷ID
-            string updateOrder = this.Request.QueryString["UpdateOrder"];  //從URL取得當前正在編輯的題目
-            string currentBsicAnsID = this.Request.QueryString["BsicAnsID"];//從URL取得當前查看的問卷細節
-            string targetplh = this.Request.QueryString["Targetplh"];//從URL取得要查看的頁籤
+            //檢查:_currentQnirID能不能保留
+            string updateOrder = this.Request.QueryString["UpdateOrder"];  //當前正在編輯的題目
+            string currentBsicAnsID = this.Request.QueryString["BsicAnsID"];//當前查看的問卷細節
+            string targetplh = this.Request.QueryString["Targetplh"];//要查看的頁籤
+
+
+            if (updateOrder != null)
+                HttpContext.Current.Session["UpdateOrder"] = updateOrder;
+
 
             #region//由URL判斷進入哪一個頁籤
             if (targetplh == "1")
@@ -395,7 +421,11 @@ namespace QuestionnaireSystem.admin
             else if (targetplh == "3")
                 Changebookmark3();
             else if (targetplh == "4")
+            {
+
+
                 Changebookmark4();
+            }
             #endregion
 
             //如果網址帶有UpdateOrder，就切換到更新問題頁籤
@@ -405,14 +435,7 @@ namespace QuestionnaireSystem.admin
                 this.Updatequest(updateOrder);
             }
 
-            //藉由預存session跳出視窗 的字串
-            if (Session["AdminMainMsg"] != null)
-            {
-                IGetable o = (IGetable)this.Master;
-                var m = o.GetMsg();
-                m.Value = Session["AdminMainMsg"] as string;
-                Session.Remove("AdminMainMsg");
-            }
+
 
             //帶入問題列表
             if (HttpContext.Current.Session["CurrentQuests"] == null)//如果沒有儲存修改後的題目列表，直接帶入DB
@@ -426,8 +449,7 @@ namespace QuestionnaireSystem.admin
                 this.RptrQuest.DataBind();
             }
 
-
-            #region//如果有作答號碼，顯示繳回的問卷的細節
+            #region//如果有指定回覆的填寫，顯示繳回的問卷的細節
             if (currentBsicAnsID != null)
             {
                 Changebookmark3();
@@ -536,78 +558,73 @@ namespace QuestionnaireSystem.admin
                 }
             }
             #endregion
+
+            //藉由預存session跳出視窗 的字串
+            if (Session["EditMsg"] != null)
+            {
+                IGetable o = (IGetable)this.Master;
+                var m = o.GetMsg();
+                m.Value = Session["EditMsg"] as string;
+                Session.Remove("EditMsg");
+            }
         }
 
         //點擊分頁-問卷基本題目
         protected void bookmark1_Click(object sender, EventArgs e)
         {
-            string qstnirID = this.Request.QueryString["QstnirID"];
-
             string updateOrder = this.Request.QueryString["UpdateOrder"];
             if (updateOrder == null)
-                this.Response.Redirect($"/admin/EditQuestionnaire.aspx?&QstnirID={qstnirID}&Targetplh=1");
+                this.Response.Redirect($"/admin/EditQuestionnaire.aspx?&QstnirID={_currentQnirID}&Targetplh=1");
             else
-                this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={qstnirID}&UpdateOrder={updateOrder}&Targetplh=1");
+                this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={_currentQnirID}&UpdateOrder={updateOrder}&Targetplh=1");//確認會不會進postback
         }
         //點擊分頁-問題編輯
         protected void bookmark2_Click(object sender, EventArgs e)
         {
-            string qstnirID = this.Request.QueryString["QstnirID"];
             this.bookmark2.Enabled = false;
-            this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={qstnirID}&Targetplh=2");
+            this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={_currentQnirID}&Targetplh=2");
         }
         //點擊分頁-填寫資料
         protected void bookmark3_Click(object sender, EventArgs e)
         {
-            string currentQnirID = this.Request.QueryString["QstnirID"];  //從URL取得當前所在的問卷ID
             string currentBsicAnsID = this.Request.QueryString["BsicAnsID"];//從URL取得當前查看的問卷細節
-            if (currentQnirID == null)
-                HttpContext.Current.Session["AdminMainMsg"] = "新增的問卷沒有填寫過的資料。";
+            if (_isNewQstnir)
+                HttpContext.Current.Session["EditMsg"] = "新增的問卷沒有填寫過的資料。";
 
             //觀看填寫列表
-            else if (currentQnirID != null && currentBsicAnsID == null)
+            else if (!_isNewQstnir && currentBsicAnsID == null)
             {
-                string qstnirID = this.Request.QueryString["QstnirID"];
                 this.bookmark3.Enabled = false;
-                this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={qstnirID}&Targetplh=3");
+                this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={_currentQnirID}&Targetplh=3");
             }
-
-
         }
         //點擊分頁-統計
         protected void bookmark4_Click(object sender, EventArgs e)
         {
-            string qstnirID = this.Request.QueryString["QstnirID"];
+            if (_isNewQstnir)
+                HttpContext.Current.Session["EditMsg"] = "新增的問卷沒有統計資料。";
             this.bookmark4.Enabled = false;
-            this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={qstnirID}&Targetplh=4");
+            this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={_currentQnirID}&Targetplh=4");
         }
 
         //問卷基本資料送出按鈕
         protected void btnBasicSummit_Click(object sender, EventArgs e)
         {
-            //判斷是否為新的一筆資料
-            if (this.Request.QueryString["QstnirID"] != null)
-                _basicQnir.QuestionnaireID = int.Parse(this.Request.QueryString["QstnirID"]);
 
-            if (this.textCaption.Text == null || this.textQuestionnaireContent.Text == null || this.textStartDate.Text == null || this.textEndDate.Text == null)
-            {
-                HttpContext.Current.Session["AdminMainMsg"] = "此頁面皆為必填項目。";
-            }
+            if (this.textCaption.Text == "" || this.textQuestionnaireContent.Text == "" || this.textStartDate.Text == "" || this.textEndDate.Text == "")
+                HttpContext.Current.Session["EditMsg"] = "此頁面皆為必填項目。";
             else
             {
                 //將輸入值存入靜態Questionnaire，並存成Session
-                _basicQnir.Caption = this.textCaption.Text;
-                _basicQnir.QuestionnaireContent = this.textQuestionnaireContent.Text;
-                _basicQnir.StartDate = Convert.ToDateTime(this.textStartDate.Text);
-                _basicQnir.EndDate = Convert.ToDateTime(this.textEndDate.Text);
-                _basicQnir.VoidStatus = this.ChkBxVoidStatus.Checked;
-                HttpContext.Current.Session["AdminMainMsg"] = "資料尚未儲存，請繼續編輯問題後送出。";
-                HttpContext.Current.Session["Targetplh"] = "2";
-                string qstnirID = this.Request.QueryString["QstnirID"];
-                if (qstnirID != null)
-                    this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={qstnirID}&Targetplh=2");
-                else
-                    this.Response.Redirect($"/admin/EditQuestionnaire.aspx?Targetplh=2");
+                _basicQstnir.Caption = this.textCaption.Text;
+                _basicQstnir.QuestionnaireContent = this.textQuestionnaireContent.Text;
+                _basicQstnir.StartDate = Convert.ToDateTime(this.textStartDate.Text);
+                _basicQstnir.EndDate = Convert.ToDateTime(this.textEndDate.Text);
+                _basicQstnir.VoidStatus = this.ChkBxVoidStatus.Checked;
+                HttpContext.Current.Session["EditMsg"] = "資料尚未儲存，請繼續編輯問題後送出。";
+                Changebookmark2();//試試看
+
+                //this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={_currentQnirID}&Targetplh=2");
 
             }
         }
@@ -622,16 +639,15 @@ namespace QuestionnaireSystem.admin
         //新增題目-按下加入按鈕後，存到Session
         protected void btnAddToQuest_Click(object sender, EventArgs e)
         {
-            string updateOrder = this.Request.QueryString["UpdateOrder"];  //從URL取得當前正在編輯的題目
+            string updateOrder = null;
+            if (HttpContext.Current.Session["UpdateOrder"] != null)
+                updateOrder = HttpContext.Current.Session["UpdateOrder"] as string;  //從URL取得當前正在編輯的題目
+            HttpContext.Current.Session["UpdateOrder"] = null;
 
             #region//定義題目屬性
-            int qstnirID = 0;//問卷ID
-            if (updateOrder != null)//是修改既有問卷的情況，取出問卷ID賦予到該題目
-                qstnirID = int.Parse(this.Request.QueryString["QstnirID"]);
-            else
-                qstnirID = _QstnirMgr.GetNextQuestionnaireID();
             string questContent = this.setQuest.Text;                               //問題描述
-            int intQuestForm = _QuestMgr.AnswerTextToInt(this.setQuestForm.Text);   //問題種類
+            int intQuestForm = int.Parse(this.setQuestForm.Text);                   //問題種類
+            string strQuestForm = _QuestMgr.AnswerTextToInt(intQuestForm);          //問題種類
             bool required = this.IsRequired.Checked;                                //是否必填
             string selectItem = this.textSelectItem.Text;                           //選項
             #endregion
@@ -639,61 +655,61 @@ namespace QuestionnaireSystem.admin
             #region//檢查輸入值
             if (questContent == null)//驗證是否有輸入問題
             {
-                HttpContext.Current.Session["AdminMainMsg"] = "請輸入問題。";
+                HttpContext.Current.Session["EditMsg"] = "請輸入問題。";
                 return;
             }
             if (intQuestForm == 5 || intQuestForm == 6)//驗證選擇題是否有輸入選項
             {
                 if (selectItem == null || _checksMgr.IsMistakeSemicolon(selectItem))
                 {
-                    HttpContext.Current.Session["AdminMainMsg"] = "請設置單選及多選方塊的選項，(以半形;符號區分)。";
+                    HttpContext.Current.Session["EditMsg"] = "請設置單選及多選方塊的選項，(以半形;符號區分)。";
                     return;
                 }
                 if (intQuestForm == 5 && !required)//如果選擇題沒有輸入選項
                 {
-                    HttpContext.Current.Session["AdminMainMsg"] = "單選題必須為必選。";
+                    HttpContext.Current.Session["EditMsg"] = "單選題必須為必選。";
                     return;
                 }
             }
             else
             {
-                if (selectItem != null)
-                    HttpContext.Current.Session["AdminMainMsg"] = "選擇題以外的題目不需輸入選項。";
+                if (selectItem != "")
+                    HttpContext.Current.Session["EditMsg"] = "選擇題以外的題目不需輸入選項。";
                 return;
             }
             #endregion
-
 
             //現在正在修改題目
             if (updateOrder != null)
             {
                 WholeAnswer wholeUpdateQuest = new WholeAnswer()
                 {
-                    QuestionnaireID = qstnirID,
+                    QuestionnaireID = _currentQnirID,
                     QuestOrder = int.Parse(updateOrder),
                     QuestContent = questContent,
                     AnswerForm = intQuestForm,
-                    strAnswerForm = this.setQuestForm.Text,
+                    strAnswerForm = strQuestForm,
                     Required = required,
                     SelectItem = selectItem
                 };
 
                 _currentQuestList = _QuestMgr.UpdateQuest(_currentQuestList, wholeUpdateQuest);
 
-                if (this.Request.QueryString["QstnirID"] != null)
+                if (!_isNewQstnir)
                     this.Response.Redirect($"/admin/EditQuestionnaire.aspx/?Targetplh=2");//新增的問卷修改題目
                 else
-                    this.Response.Redirect($"/admin/EditQuestionnaire.aspx/?QstnirID={qstnirID}&Targetplh=2");//舊的問卷修改題目
+                    this.Response.Redirect($"/admin/EditQuestionnaire.aspx/?QstnirID={_currentQnirID}&Targetplh=2");//舊的問卷修改題目
             }
             else//新增題目
             {
                 //將題目更新至List
                 WholeAnswer arrWhole = new WholeAnswer()
                 {
-                    QuestionnaireID = qstnirID,
+                    QuestionnaireID = _currentQnirID,
                     QuestOrder = _currentQuestList.Count + 1,
                     QuestContent = questContent,
                     AnswerForm = intQuestForm,
+                    strAnswerForm = strQuestForm,
                     Required = required,
                     SelectItem = selectItem
                 };
@@ -741,37 +757,33 @@ namespace QuestionnaireSystem.admin
         //將問卷寫進資料庫
         protected void btnQuestSummit_Click(object sender, EventArgs e)
         {
-            string currentQnirID = this.Request.QueryString["QstnirID"];  //從URL取得當前所在的問卷ID
-            List<Question> saveQstList = _transMgr.WholeToQstList(_currentQuestList);//記憶體的題目列表
+            List<Question> saveQstList = _transMgr.WholeToQstList(_currentQuestList, _currentQnirID);//記憶體的題目列表
 
-            //判斷是否為新資料
-            if (currentQnirID == null)
-                _basicQnir.QuestionnaireID = _QstnirMgr.GetNextQuestionnaireID();
-
-            this._QstnirMgr.Updateuestionnaire(_basicQnir, saveQstList);//存進DB
+            this._QstnirMgr.Updateuestionnaire(_basicQstnir, saveQstList);//存進DB
             HttpContext.Current.Session.Abandon();      //清除所有session並返回
-            HttpContext.Current.Session["AdminMainMsg"] = "問卷已更新。";
+            HttpContext.Current.Session["EditMsg"] = "問卷已更新。";
             this.Response.Redirect("/admin/MyQuestionnaire.aspx");
         }
 
         //取消問題(待看)
         protected void btnQuestCancel_Click(object sender, EventArgs e)
         {
-            string currentQnirID = this.Request.QueryString["QstnirID"];  //從URL取得當前所在的問卷ID
+            string currentQnirID = this.Request.QueryString["QstnirID"] as string;
+
             HttpContext.Current.Session.Abandon();      //清除所有session並返回
-            _basicQnir = null;
+            _basicQstnir = null;
             this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={currentQnirID}&Targetplh=2");
         }
 
         //匯出CSV檔
         protected void btnExport_Click(object sender, EventArgs e)
         {
-            string currentQnirID = this.Request.QueryString["QstnirID"];  //從URL取得當前所在的問卷ID
+            string currentQnirID = this.Request.QueryString["QstnirID"] as string;
             string strCSV = "";
             //填寫者的基本資料List
             List<BasicAnswer> allBasicAnswer = _AnswerMgr.GetDoneList(currentQnirID);
             if (allBasicAnswer.Count == 0)
-                HttpContext.Current.Session["AdminMainMsg"] = "查無資料，無法匯出檔案。";
+                HttpContext.Current.Session["EditMsg"] = "查無資料，無法匯出檔案。";
             else
             {
                 //每筆回答
@@ -792,7 +804,7 @@ namespace QuestionnaireSystem.admin
                 }
                 System.Text.UTF8Encoding utf8 = new System.Text.UTF8Encoding(false);
                 File.WriteAllText("C:\\tryCSV.csv", strCSV.ToString(), utf8);
-                HttpContext.Current.Session["AdminMainMsg"] = "預設路徑在C槽最外層，檔案匯出成功。(注意：不包含尚在變更中的問卷。)";
+                HttpContext.Current.Session["EditMsg"] = "預設路徑在C槽最外層，檔案匯出成功。(注意：不包含尚在變更中的問卷。)";
             }
         }
 
@@ -804,6 +816,9 @@ namespace QuestionnaireSystem.admin
             this.plhbookmark3.Visible = false;
             this.plhbookmark4.Visible = false;
             this.bookmark1.Enabled = false;
+            this.bookmark2.Enabled = true;
+            this.bookmark3.Enabled = true;
+            this.bookmark4.Enabled = true;
 
         }
         //切換分頁的事件
@@ -813,7 +828,10 @@ namespace QuestionnaireSystem.admin
             this.plhbookmark2.Visible = true;
             this.plhbookmark3.Visible = false;
             this.plhbookmark4.Visible = false;
+            this.bookmark1.Enabled = true;
             this.bookmark2.Enabled = false;
+            this.bookmark3.Enabled = true;
+            this.bookmark4.Enabled = true;
 
         }
         //切換分頁的事件
@@ -823,7 +841,10 @@ namespace QuestionnaireSystem.admin
             this.plhbookmark2.Visible = false;
             this.plhbookmark3.Visible = true;
             this.plhbookmark4.Visible = false;
+            this.bookmark1.Enabled = true;
+            this.bookmark2.Enabled = true;
             this.bookmark3.Enabled = false;
+            this.bookmark4.Enabled = true;
 
         }
         //切換分頁的事件
@@ -833,8 +854,10 @@ namespace QuestionnaireSystem.admin
             this.plhbookmark2.Visible = false;
             this.plhbookmark3.Visible = false;
             this.plhbookmark4.Visible = true;
+            this.bookmark1.Enabled = true;
+            this.bookmark2.Enabled = true;
+            this.bookmark3.Enabled = true;
             this.bookmark4.Enabled = false;
-
         }
 
     }

@@ -91,18 +91,14 @@ namespace QuestionnaireSystem.Manager
             }
         }
 
-        public List<Question> WholeToQstList(List<WholeAnswer> wholeAnswers)
+        public List<Question> WholeToQstList(List<WholeAnswer> wholeAnswers, int currentQnirID)
         {
             try
             {
                 List<Question> newQstList = new List<Question>();
                 for (int i = 0; i < wholeAnswers.Count; i++)
                 {
-                    if (wholeAnswers[i].QuestionnaireID == 0)
-                        newQstList[i].QuestionnaireID = _QtnirMgr.GetNextQuestionnaireID();//賦予新的ID
-                    else
-                        newQstList[i].QuestionnaireID = wholeAnswers[i].QuestionnaireID;//存進舊的ID
-
+                    newQstList[i].QuestionnaireID = currentQnirID;//存進舊的ID
                     newQstList[i].QuestContent = wholeAnswers[i].QuestContent;//存進舊的ID
                     newQstList[i].Required = wholeAnswers[i].Required;//存進舊的ID
                     newQstList[i].AnswerForm = wholeAnswers[i].AnswerForm;//存進舊的ID

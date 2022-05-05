@@ -38,12 +38,12 @@
             <div>
                 問題<asp:TextBox ID="setQuest" runat="server"></asp:TextBox>
                 <asp:DropDownList ID="setQuestForm" runat="server">
-                    <asp:ListItem Value="1">文字方塊</asp:ListItem>
-                    <asp:ListItem Value="2">數字</asp:ListItem>
-                    <asp:ListItem Value="3">Email</asp:ListItem>
-                    <asp:ListItem Value="4">日期</asp:ListItem>
-                    <asp:ListItem Value="5">單選方塊</asp:ListItem>
-                    <asp:ListItem Value="6">複選方塊</asp:ListItem>
+                    <asp:ListItem Value="1" Text="文字方塊"></asp:ListItem>
+                    <asp:ListItem Value="2" Text="數字"></asp:ListItem>
+                    <asp:ListItem Value="3" Text="Email"></asp:ListItem>
+                    <asp:ListItem Value="4" Text="日期"></asp:ListItem>
+                    <asp:ListItem Value="5" Text="單選方塊"></asp:ListItem>
+                    <asp:ListItem Value="6" Text="複選方塊"></asp:ListItem>
                 </asp:DropDownList>
                 <asp:CheckBox ID="IsRequired" runat="server" Text="必填" Checked="false" />
             </div>
@@ -79,7 +79,7 @@
                             <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>'></asp:CheckBox>
                         </td>
                         <td>
-                            <a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&UpdateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
+                            <a href="EditQuestionnaire.aspx?UpdateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
                         </td>
                     </tr>
                 </ItemTemplate>
@@ -96,7 +96,7 @@
                             <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>'></asp:CheckBox>
                         </td>
                         <td bgcolor="#CECECF">
-                            <a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&UpdateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
+                            <a href="EditQuestionnaire.aspx?UpdateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
                     </tr>
                 </AlternatingItemTemplate>
                 <FooterTemplate>
@@ -198,12 +198,7 @@
 
 
     <script>
-        //$(document).ready(function () {
-        //    //藉由預存session跳出視窗的功能
-        //    if (adminMainMsg.value != "") {
-        //        alert(adminMainMsg.value);
-        //        adminMainMsg.value = "";
-        //    }
+        $(document).ready(function () {
             //取得常用問題
             GetCommon();
 

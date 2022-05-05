@@ -65,11 +65,18 @@
                 </div>
             </div>
         </div>
-        <input id="adminMainMsg1" name="adminMainMsg1" runat="server" type="hidden" />
-        <asp:HiddenField ID="MyQstnirMsg" runat="server" />
+        <input id="MyQstnirMsg" name="MyQstnirMsg" runat="server" type="hidden" />
+        <input id="EditMsg" name="EditMsg" runat="server" type="hidden" />
         <asp:HiddenField ID="AdminMainMsg" runat="server" />
     </form>
-
-
+    <script>
+        $(document).ready(function () {
+            //藉由預存session跳出視窗的功能
+            if (AdminMainMsg.value != "") {
+                alert(AdminMainMsg.value);
+                AdminMainMsg.value = "";
+            }
+        });
+    </script>
 </body>
 </html>

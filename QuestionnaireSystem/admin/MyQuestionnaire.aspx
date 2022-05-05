@@ -40,11 +40,11 @@
                             <asp:CheckBox ID="ChkBxQnir" runat="server" value='<%# Eval("QuestionnaireID")%>' />
                         </td>
                         <td><%# Eval("QuestionnaireID")%></td>
-                        <td><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&Targetplh=1" target="_blank"><%# Eval("Caption")%></a></td>
+                        <td><a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&Targetplh=1" target="_blank"><%# Eval("Caption")%></a></td>
                         <td><%# Eval("VoidStatus")%></td>
                         <td><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                         <td><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
-                        <td><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&Targetplh=4" target="_blank">前往</a></td>
+                        <td><a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&Targetplh=4" target="_blank">前往</a></td>
                     </tr>
                 </ItemTemplate>
                 <AlternatingItemTemplate>
@@ -54,11 +54,11 @@
                             <asp:CheckBox ID="ChkBxQnir" runat="server" value='<%# Eval("QuestionnaireID")%>' />
                         </td>
                         <td bgcolor="#CECECF"><%# Eval("QuestionnaireID")%></td>
-                        <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&Targetplh=1" target="_blank"><%# Eval("Caption")%></a></td>
+                        <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&Targetplh=1" target="_blank"><%# Eval("Caption")%></a></td>
                         <td bgcolor="#CECECF"><%# Eval("VoidStatus")%></td>
                         <td bgcolor="#CECECF"><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                         <td bgcolor="#CECECF"><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
-                        <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QnirID=<%# Eval("QuestionnaireID")%>&Targetplh=4" target="_blank">前往</a></td>
+                        <td bgcolor="#CECECF"><a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&Targetplh=4" target="_blank">前往</a></td>
                     </tr>
                 </AlternatingItemTemplate>
                 <FooterTemplate>

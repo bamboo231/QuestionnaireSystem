@@ -96,6 +96,8 @@ namespace QuestionnaireSystem.admin
         //新增問卷
         protected void ImageAdd_Click(object sender, ImageClickEventArgs e)
         {
+            HttpContext.Current.Session["QstnirID"] = _QtnirMgr.GetNextQuestionnaireID();
+            HttpContext.Current.Session["IsNewQstnir"] = true;
             this.Response.Redirect("/admin/EditQuestionnaire.aspx");
         }
 
