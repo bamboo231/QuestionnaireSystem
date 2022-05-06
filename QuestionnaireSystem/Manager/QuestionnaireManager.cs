@@ -55,14 +55,14 @@ namespace QuestionnaireSystem.Manager
         {
             using (ContextModel contextModel = new ContextModel())
             {
-                var srchList = contextModel.Questionnaires.Where(obj => obj.VoidStatus == true).ToList();
+                var srchList = contextModel.Questionnaires.Where(obj => obj.VoteStatus == true).ToList();
                 srchList = srchList.OrderByDescending(obj => obj.BuildDate).ToList();
                 return srchList;
             }
         }
 
 
-        public List<Questionnaire> TakeEnableQstnir(int pageSize, int pageIndex, out int totalRows)
+        public List<Questionnaire> TakeEnableQstnir(List<Questionnaire> QtnirList ,int pageSize, int pageIndex, out int totalRows)
         {
             int skip = pageSize * (pageIndex - 1);  // 計算跳頁數
             if (skip < 0)
@@ -72,16 +72,16 @@ namespace QuestionnaireSystem.Manager
 
             using (ContextModel contextModel = new ContextModel())
             {
-                var srchList = contextModel.Questionnaires.Where(obj => obj.VoidStatus == true).ToList();
+                var srchList = contextModel.Questionnaires.Where(obj => obj.VoteStatus == true).ToList();
                 srchList = srchList.OrderByDescending(obj => obj.BuildDate).ToList();
                 //取得前{pageSize}*{pageIndex}拿掉前{skip}筆資料
-                var takeList = (List<Questionnaire>)srchList.Take(pageSize * pageIndex).Skip(skip);
-                totalRows = GetEnableQstnir().Count;
+                var takeList = (List<Questionnaire>)srchList.Take(pageSize * pageIndex).Skip(skip).ToList();
+                totalRows = srchList.Count();
                 return takeList;
             }
         }
 
-        //要改
+
         /// <summary>
         /// 刪除某筆問卷
         /// </summary>
@@ -134,7 +134,7 @@ namespace QuestionnaireSystem.Manager
                     targetQnir.QuestionnaireContent = addQnir.QuestionnaireContent;
                     targetQnir.StartDate = addQnir.StartDate;
                     targetQnir.EndDate = addQnir.EndDate;
-                    targetQnir.VoidStatus = addQnir.VoidStatus;
+                    targetQnir.VoteStatus = addQnir.VoteStatus;
 
                     var targetQst = context.Questions.Where(obj => obj.QuestionnaireID == addQnir.QuestionnaireID).ToList();
                     int i = 0;
@@ -234,6 +234,9 @@ namespace QuestionnaireSystem.Manager
                         AnswerForm = qst.AnswerForm,
                         SelectItem = qst.SelectItem,
                         Required = qst.Required,
+                        VoteStatus = qstnir.VoteStatus,
+                        StartDate = qstnir.StartDate,
+                        EndDate = qstnir.EndDate,
                     };
                 List<WholeAnswer> wholeQuestionnaire = new List<WholeAnswer>(newList).ToList();
                 return wholeQuestionnaire;

@@ -19,20 +19,48 @@ namespace QuestionnaireSystem.Manager
         /// <param name="srchText">使用者輸入的關鍵字(string)</param>
         /// <param name="checkedList">被比對的問卷List(List<Questionnaire>)</param>
         /// <returns>回傳值為List<Questionnaire></returns>
-        public List<Questionnaire> GetIncludeTextList(string srchText, List<Questionnaire> checkedList)
+        public List<Questionnaire> GetIncludeTextList(string srchKey, List<Questionnaire> checkedList)
         {
-            List<Questionnaire> includeList = new List<Questionnaire>(checkedList);
             try
             {
-                //將標題不包含關鍵字的資料從List移除
-                foreach (Questionnaire item in checkedList)
+                if (srchKey == null)
+                    return checkedList;
+                else
                 {
-                    if (!_chkInpMgr.IncludeText(item.Caption, srchText))
+                    List<Questionnaire> includeList = new List<Questionnaire>();
+                    int keyAmount = 0;
+                    if (_chkInpMgr.IncludeText(srchKey, " "))
                     {
-                        includeList.Remove(item);
+                        keyAmount = srchKey.Count(f => f == ' ') + 1;
+
+                        string[] subs = new string[keyAmount];
+                        if (!string.IsNullOrWhiteSpace(srchKey))
+                            subs = srchKey.Split(' ');
+
+                        foreach (Questionnaire item in checkedList)
+                        {
+                            foreach (string sub in subs)
+                            {
+                                if (_chkInpMgr.IncludeText(item.Caption, sub))
+                                {
+                                    includeList.Add(item);
+                                }
+                            }
+                        }
                     }
+                    else
+                    {
+                        foreach (Questionnaire item in checkedList)
+                        {
+                            if (_chkInpMgr.IncludeText(item.Caption, srchKey))
+                            {
+                                includeList.Add(item);
+                            }
+                        }
+                    }
+
+                    return includeList;
                 }
-                return includeList;
             }
             catch (Exception ex)
             {
@@ -56,15 +84,16 @@ namespace QuestionnaireSystem.Manager
                 DateTime DTBeginDate = Convert.ToDateTime(beginDate);
                 DateTime DTEndDate = Convert.ToDateTime(endDate);
 
+                List<Questionnaire> result = new List<Questionnaire>();
                 //將標題不包含關鍵字的資料從List移除
                 foreach (Questionnaire item in checkedList)
                 {
-                    if (!_chkInpMgr.InDateRange(DTBeginDate, DTEndDate, item.StartDate) || !_chkInpMgr.InDateRange(DTBeginDate, DTEndDate, item.EndDate))
+                    if (_chkInpMgr.InDateRange(DTBeginDate, DTEndDate, item.StartDate) && _chkInpMgr.InDateRange(DTBeginDate, DTEndDate, item.EndDate))
                     {
-                        checkedList.Remove(item);
+                        result.Add(item);
                     }
                 }
-                return checkedList;
+                return result;
 
             }
             catch (Exception ex)

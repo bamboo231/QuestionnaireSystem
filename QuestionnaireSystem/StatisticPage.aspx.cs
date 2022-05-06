@@ -14,12 +14,22 @@ namespace QuestionnaireSystem
 {
     public partial class StatisticPage : System.Web.UI.Page
     {
+        private QuestionnaireManager _QtnirMgr = new QuestionnaireManager();    //問卷基本資料管理
         private QuestManager _QuestMgr = new QuestManager();    //問題管理
         private Statistic _statisMgr = new Statistic();    //統計管理
         protected void Page_Load(object sender, EventArgs e)
         {
+
             string currentQnirID = this.Request.QueryString["QnirID"];  //從URL取得當前所在的問卷ID
 
+            List<WholeAnswer> wholeQuestionnaire = _QtnirMgr.GetWholeQuestioniar(currentQnirID);
+            this.Caption.Text = wholeQuestionnaire[0].Caption.ToString();
+
+            if (wholeQuestionnaire[0].VoteStatus)
+                this.IsVoting.Text = "投票中";
+            string strStartDate = wholeQuestionnaire[0].StartDate.ToString("yyyy/MM/dd");
+            string strEndDate = wholeQuestionnaire[0].EndDate.ToString("yyyy/MM/dd");
+            this.Period.Text = strStartDate + "~" + strEndDate;
             this.currentID.Value = currentQnirID;
 
             #region//後台統計頁

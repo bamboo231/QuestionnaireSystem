@@ -4,9 +4,9 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="position-absolute top-0 end-0">
-        <asp:Label ID="Label4" class="position-absolute top-0 end-0" runat="server" Text="投票中"></asp:Label>
+        <asp:Label ID="IsVoting" class="position-absolute top-0 end-0" runat="server" Text="已結束"></asp:Label>
         <br />
-        <asp:Label ID="Label6" runat="server" Text="2021/9/9~2022/5/5"></asp:Label>
+        <asp:Label ID="Period" runat="server" Text="2021/9/9~2022/5/5"></asp:Label>
         <br />
     </div>
     <div id="doIt" class="container" runat="server">

@@ -60,21 +60,21 @@ namespace QuestionnaireSystem
         protected global::System.Web.UI.WebControls.Repeater RptrQtnir;
 
         /// <summary>
-        /// ucPager1 控制項。
+        /// NoData 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::QuestionnaireSystem.ShareControls.ucPager ucPager1;
+        protected global::System.Web.UI.WebControls.Label NoData;
 
         /// <summary>
-        /// Label1 控制項。
+        /// ucPager 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label1;
+        protected global::QuestionnaireSystem.ShareControls.ucPager ucPager;
     }
 }

@@ -38,7 +38,7 @@
                         <tr>
                             <td><%# Eval("QuestionnaireID")%></td>
                             <td><a href="FillOutPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank"><%# Eval("Caption")%></a></td>
-                            <td><%# Eval("VoidStatus")%></td>
+                            <td><%# Eval("VoteStatus")%></td>
                             <td><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                             <td><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
                             <td><a href="StatisticPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank">前往</a></td>
@@ -48,7 +48,7 @@
                         <tr>
                             <td bgcolor="#CECECF"><%# Eval("QuestionnaireID")%></td>
                             <td bgcolor="#CECECF"><a href="FillOutPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank"><%# Eval("Caption")%></a></td>
-                            <td bgcolor="#CECECF"><%# Eval("VoidStatus")%></td>
+                            <td bgcolor="#CECECF"><%# Eval("VoteStatus")%></td>
                             <td bgcolor="#CECECF"><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                             <td bgcolor="#CECECF"><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
                             <td bgcolor="#CECECF"><a href="StatisticPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank">前往</a></td>
@@ -58,8 +58,8 @@
                         </table>
                     </FooterTemplate>
                 </asp:Repeater>
-                <uc1:ucPager runat="server" id="ucPager1"  PageSize="10"/>
-                <asp:Label ID="Label1" runat="server" Text="(現在沒有問卷)" Visible="false"></asp:Label>
+                <asp:Label ID="NoData" runat="server" Text="(查無資料)" Visible="false"></asp:Label>
+                <uc1:ucPager runat="server" id="ucPager"  PageSize="10"/>
 
             </div>
         </div>

@@ -34,7 +34,7 @@ namespace QuestionnaireSystem.ORM
         [Column(TypeName = "datetime2")]
         public DateTime EndDate { get; set; }
 
-        public bool VoidStatus { get; set; }
+        public bool VoteStatus { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BasicAnswer> BasicAnswers { get; set; }

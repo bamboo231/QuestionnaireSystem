@@ -30,6 +30,11 @@ namespace QuestionnaireSystem
 
             #region//問卷
             List<WholeAnswer> wholeQuestionnaire = _QtnirMgr.GetWholeQuestioniar(currentQnirID);//每個題目
+            if (wholeQuestionnaire[0].VoteStatus)
+                this.IsVoting.Text = "投票中";
+            string strStartDate = wholeQuestionnaire[0].StartDate.ToString("yyyy/MM/dd");
+            string strEndDate = wholeQuestionnaire[0].EndDate.ToString("yyyy/MM/dd");
+            this.Period.Text = strStartDate + "~" + strEndDate;
 
             this.Caption.Text = wholeQuestionnaire[0].Caption.ToString();
             this.Caption2.Text = wholeQuestionnaire[0].Caption.ToString();
@@ -318,7 +323,7 @@ namespace QuestionnaireSystem
             string strEmail = this.doneEmail.Text.Trim();
             string strAge = this.doneAge.Text.Trim();
 
-            if (currentQnirID == "" || strName == "" || strPhone == "" || strEmail == "" || strAge == "")
+            if (string.IsNullOrWhiteSpace(currentQnirID) || string.IsNullOrWhiteSpace(strName) || string.IsNullOrWhiteSpace(strPhone) || string.IsNullOrWhiteSpace(strEmail) || string.IsNullOrWhiteSpace(strAge))
             {
                 HttpContext.Current.Session["MainMsg"] = "基本資料皆為必填項目。";
                 return;
@@ -339,7 +344,12 @@ namespace QuestionnaireSystem
             }
             else if (int.Parse(strAge) <= 0)
             {
-                HttpContext.Current.Session["MainMsg"] = "你沒有那麼年輕ㄛ。";
+                HttpContext.Current.Session["MainMsg"] = "年齡錯誤，你沒有那麼年輕ㄛ。";
+                return;
+            }
+            else if (int.Parse(strAge) >= 200)
+            {
+                HttpContext.Current.Session["MainMsg"] = "年齡錯誤，本問卷限人類與貓填寫ㄛ。";
                 return;
             }
             else
@@ -363,16 +373,16 @@ namespace QuestionnaireSystem
                     //題號
                     int qstNumber = item.QuestOrder;//題號
 
-                    if (item.AnswerForm == 1 || item.AnswerForm == 2 || item.AnswerForm == 3 || item.AnswerForm == 4)//文字方塊
+                    if (item.AnswerForm != 6 && item.AnswerForm != 5)//文字方塊
                     {
                         string textboxTitle = $"textbox{qstNumber}";
                         TextBox dynBox = plhDynDetail.FindControl(textboxTitle) as TextBox;
-                        if (dynBox.Text == null || dynBox.Text.Trim() == "")
+                        if (string.IsNullOrWhiteSpace(dynBox.Text) || string.IsNullOrWhiteSpace(dynBox.Text))
                         {
                             checkFilled = false;//必填沒填
                         }
                     }
-                    else
+                    else if (item.AnswerForm == 6)
                     {
                         CheckBoxList dynCB = plhDynDetail.FindControl($"CB{qstNumber}") as CheckBoxList;
                         int amount = dynCB.Items.Count;
@@ -385,13 +395,26 @@ namespace QuestionnaireSystem
                         if (check == 0)
                             checkFilled = false;//漏填
                     }
+                    else if (item.AnswerForm == 5)
+                    {
+                        RadioButtonList dynRB = plhDynDetail.FindControl($"RB{qstNumber}") as RadioButtonList;
+                        int amount = dynRB.Items.Count;
+                        int check = 0;//計算被選取數量
+                        for (int i = 0; i < amount - 1; i++)
+                        {
+                            if (dynRB.Items[i].Selected == true)
+                                check++;
+                        }
+                        if (check == 0)
+                            checkFilled = false;//漏填
+                    }
                 }
 
                 int lastBasicID = 0;
                 //計算前一筆的BasicAnswer
-                if ( _AnswerMgr.GetDoneList(currentQnirID).Count!=0 )
+                if (_AnswerMgr.GetDoneList(currentQnirID).Count != 0)
                 {
-                lastBasicID = _AnswerMgr.GetDoneList(currentQnirID).LastOrDefault().BasicAnswerID;
+                    lastBasicID = _AnswerMgr.GetDoneList(currentQnirID).LastOrDefault().BasicAnswerID;
                 }
 
 
@@ -415,7 +438,7 @@ namespace QuestionnaireSystem
                             TextBox dynBox = plhDynDetail.FindControl($"textbox{theQuestID + 1}") as TextBox;
                             Answer a = new Answer()
                             {
-                                BasicAnswerID = lastBasicID+1,
+                                BasicAnswerID = lastBasicID + 1,
                                 QuestID = wholeQuestionnaire[theQuestID].QuestID,
                                 Answer1 = dynBox.Text,
                             };
@@ -465,7 +488,9 @@ namespace QuestionnaireSystem
                         count++;
                     }
 
-                    HttpContext.Current.Session["FillOutMsg"] = "請確認填妥後送出(送出後不可修改)。";
+                    HttpContext.Current.Session["MainMsg"] = "請確認填妥後送出(送出後不可修改)。";
+
+                    Changebookmark2();
                 }
 
 
@@ -618,10 +643,9 @@ namespace QuestionnaireSystem
         protected void btnChkSummit_Click(object sender, EventArgs e)
         {
 
-            _AnswerMgr.SaveBasicQnir(basicQnir);
-            _AnswerMgr.SaveAnswer(AnswerList);
+            _AnswerMgr.SaveAnswer(AnswerList, basicQnir);
 
-            HttpContext.Current.Session["FillOutMsg"] = "問卷已送出。";
+            HttpContext.Current.Session["MainMsg"] = "問卷已送出。";
             this.Response.Redirect("Index.aspx");
         }
 

@@ -280,18 +280,6 @@ namespace QuestionnaireSystem.Manager
             }
         }
 
-        /// <summary>
-        /// 儲存填寫問卷的基本資料
-        /// </summary>
-        /// <param name="basicQnir">傳入BasicAnswer</param>
-        public void SaveBasicQnir(BasicAnswer basicQnir)
-        {
-            using (ContextModel contextModel = new ContextModel())
-            {
-                contextModel.BasicAnswers.Add(basicQnir);
-                contextModel.SaveChanges();
-            }
-        }
 
         /// <summary>
         /// 取得新增的基本資料號
@@ -308,19 +296,23 @@ namespace QuestionnaireSystem.Manager
         }
 
         /// <summary>
-        /// 儲存填寫問卷的問題內容
+        /// 儲存填寫的問卷內容
         /// </summary>
         /// <param name="AnswerList">傳入List<Answer></param>
-        public void SaveAnswer(List<Answer> AnswerList)
+        public void SaveAnswer(List<Answer> AnswerList, BasicAnswer basicQnir)
         {
-
-            int newNumber = GetBasicQnir();
+            int newBasicQnirID = GetBasicQnir(); 
+            basicQnir.BasicAnswerID = newBasicQnirID;
+            basicQnir.AnswerDate = DateTime.Now;
             using (ContextModel contextModel = new ContextModel())
             {
                 foreach (Answer answer in AnswerList)
                 {
+                    answer.BasicAnswerID= newBasicQnirID;
                     contextModel.Answers.Add(answer);
                 }
+
+                contextModel.BasicAnswers.Add(basicQnir);
                 contextModel.SaveChanges();
             }
         }

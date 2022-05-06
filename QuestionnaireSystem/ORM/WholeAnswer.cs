@@ -29,7 +29,7 @@ namespace QuestionnaireSystem.ORM
         public DateTime BuildDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public bool VoidStatus { get; set; }
+        public bool VoteStatus { get; set; }
         public string OpenOrNot { get; set; }
     }
 }

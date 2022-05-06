@@ -45,8 +45,15 @@ namespace QuestionnaireSystem.admin
 
             if (!IsPostBack)
             {
+                if(this.Request.QueryString["Update"] == "true")//從列表點進來
+                {
+                    HttpContext.Current.Session.Abandon();
+                    _basicQstnir = null;
+                    _currentQuestList = null;
+                    _isNewQstnir = false;
+                    _currentQnirID=0;
 
-
+                }
 
                 #region//_currentQnirID的值
                 if (_currentQnirID == 0)
@@ -77,8 +84,7 @@ namespace QuestionnaireSystem.admin
                 }
                 else
                 {
-
-                    _currentQnirID = int.Parse(this.Request.QueryString["QstnirID"]);
+                    //_currentQnirID = int.Parse(this.Request.QueryString["QstnirID"]);
                 }
                 #endregion
 
@@ -92,7 +98,7 @@ namespace QuestionnaireSystem.admin
 
                     this.ucPager.TotalRows = totalRows;
                     this.ucPager.PageIndex = pageIndex;
-                    this.ucPager.Bind();
+                    this.ucPager.Bind2();
 
 
                     this.RptrAnswerList.DataSource = doneList;
@@ -227,12 +233,11 @@ namespace QuestionnaireSystem.admin
 
                 #endregion
 
-
                 #region//後台統計頁
                 if (!_isNewQstnir)
                 {
                     //顯示問卷題目及填寫的內容 
-                    this.plhbookmark4.Controls.Clear();     //清空統計的placeHolder
+                    this.plhStatistic.Controls.Clear();     //清空統計的placeHolder
 
                     List<Question> dispQuestion = _QuestMgr.GetQuestionList(_currentQnirID, _isNewQstnir);//題目的資料
 
@@ -262,13 +267,14 @@ namespace QuestionnaireSystem.admin
                             //動態新增控制項(題號&題目(5:單選/6:多選/其他:文字方塊))
                             if (item.AnswerForm == 5)
                             {
-
                                 Label dynLabel = new Label()//標題
                                 {
                                     ID = $"dynTitle{item.QuestOrder}",
                                     Text = $"{item.QuestOrder} . {item.QuestContent}",
                                 };
-                                plhbookmark4.Controls.Add(dynLabel);
+                                plhStatistic.Controls.Add(dynLabel);
+                                Label lb1 = new Label() { ID = $"lb{item.QuestID}_1", Text = "<br>", };//分行
+                                plhStatistic.Controls.Add(lb1);
 
                                 _QuestMgr.SplitSelectItem(item.SelectItem, out int selectionCount, out string[] arrSelectItem);//本題選項數量,本題選項陣列
                                 int sumVoid = 0;
@@ -286,9 +292,9 @@ namespace QuestionnaireSystem.admin
                                         ID = $"Selection",
                                         Text = $"{arrSelectItem[i]}",
                                     };
-                                    plhbookmark4.Controls.Add(dynSelection);
+                                    plhStatistic.Controls.Add(dynSelection);
                                     Label lb2 = new Label() { ID = $"lb{item.QuestID}", Text = "<br>", }; //分行
-                                    plhbookmark4.Controls.Add(lb2);
+                                    plhStatistic.Controls.Add(lb2);
 
 
 
@@ -299,7 +305,7 @@ namespace QuestionnaireSystem.admin
                                         ID = $"PecentCount",
                                         Text = $"{strPecent}",
                                     };
-                                    plhbookmark4.Controls.Add(pecentCount);//百分比
+                                    plhStatistic.Controls.Add(pecentCount);//百分比
 
 
                                     Label dynCount = new Label()//數量
@@ -307,14 +313,14 @@ namespace QuestionnaireSystem.admin
                                         ID = $"Count",
                                         Text = $"({arrAllThisQuestAmount[i]})",
                                     };
-                                    plhbookmark4.Controls.Add(dynCount);//數量
+                                    plhStatistic.Controls.Add(dynCount);//數量
 
                                     Label lb3 = new Label() { ID = $"lb{item.QuestID}_{i}", Text = "<br>", }; //分行
-                                    plhbookmark4.Controls.Add(lb3);//分行
+                                    plhStatistic.Controls.Add(lb3);//分行
 
                                 }
                                 Label lb4 = new Label() { ID = $"lb{item.QuestID}_2", Text = "<br>", }; //分行
-                                plhbookmark4.Controls.Add(lb4);
+                                plhStatistic.Controls.Add(lb4);
                             }
                             else if (item.AnswerForm == 6)
                             {
@@ -324,7 +330,9 @@ namespace QuestionnaireSystem.admin
                                     ID = $"dynTitle{item.QuestOrder}",
                                     Text = $"{item.QuestOrder} . {item.QuestContent}",
                                 };
-                                plhbookmark4.Controls.Add(dynLabel);
+                                plhStatistic.Controls.Add(dynLabel);
+                                Label lb1 = new Label() { ID = $"lb{item.QuestID}_1", Text = "<br>", };//分行
+                                plhStatistic.Controls.Add(lb1);
 
                                 _QuestMgr.SplitSelectItem(item.SelectItem, out int selectionCount, out string[] arrSelectItem);  //選項的數量,選項的陣列
 
@@ -346,9 +354,9 @@ namespace QuestionnaireSystem.admin
                                         ID = $"Selection",
                                         Text = $"{arrSelectItem[i]}",
                                     };
-                                    plhbookmark4.Controls.Add(dynSelection);
+                                    plhStatistic.Controls.Add(dynSelection);
                                     Label lb2 = new Label() { ID = $"lb{item.QuestID}_{i}", Text = "<br>", };//分行
-                                    plhbookmark4.Controls.Add(lb2);
+                                    plhStatistic.Controls.Add(lb2);
 
 
                                     int count = 0;
@@ -363,7 +371,7 @@ namespace QuestionnaireSystem.admin
                                         ID = $"PecentCount",
                                         Text = $"{strPecent}",
                                     };
-                                    plhbookmark4.Controls.Add(pecentCount);//百分比
+                                    plhStatistic.Controls.Add(pecentCount);//百分比
 
 
                                     Label dynCount = new Label()//票數
@@ -371,13 +379,13 @@ namespace QuestionnaireSystem.admin
                                         ID = $"Count",
                                         Text = $"({count})",
                                     };
-                                    plhbookmark4.Controls.Add(dynCount);//票數
+                                    plhStatistic.Controls.Add(dynCount);//票數
                                                                         //分行
                                     Label lb2_2 = new Label() { ID = $"lb{item.QuestID}_{i}", Text = "<br>", };
-                                    plhbookmark4.Controls.Add(lb2_2);
+                                    plhStatistic.Controls.Add(lb2_2);
                                 }
                                 Label lb3 = new Label() { ID = $"lb{item.QuestID}_2", Text = "<br>", }; //分行
-                                plhbookmark4.Controls.Add(lb3);
+                                plhStatistic.Controls.Add(lb3);
                             }
                             else
                             {
@@ -392,31 +400,45 @@ namespace QuestionnaireSystem.admin
                                     Text = "-",
                                 };
                                 Label lb = new Label() { ID = $"lb{item.QuestOrder}", Text = "<br>", }; //分行
-                                plhbookmark4.Controls.Add(dynLabel);
-                                plhbookmark4.Controls.Add(lb);
+                                plhStatistic.Controls.Add(dynLabel);
+                                plhStatistic.Controls.Add(lb);
 
                                 Label lb2 = new Label() { ID = $"lb{item.QuestOrder}", Text = "<br>", }; //分行
-                                plhbookmark4.Controls.Add(content);
-                                plhbookmark4.Controls.Add(lb2);
+                                plhStatistic.Controls.Add(content);
+                                plhStatistic.Controls.Add(lb2);
 
                                 Label lb3 = new Label() { ID = $"lb{item.QuestOrder}_2", Text = "<br>", }; //分行
-                                plhbookmark4.Controls.Add(lb3);
+                                plhStatistic.Controls.Add(lb3);
                             }
                         }
                     }
                 }
+
+
                 #endregion
 
                 #region//如果是既有問卷把舊資料帶入
                 if (!_isNewQstnir)
                 {
-                    Questionnaire questionnaire = _QstnirMgr.GetQuestionnaire(_currentQnirID, _isNewQstnir);
-                    this.textCaption.Text = questionnaire.Caption;
-                    this.textQuestionnaireContent.Text = questionnaire.QuestionnaireContent;
-                    this.textStartDate.Text = questionnaire.EndDate.ToString("yyyy-MM-dd");
-                    this.textEndDate.Text = questionnaire.EndDate.ToString("yyyy-MM-dd");
-                    this.ChkBxVoidStatus.Checked = questionnaire.VoidStatus;
-                    _basicQstnir = questionnaire;
+                    if ((Questionnaire)HttpContext.Current.Session["BasicQstnir"] == null)
+                    {
+                        Questionnaire questionnaire = _QstnirMgr.GetQuestionnaire(_currentQnirID, _isNewQstnir);
+                        this.textCaption.Text = questionnaire.Caption;
+                        this.textQuestionnaireContent.Text = questionnaire.QuestionnaireContent;
+                        this.textStartDate.Text = questionnaire.StartDate.ToString("yyyy-MM-dd");
+                        this.textEndDate.Text = questionnaire.EndDate.ToString("yyyy-MM-dd");
+                        this.ChkBxVoidStatus.Checked = questionnaire.VoteStatus;
+                        _basicQstnir = questionnaire;
+                    }
+                    else
+                    {
+                        _basicQstnir = (Questionnaire)HttpContext.Current.Session["BasicQstnir"];
+                        this.textCaption.Text = _basicQstnir.Caption;
+                        this.textQuestionnaireContent.Text = _basicQstnir.QuestionnaireContent;
+                        this.textStartDate.Text = _basicQstnir.StartDate.ToString("yyyy-MM-dd");
+                        this.textEndDate.Text = _basicQstnir.EndDate.ToString("yyyy-MM-dd");
+                        this.ChkBxVoidStatus.Checked = _basicQstnir.VoteStatus;
+                    }
 
                     //第一次帶入DB
                     List<WholeAnswer> qstsWithIntAnswerForm = new List<WholeAnswer>();
@@ -424,6 +446,7 @@ namespace QuestionnaireSystem.admin
                     _currentQuestList = _transMgr.WholeToWholeList2(qstsWithIntAnswerForm);//將問題類型轉成字串
                 }
                 #endregion
+
             }
 
 
@@ -462,14 +485,14 @@ namespace QuestionnaireSystem.admin
 
 
             //帶入問題列表
-            if (HttpContext.Current.Session["CurrentQuests"] == null)//如果沒有儲存修改後的題目列表，直接帶入DB
+            if (HttpContext.Current.Session["SessionCurrentQuests"] == null)//如果沒有儲存修改後的題目列表，直接帶入DB
             {
                 this.RptrQuest.DataSource = _currentQuestList;
                 this.RptrQuest.DataBind();
             }
             else
             {
-                this.RptrQuest.DataSource = HttpContext.Current.Session["CurrentQuests"];//帶入Session的題目列表，
+                this.RptrQuest.DataSource = HttpContext.Current.Session["SessionCurrentQuests"];//帶入Session的題目列表，
                 this.RptrQuest.DataBind();
             }
 
@@ -627,7 +650,7 @@ namespace QuestionnaireSystem.admin
                 else
                 {
                     page = page.Remove(page.IndexOf("?"));
-                    url = $"/admin/EditQuestionnaire.aspx?QstnirID={_currentQnirID}&Targetplh=3"+ page;
+                    url = $"/admin/EditQuestionnaire.aspx?QstnirID={_currentQnirID}&Targetplh=3" + page;
                 }
                 this.Response.Redirect(url);
             }
@@ -654,12 +677,12 @@ namespace QuestionnaireSystem.admin
                 _basicQstnir.QuestionnaireContent = this.textQuestionnaireContent.Text;
                 _basicQstnir.StartDate = Convert.ToDateTime(this.textStartDate.Text);
                 _basicQstnir.EndDate = Convert.ToDateTime(this.textEndDate.Text);
-                _basicQstnir.VoidStatus = this.ChkBxVoidStatus.Checked;
+                _basicQstnir.VoteStatus = this.ChkBxVoidStatus.Checked;
                 _basicQstnir.QuestionnaireID = _currentQnirID;
                 _basicQstnir.BuildDate = DateTime.Now;
                 HttpContext.Current.Session["EditMsg"] = "資料尚未儲存，請繼續編輯問題後送出。";
+                HttpContext.Current.Session["BasicQstnir"] = _basicQstnir;
                 this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={_currentQnirID}&Targetplh=2");
-
             }
         }
 
@@ -730,11 +753,12 @@ namespace QuestionnaireSystem.admin
                 };
 
                 _currentQuestList = _QuestMgr.UpdateQuest(_currentQuestList, wholeUpdateQuest);
+                HttpContext.Current.Session["SessionCurrentQuests"] = _currentQuestList;//編輯中的問卷列表
 
                 if (!_isNewQstnir)
-                    this.Response.Redirect($"/admin/EditQuestionnaire.aspx/?Targetplh=2");//新增的問卷修改題目
+                    this.Response.Redirect($"/admin/EditQuestionnaire.aspx?Targetplh=2");//新增的問卷修改題目
                 else
-                    this.Response.Redirect($"/admin/EditQuestionnaire.aspx/?QstnirID={_currentQnirID}&Targetplh=2");//舊的問卷修改題目
+                    this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={_currentQnirID}&Targetplh=2");//舊的問卷修改題目
             }
             else//新增題目
             {
@@ -793,17 +817,26 @@ namespace QuestionnaireSystem.admin
         //將問卷寫進資料庫
         protected void btnQuestSummit_Click(object sender, EventArgs e)
         {
-            List<Question> saveQstList = _transMgr.WholeToQstList(_currentQuestList, _currentQnirID);//記憶體的題目列表
-            if (_isNewQstnir)
-                this._QstnirMgr.AddQuestionnaire(_basicQstnir, saveQstList);//存進DB
-            else
-                this._QstnirMgr.Updateuestionnaire(_basicQstnir, saveQstList);//存進DB
-            HttpContext.Current.Session.Abandon();      //清除所有session並返回
-            HttpContext.Current.Session["EditMsg"] = "問卷已更新。";
 
-            _currentQnirID = 0;
-            _isNewQstnir = false;
-            this.Response.Redirect("/admin/MyQuestionnaire.aspx");
+            int theDoneAmount = _AnswerMgr.GetDoneList(_currentQnirID.ToString()).Count();
+            if (theDoneAmount != 0)
+                HttpContext.Current.Session["EditMsg"] = "此問卷已有填寫資料，無法修改。";
+            else
+            {
+                List<Question> saveQstList = _transMgr.WholeToQstList(_currentQuestList, _currentQnirID);//記憶體的題目列表
+
+                _basicQstnir = (Questionnaire)HttpContext.Current.Session["BasicQstnir"];
+                if (_isNewQstnir)
+                    this._QstnirMgr.AddQuestionnaire(_basicQstnir, saveQstList);//存進DB
+                else
+                    this._QstnirMgr.Updateuestionnaire(_basicQstnir, saveQstList);//存進DB
+                HttpContext.Current.Session.Abandon();      //清除所有session並返回
+                HttpContext.Current.Session["EditMsg"] = "問卷已更新。";
+
+                _currentQnirID = 0;
+                _isNewQstnir = false;
+                this.Response.Redirect("/admin/MyQuestionnaire.aspx");
+            }
         }
 
         //取消問題(待看)
@@ -812,7 +845,6 @@ namespace QuestionnaireSystem.admin
             string currentQnirID = this.Request.QueryString["QstnirID"] as string;
 
             HttpContext.Current.Session.Abandon();      //清除所有session並返回
-            _basicQstnir = null;
             this.Response.Redirect($"/admin/EditQuestionnaire.aspx?QstnirID={currentQnirID}&Targetplh=2");
         }
 

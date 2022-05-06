@@ -30,7 +30,7 @@ namespace QuestionnaireSystem.admin
                 List<WholeAnswer> wholeList=_transMgr.QstnirToWholeList(QtnirList);
                 foreach (WholeAnswer item in wholeList)
                 {
-                    if (item.VoidStatus == true)
+                    if (item.VoteStatus == true)
                         item.OpenOrNot= "開放";
                     else
                         item.OpenOrNot = "已關閉";
@@ -89,7 +89,7 @@ namespace QuestionnaireSystem.admin
                     List<WholeAnswer> wholeList = _transMgr.QstnirToWholeList(srchQuestionnaireList);
                     foreach (WholeAnswer item in wholeList)
                     {
-                        if (item.VoidStatus == true)
+                        if (item.VoteStatus == true)
                             item.OpenOrNot = "開放";
                         else
                             item.OpenOrNot = "已關閉";
@@ -98,6 +98,8 @@ namespace QuestionnaireSystem.admin
                     this.RptrQtnir.DataBind();
                     if(srchQuestionnaireList.Count==0)
                         this.Label1.Visible = true;
+                    string url = this.Request.Url.LocalPath + "?keyword=" + srchKey;
+                    this.Response.Redirect(url);
                 }
             }
 

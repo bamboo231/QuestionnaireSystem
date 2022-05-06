@@ -44,12 +44,15 @@ namespace QuestionnaireSystem.Manager
         /// <returns>回傳值為boolean</returns>
         public bool IncludeText(string checkedData, string inpText)
         {
-            string inpString = inpText.Trim();   //將使用者輸入的字串去除Space
 
             try
             {
-                bool isInclude = checkedData.Contains(inpText);  //checkString：輸入字串
-
+                bool isInclude = false;
+                if (!string.IsNullOrWhiteSpace(inpText))
+                {
+                    inpText = inpText.Trim();
+                    isInclude = checkedData.Contains(inpText);  //checkString：輸入字串
+                }
                 return isInclude;
             }
 
@@ -115,7 +118,7 @@ namespace QuestionnaireSystem.Manager
             {
                 bool isEmail = true;
                 if (inpEmail.IndexOf("@") == -1 || inpEmail.IndexOf(".") == -1 || inpEmail.IndexOf("@") > inpEmail.IndexOf("."))
-                     isEmail = false;
+                    isEmail = false;
                 return isEmail;
 
             }

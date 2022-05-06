@@ -62,7 +62,7 @@ namespace QuestionnaireSystem.Manager
                     newItem.BuildDate = qstnirs[i].BuildDate; 
                     newItem.StartDate = qstnirs[i].StartDate;
                     newItem.EndDate = qstnirs[i].EndDate;
-                    newItem.VoidStatus = qstnirs[i].VoidStatus;
+                    newItem.VoteStatus = qstnirs[i].VoteStatus;
                     QstListToDisplay.Add(newItem);
                 }
                 return QstListToDisplay;

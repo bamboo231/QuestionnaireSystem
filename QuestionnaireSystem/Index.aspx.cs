@@ -24,15 +24,24 @@ namespace QuestionnaireSystem
                     : Convert.ToInt32(pageIndexText);
             if (!IsPostBack)
             {
+                string keyword = this.Request.QueryString["keyword"];
+                if (!string.IsNullOrWhiteSpace(keyword))
+                    this.srchKey.Text = keyword;
 
                 List<Questionnaire> QtnirList = _QtnirMgr.GetEnableQstnir();
+                var list = this._QtnirMgr.TakeEnableQstnir(QtnirList, _pageSize, pageIndex, out int totalRows);
+                list = _srchMgr.GetIncludeTextList(keyword, list);
 
-                var list = this._QtnirMgr.TakeEnableQstnir( _pageSize, pageIndex, out int totalRows);
-                this.ucPager1.TotalRows = totalRows;
-                this.ucPager1.PageIndex = pageIndex;
+                this.ucPager.TotalRows = totalRows;
+                this.ucPager.PageIndex = pageIndex;
+                this.ucPager.Bind("keyword", keyword);
+                //篩選出包含關鍵字的資料
 
                 this.RptrQtnir.DataSource = list;
                 this.RptrQtnir.DataBind();
+
+                if (list.Count < 1)
+                    NoData.Visible = true;
             }
         }
 
@@ -59,14 +68,19 @@ namespace QuestionnaireSystem
                 }
                 else
                 {
+
                     //篩選出包含關鍵字的資料
-                    srchQuestionnaireList = _srchMgr.GetIncludeTextList(srchKey, srchQuestionnaireList);
+                    //srchQuestionnaireList = _srchMgr.GetIncludeTextList(srchKey, srchQuestionnaireList);
                     //篩選出於時間範圍內的資料
                     srchQuestionnaireList = _srchMgr.GetIncludeDate(srchBeginDate, srchEndDate, srchQuestionnaireList);
-                    this.RptrQtnir.DataSource = srchQuestionnaireList;
-                    this.RptrQtnir.DataBind();
+
+                    string url = this.Request.Url.LocalPath + "?keyword=" + srchKey;
+
+                    //this.RptrQtnir.DataSource = srchQuestionnaireList;
+                    //this.RptrQtnir.DataBind();
                     if (srchQuestionnaireList.Count == 0)
-                        this.Label1.Visible = true;
+                        this.NoData.Visible = true;
+                    this.Response.Redirect(url);
                 }
             }
 

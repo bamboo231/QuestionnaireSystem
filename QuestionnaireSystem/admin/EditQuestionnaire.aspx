@@ -92,7 +92,7 @@
                             <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>'></asp:CheckBox>
                         </td>
                         <td>
-                            <a href="EditQuestionnaire.aspx?UpdateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
+                            <a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&UpdateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
                         </td>
                     </tr>
                 </ItemTemplate>
@@ -109,7 +109,7 @@
                             <asp:CheckBox ID="CheckBox6" runat="server" Checked='<%# Eval("Required")%>'></asp:CheckBox>
                         </td>
                         <td bgcolor="#CECECF">
-                            <a href="EditQuestionnaire.aspx?UpdateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
+                            <a href="EditQuestionnaire.aspx?QstnirID=<%# Eval("QuestionnaireID")%>&UpdateOrder=<%# Eval("QuestOrder")%>&Targetplh=2">編輯</a>
                     </tr>
                 </AlternatingItemTemplate>
                 <FooterTemplate>
@@ -207,7 +207,8 @@
         </asp:PlaceHolder>
         <%--統計--%>
         <asp:PlaceHolder ID="plhbookmark4" runat="server" Visible="false">
-            <asp:Label ID="NAStatistic" runat="server" Text="(查無資料)" Visible="false"></asp:Label>
+            <asp:PlaceHolder ID="plhStatistic" runat="server"></asp:PlaceHolder>
+            <asp:Label ID="NAStatistic" runat="server" Visible="false">(查無資料)</asp:Label>
         </asp:PlaceHolder>
     </div>
 
@@ -238,7 +239,7 @@
                             var isRequired = item.Required;
                             var txtQuestSelectItem = `${item.SelectItem}`;
 
-                            if (`${item.SelectItem}` == null || `${item.SelectItem}`=="") { txtQuestSelectItem = ""; }
+                            if (`${item.SelectItem}` == null || `${item.SelectItem}` == "") { txtQuestSelectItem = ""; }
                             if (intAnswerForm != 5 || intAnswerForm != 6) { isRequired = true }
                             $("#ContentPlaceHolder1_setQuest").val(txtQuestContent);//問題題目描述
                             $("#ContentPlaceHolder1_IsRequired").prop('checked', isRequired);//是否必填
