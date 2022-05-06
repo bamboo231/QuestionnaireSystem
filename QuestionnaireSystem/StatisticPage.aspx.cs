@@ -25,8 +25,19 @@ namespace QuestionnaireSystem
             List<WholeAnswer> wholeQuestionnaire = _QtnirMgr.GetWholeQuestioniar(currentQnirID);
             this.Caption.Text = wholeQuestionnaire[0].Caption.ToString();
 
-            if (wholeQuestionnaire[0].VoteStatus)
-                this.IsVoting.Text = "投票中";
+            this.IsVoting.Text = "投票中";
+            if (wholeQuestionnaire[0].StartDate > DateTime.Now)
+            {
+                HttpContext.Current.Session.Abandon();
+                HttpContext.Current.Session["MainMsg"] = "此問卷還未開始。<br/>(自動跳轉回列表頁)";
+                this.Response.Redirect($"/Index.aspx");
+            }
+            else if (wholeQuestionnaire[0].EndDate < DateTime.Now)
+            {
+                this.IsVoting.Text = "已結束";
+                HttpContext.Current.Session.Abandon();
+            }
+
             string strStartDate = wholeQuestionnaire[0].StartDate.ToString("yyyy/MM/dd");
             string strEndDate = wholeQuestionnaire[0].EndDate.ToString("yyyy/MM/dd");
             this.Period.Text = strStartDate + "~" + strEndDate;

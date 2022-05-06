@@ -30,8 +30,7 @@ namespace QuestionnaireSystem
 
             #region//問卷
             List<WholeAnswer> wholeQuestionnaire = _QtnirMgr.GetWholeQuestioniar(currentQnirID);//每個題目
-            if (wholeQuestionnaire[0].VoteStatus)
-                this.IsVoting.Text = "投票中";
+
             string strStartDate = wholeQuestionnaire[0].StartDate.ToString("yyyy/MM/dd");
             string strEndDate = wholeQuestionnaire[0].EndDate.ToString("yyyy/MM/dd");
             this.Period.Text = strStartDate + "~" + strEndDate;
@@ -277,15 +276,22 @@ namespace QuestionnaireSystem
                 }
             }
 
-            ////如果記憶體中一題都沒有就跳到作答頁
-            //if (AnswerList.Count == 0)
-            //    Changebookmark1();
-            //else
-            //    Changebookmark2();
 
+            List<WholeAnswer> wholeQuestionnaire = _QtnirMgr.GetWholeQuestioniar(currentQnirID);//每個題目
+            this.IsVoting.Text = "投票中";
+            if (wholeQuestionnaire[0].StartDate > DateTime.Now)
+            {
+                HttpContext.Current.Session["MainMsg"] = "此問卷還未開始。";
+                this.Response.Redirect($"/Index.aspx");
+            }
+            else if (wholeQuestionnaire[0].EndDate < DateTime.Now)
+            {
+                HttpContext.Current.Session["MainMsg"] = "此問卷已結束。";
+                this.Response.Redirect($"/Index.aspx");
+            }
 
-            //藉由預存session跳出視窗 的字串
-            if (Session["MainMsg"] != null)
+                //藉由預存session跳出視窗 的字串
+                if (Session["MainMsg"] != null)
             {
                 FrontIGetable o = (FrontIGetable)this.Master;
                 var m = o.GetMsg();

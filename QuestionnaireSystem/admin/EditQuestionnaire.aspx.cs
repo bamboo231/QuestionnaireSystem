@@ -45,13 +45,13 @@ namespace QuestionnaireSystem.admin
 
             if (!IsPostBack)
             {
-                if(this.Request.QueryString["Update"] == "true")//從列表點進來
+                if (this.Request.QueryString["Update"] == "true")//從列表點進來
                 {
                     HttpContext.Current.Session.Abandon();
                     _basicQstnir = null;
                     _currentQuestList = null;
                     _isNewQstnir = false;
-                    _currentQnirID=0;
+                    _currentQnirID = 0;
 
                 }
 
@@ -101,7 +101,7 @@ namespace QuestionnaireSystem.admin
                     this.ucPager.Bind2();
 
 
-                    this.RptrAnswerList.DataSource = doneList;
+                    this.RptrAnswerList.DataSource = list;
                     this.RptrAnswerList.DataBind();
                     if (doneList.Count == 0)
                         this.NoneDATA.Visible = true;
@@ -802,14 +802,14 @@ namespace QuestionnaireSystem.admin
                 CheckBox cbx = (CheckBox)c.FindControl("A");
                 Label tbx = (Label)c.FindControl("lblText");
 
-                if (cbx != null && cbx.Checked == true)
+                if (cbx != null && cbx.Checked == false)
                 {
                     int QuestOrder = Int32.Parse(tbx.Text);
-                    _currentQuestList.RemoveAt((int)QuestOrder - 1);
-                    //將刪除指定資料後的list排序重設，並存入Session
-                    newList = _QuestMgr.ReOrderQuestionList(_currentQuestList);
+                    WholeAnswer a = _currentQuestList.Where(item => item.QuestOrder == QuestOrder - 1).FirstOrDefault();
+                    newList.Add(a);
                 }
             }
+            newList = _QuestMgr.ReOrderQuestionList(newList);
             HttpContext.Current.Session["SessionCurrentQuests"] = newList;
             _currentQuestList = newList;
         }
@@ -861,21 +861,23 @@ namespace QuestionnaireSystem.admin
             {
                 //每筆回答
                 List<WholeAnswer> answersToExport = _AnswerMgr.GetWholeDoneList(currentQnirID);
-                WholeAnswer firstItem = answersToExport.FirstOrDefault();
 
                 for (int i = 0; i < allBasicAnswer.Count; i++)
                 {
-                    strCSV += $"{firstItem.Nickname},{firstItem.Phone},{firstItem.Email},{firstItem.Age}";
-                    int basicID = allBasicAnswer.FirstOrDefault().BasicAnswerID;
+                    strCSV += $"{allBasicAnswer[i].Nickname},{allBasicAnswer[i].Phone},{allBasicAnswer[i].Email},{allBasicAnswer[i].Age}";
+
+                    int basicID = allBasicAnswer[i].BasicAnswerID;
                     List<WholeAnswer> detailList = _AnswerMgr.GetTargetType(basicID);
-                    foreach (WholeAnswer item in detailList)
+                    foreach (WholeAnswer obj in detailList)
                     {
-                        strCSV += $"{item.QuestContent},{item.Answer},";
+                        strCSV += $"{obj.QuestContent},{obj.Answer},";
                         strCSV = strCSV.Remove(strCSV.LastIndexOf(","), 1);
                     }
                     strCSV += "\r\n";
+
+
                 }
-                File.WriteAllText("C:\\tryCSV.csv", strCSV, Encoding.UTF8);
+                File.WriteAllText("C:\\tryCSV.csv", strCSV, Encoding.Unicode);
                 HttpContext.Current.Session["EditMsg"] = "預設路徑在C槽最外層，檔案匯出成功。(注意：不包含尚在變更中的問卷。)";
             }
         }

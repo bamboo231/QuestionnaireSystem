@@ -24,7 +24,7 @@
             <div id="QuestionnaireList">
                 <asp:Repeater ID="RptrQtnir" runat="server">
                     <HeaderTemplate>
-                        <table border="1" width="60%" id="table2">
+                        <table border="1" width="90%" id="table2">
                             <tr>
                                 <td bgcolor="#000000"><font color="#FFFFFF"><b>#</b></font></td>
                                 <td bgcolor="#000000"><font color="#FFFFFF"><b>問卷</b></font></td>
@@ -34,11 +34,12 @@
                                 <td bgcolor="#000000"><font color="#FFFFFF"><b>觀看統計</b></font></td>
                             </tr>
                     </HeaderTemplate>
+                    
                     <ItemTemplate>
                         <tr>
                             <td><%# Eval("QuestionnaireID")%></td>
-                            <td><a href="FillOutPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank"><%# Eval("Caption")%></a></td>
-                            <td><%# Eval("VoteStatus")%></td>
+                            <td><a href="FillOutPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>"><%# Eval("Caption")%></a></td>
+                            <td><%# Eval("OpenOrNot")%></td>
                             <td><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                             <td><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
                             <td><a href="StatisticPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank">前往</a></td>
@@ -47,8 +48,8 @@
                     <AlternatingItemTemplate>
                         <tr>
                             <td bgcolor="#CECECF"><%# Eval("QuestionnaireID")%></td>
-                            <td bgcolor="#CECECF"><a href="FillOutPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank"><%# Eval("Caption")%></a></td>
-                            <td bgcolor="#CECECF"><%# Eval("VoteStatus")%></td>
+                            <td bgcolor="#CECECF"><a href="FillOutPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>"><%# Eval("Caption")%></a></td>
+                            <td bgcolor="#CECECF"><%# Eval("OpenOrNot")%></td>
                             <td bgcolor="#CECECF"><%# Eval("StartDate", "{0:yyyy/MM/dd}")%></td>
                             <td bgcolor="#CECECF"><%# Eval("EndDate", "{0:yyyy/MM/dd}")%></td>
                             <td bgcolor="#CECECF"><a href="StatisticPage.aspx?QnirID=<%# Eval("QuestionnaireID")%>" target="_blank">前往</a></td>
@@ -59,9 +60,14 @@
                     </FooterTemplate>
                 </asp:Repeater>
                 <asp:Label ID="NoData" runat="server" Text="(查無資料)" Visible="false"></asp:Label>
-                <uc1:ucPager runat="server" id="ucPager"  PageSize="10"/>
+                <uc1:ucPager runat="server" ID="ucPager" PageSize="10" />
 
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+
+        });
+    </script>
 </asp:Content>

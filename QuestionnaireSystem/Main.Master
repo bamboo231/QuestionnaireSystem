@@ -16,6 +16,10 @@
 
         #pageTitle {
             font-size: 28px;
+            color:black;
+        }
+        a {
+            text-decoration: none;
         }
     </style>
 </head>
@@ -25,7 +29,7 @@
             <!-- 上區塊 -->
             <div class="container-fluid">
                 <div>
-                    <asp:Label ID="pageTitle" class="col-1" runat="server" Text="前台"></asp:Label>
+                    <a href="/Index.aspx" ID="pageTitle" class="col-1" >前台</a>
                 </div>
 <%--                <div class="position-absolute top-0 end-0">
                     <span><a href="admin/MyQuestionnaire.aspx" target="_blank">後台</a></span>

@@ -11,6 +11,7 @@ namespace QuestionnaireSystem
 {
     public partial class Index : System.Web.UI.Page
     {
+        private transWholeAnswerManager _transMgr = new transWholeAnswerManager();    //轉換WholeAnswer
         private QuestionnaireManager _QtnirMgr = new QuestionnaireManager();    //主問卷的Manager
         private SearchManager _srchMgr = new SearchManager();    //主問卷資訊
         private const int _pageSize = 10;  //每頁10筆資料
@@ -37,7 +38,16 @@ namespace QuestionnaireSystem
                 this.ucPager.Bind("keyword", keyword);
                 //篩選出包含關鍵字的資料
 
-                this.RptrQtnir.DataSource = list;
+                List<WholeAnswer> wholeList = _transMgr.QstnirToWholeList(list);
+                foreach (var item in wholeList)
+                {
+                    item.OpenOrNot = "投票中";
+                    if (item.StartDate > DateTime.Now)
+                        item.OpenOrNot = "未開始";
+                    else if (item.EndDate < DateTime.Now)
+                        item.OpenOrNot = "已完結";
+                }
+                this.RptrQtnir.DataSource = wholeList;
                 this.RptrQtnir.DataBind();
 
                 if (list.Count < 1)

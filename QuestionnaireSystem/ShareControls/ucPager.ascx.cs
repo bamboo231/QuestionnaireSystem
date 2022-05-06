@@ -95,6 +95,8 @@ namespace QuestionnaireSystem.ShareControls
                 this.aLinkNext.HRef = url + "?Page=" + pageCount + qsText;
 
             this.aLinkLast.HRef = url + "?Page=" + pageCount + qsText;
+            if (this.PageIndex ==0 && this.PageIndex > 1)
+                    this.aLinkLast.HRef = url + "&Page=1" + qsText;
 
             this.aLinkPage1.HRef = url + "?Page=" + (this.PageIndex - 2) + qsText;
             this.aLinkPage1.InnerText = (this.PageIndex - 2).ToString();
@@ -125,26 +127,34 @@ namespace QuestionnaireSystem.ShareControls
             if ((this.TotalRows % this.PageSize) > 0)
                 pageCount += 1;
 
-            string url = this.Url;
+            string url = this.Url2;
+            if(this.Request.QueryString["Page"]!=null)
+            {
+                int c = url.IndexOf("Page");//Page的位置
+                url=url.Remove(c-1);//從c開始移除後面的字
+            }
+
             string qsText = this.BuildQueryString(collection);
 
-            this.aLinkFirst.HRef = url + "?Page=1" + qsText;
-            this.aLinkPrev.HRef = url + "?Page=" + (this.PageIndex - 1) + qsText;
+            this.aLinkFirst.HRef = url + "&Page=1" + qsText;
+            this.aLinkPrev.HRef = url + "&Page=" + (this.PageIndex - 1) + qsText;
             if (this.PageIndex - 1 < 1 || this.PageIndex > pageCount)
-                this.aLinkPrev.HRef = url + "?Page=1" + qsText;
+                this.aLinkPrev.HRef = url + "&Page=1" + qsText;
 
-            this.aLinkNext.HRef = url + "?Page=" + (this.PageIndex + 1) + qsText;
+            this.aLinkNext.HRef = url + "&Page=" + (this.PageIndex + 1) + qsText;
             if (this.PageIndex + 1 > pageCount)
-                this.aLinkNext.HRef = url + "?Page=" + pageCount + qsText;
+                this.aLinkNext.HRef = url + "&Page=" + pageCount + qsText;
 
-            this.aLinkLast.HRef = url + "?Page=" + pageCount + qsText;
+            this.aLinkLast.HRef = url + "&Page=" + pageCount + qsText;
+            if (pageCount == 0 && this.PageIndex > 1)
+                this.aLinkLast.HRef = url + "&Page=1"+ qsText;
 
-            this.aLinkPage1.HRef = url + "?Page=" + (this.PageIndex - 2) + qsText;
+            this.aLinkPage1.HRef = url + "&Page=" + (this.PageIndex - 2) + qsText;
             this.aLinkPage1.InnerText = (this.PageIndex - 2).ToString();
             if (this.PageIndex <= 2)
                 this.aLinkPage1.Visible = false;
 
-            this.aLinkPage2.HRef = url + "?Page=" + (this.PageIndex - 1) + qsText;
+            this.aLinkPage2.HRef = url + "&Page=" + (this.PageIndex - 1) + qsText;
             this.aLinkPage2.InnerText = (this.PageIndex - 1).ToString();
             if (this.PageIndex <= 1)
                 this.aLinkPage2.Visible = false;
@@ -152,12 +162,12 @@ namespace QuestionnaireSystem.ShareControls
             this.aLinkPage3.HRef = "";
             this.aLinkPage3.InnerText = this.PageIndex.ToString();
 
-            this.aLinkPage4.HRef = url + "?Page=" + (this.PageIndex + 1) + qsText;
+            this.aLinkPage4.HRef = url + "&Page=" + (this.PageIndex + 1) + qsText;
             this.aLinkPage4.InnerText = (this.PageIndex + 1).ToString();
             if ((this.PageIndex + 1) > pageCount)
                 this.aLinkPage4.Visible = false;
 
-            this.aLinkPage5.HRef = url + "?Page=" + (this.PageIndex + 2) + qsText;
+            this.aLinkPage5.HRef = url + "&Page=" + (this.PageIndex + 2) + qsText;
             this.aLinkPage5.InnerText = (this.PageIndex + 2).ToString();
             if ((this.PageIndex + 2) > pageCount)
                 this.aLinkPage5.Visible = false;

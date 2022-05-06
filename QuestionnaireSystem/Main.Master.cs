@@ -20,7 +20,7 @@ namespace QuestionnaireSystem
         }
         protected void Page_Prerender(object sender, EventArgs e)
         {
-            if (Session["MainMsg"] != null)
+            if (HttpContext.Current.Session["MainMsg"] != null)
             {
                 this.MainMsg.Value = Session["MainMsg"] as string;
                 Session.Remove("MainMsg");
