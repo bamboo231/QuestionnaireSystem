@@ -142,12 +142,12 @@ namespace QuestionnaireSystem.ShareControls
                 this.aLinkPrev.HRef = url + "&Page=1" + qsText;
 
             this.aLinkNext.HRef = url + "&Page=" + (this.PageIndex + 1) + qsText;
-            if (this.PageIndex + 1 > pageCount)
-                this.aLinkNext.HRef = url + "&Page=" + pageCount + qsText;
+            if (this.PageIndex  > pageCount)
+                this.aLinkNext.HRef = url + "&Page=" + this.PageIndex + qsText;
 
-            this.aLinkLast.HRef = url + "&Page=" + pageCount + qsText;
-            if (pageCount == 0 && this.PageIndex > 1)
-                this.aLinkLast.HRef = url + "&Page=1"+ qsText;
+            this.aLinkLast.HRef = url + "&Page=" + (this.PageIndex + 1) + qsText;
+            if (this.PageIndex == 0 && this.PageIndex > 1)
+                this.aLinkLast.HRef = url + "&Page=1" + qsText;
 
             this.aLinkPage1.HRef = url + "&Page=" + (this.PageIndex - 2) + qsText;
             this.aLinkPage1.InnerText = (this.PageIndex - 2).ToString();

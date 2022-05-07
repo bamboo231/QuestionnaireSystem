@@ -290,8 +290,8 @@ namespace QuestionnaireSystem
                 this.Response.Redirect($"/Index.aspx");
             }
 
-                //藉由預存session跳出視窗 的字串
-                if (Session["MainMsg"] != null)
+            //藉由預存session跳出視窗 的字串
+            if (Session["MainMsg"] != null)
             {
                 FrontIGetable o = (FrontIGetable)this.Master;
                 var m = o.GetMsg();
@@ -393,7 +393,7 @@ namespace QuestionnaireSystem
                         CheckBoxList dynCB = plhDynDetail.FindControl($"CB{qstNumber}") as CheckBoxList;
                         int amount = dynCB.Items.Count;
                         int check = 0;//計算被選取數量
-                        for (int i = 0; i < amount - 1; i++)
+                        for (int i = 0; i < amount; i++)
                         {
                             if (dynCB.Items[i].Selected == true)
                                 check++;
@@ -406,7 +406,7 @@ namespace QuestionnaireSystem
                         RadioButtonList dynRB = plhDynDetail.FindControl($"RB{qstNumber}") as RadioButtonList;
                         int amount = dynRB.Items.Count;
                         int check = 0;//計算被選取數量
-                        for (int i = 0; i < amount - 1; i++)
+                        for (int i = 0; i < amount ; i++)
                         {
                             if (dynRB.Items[i].Selected == true)
                                 check++;
@@ -424,12 +424,12 @@ namespace QuestionnaireSystem
                 }
 
 
-                if (checkFilled == false)
+                if (!checkFilled)
                 {
                     HttpContext.Current.Session["MainMsg"] = "請確認必填項目皆有填寫。";
                     Changebookmark1();
+                    return;
                 }
-
                 else
                 {
                     List<WholeAnswer> wholeQuestionnaire = _QtnirMgr.GetWholeQuestioniar(currentQnirID);
@@ -493,136 +493,140 @@ namespace QuestionnaireSystem
                         }
                         count++;
                     }
-
+                    HttpContext.Current.Session.Clear();
                     HttpContext.Current.Session["MainMsg"] = "請確認填妥後送出(送出後不可修改)。";
 
                     Changebookmark2();
+
                 }
 
 
 
                 #region//顯示確認頁
-                List<WholeAnswer> wholeQuestionnaire2 = _QtnirMgr.GetWholeQuestioniar(currentQnirID);//每個題目
-
-                this.Caption.Text = wholeQuestionnaire2[0].Caption.ToString();
-                this.QuestionnaireContent.Text = wholeQuestionnaire2[0].QuestionnaireContent.ToString();
-
-                for (int i = 0; i < AnswerList.Count; i++)
+                if (checkFilled)
                 {
+                    List<WholeAnswer> wholeQuestionnaire2 = _QtnirMgr.GetWholeQuestioniar(currentQnirID);//每個題目
 
-                    string strselectItem = wholeQuestionnaire2[i].SelectItem;
-                    int amount = 0;
-                    string[] splitArray = null;
-                    _QuestMgr.SplitSelectItem(strselectItem, out amount, out splitArray);
+                    this.Caption.Text = wholeQuestionnaire2[0].Caption.ToString();
+                    this.QuestionnaireContent.Text = wholeQuestionnaire2[0].QuestionnaireContent.ToString();
 
-                    //文字方塊
-                    if (wholeQuestionnaire2[i].AnswerForm != 5 && wholeQuestionnaire2[i].AnswerForm != 6)
+                    for (int i = 0; i < AnswerList.Count; i++)
                     {
-                        string titleText = $"{i + 1} . {wholeQuestionnaire2[i].QuestContent}";
-                        if (wholeQuestionnaire2[i].Required == true)
+
+                        string strselectItem = wholeQuestionnaire2[i].SelectItem;
+                        int amount = 0;
+                        string[] splitArray = null;
+                        _QuestMgr.SplitSelectItem(strselectItem, out amount, out splitArray);
+
+                        //文字方塊
+                        if (wholeQuestionnaire2[i].AnswerForm != 5 && wholeQuestionnaire2[i].AnswerForm != 6)
                         {
-                            titleText = $"{i + 1} . {wholeQuestionnaire2[i].QuestContent} (必填)";
+                            string titleText = $"{i + 1} . {wholeQuestionnaire2[i].QuestContent}";
+                            if (wholeQuestionnaire2[i].Required == true)
+                            {
+                                titleText = $"{i + 1} . {wholeQuestionnaire2[i].QuestContent} (必填)";
+                            }
+                            Label dynLabel = new Label()//標題
+                            {
+                                ID = $"dynTitle{i}",
+                                Text = titleText,
+                            };
+                            chkDynDetail.Controls.Add(dynLabel);
+
+                            Label br3 = new Label() { ID = $"lb{i}_br1", Text = "<br/>", }; //分行
+                            chkDynDetail.Controls.Add(br3);
+
+                            Label textbox = new Label()
+                            {
+                                ID = $"{i}",
+                                Text = AnswerList[i].Answer1.ToString()
+                            };
+                            chkDynDetail.Controls.Add(textbox);
+
+                            Label br4 = new Label() { ID = $"lb{i}_br2", Text = "<br/>", }; //分行
+                            chkDynDetail.Controls.Add(br4);
+
                         }
-                        Label dynLabel = new Label()//標題
+
+                        //動態新增控制項(題號&題目(5:單選/6:多選/其他:文字方塊))
+                        else if (wholeQuestionnaire2[i].AnswerForm == 5)
                         {
-                            ID = $"dynTitle{i}",
-                            Text = titleText,
-                        };
-                        chkDynDetail.Controls.Add(dynLabel);
+                            string titleText = $"{i + 1} . {wholeQuestionnaire2[i].QuestContent}";
+                            if (wholeQuestionnaire2[i].Required == true)
+                            {
+                                titleText = $"{i + 1} . {wholeQuestionnaire2[i].QuestContent} (必填)";
+                            }
+                            Label dynLabel = new Label()//標題
+                            {
+                                ID = $"dynTitle5{i}",
+                                Text = titleText,
+                            };
+                            chkDynDetail.Controls.Add(dynLabel);
 
-                        Label br3 = new Label() { ID = $"lb{i}_br1", Text = "<br/>", }; //分行
-                        chkDynDetail.Controls.Add(br3);
+                            //分行
+                            Label br3 = new Label() { ID = $"br{i}_br3", Text = "<br/>", };
+                            chkDynDetail.Controls.Add(br3);
 
-                        Label textbox = new Label()
+                            //單選選項
+                            Label RBList = new Label()
+                            {
+                                ID = $"{i}",
+                                Text = AnswerList[i].Answer1
+                            };
+                            chkDynDetail.Controls.Add(RBList);
+
+                            //分行
+                            Label br4 = new Label() { ID = $"br{i}_4", Text = "<br/>", };
+                            chkDynDetail.Controls.Add(br4);
+
+                        }
+                        else
                         {
-                            ID = $"{i}",
-                            Text = AnswerList[i].Answer1.ToString()
-                        };
-                        chkDynDetail.Controls.Add(textbox);
+                            //標題
+                            string titleText = $"{i + 1} . {wholeQuestionnaire2[i].QuestContent}";
+                            if (wholeQuestionnaire2[i].Required == true)
+                            {
+                                titleText = $"{i + 1} . {wholeQuestionnaire2[i].QuestContent} (必填)";
+                            }
 
-                        Label br4 = new Label() { ID = $"lb{i}_br2", Text = "<br/>", }; //分行
-                        chkDynDetail.Controls.Add(br4);
+                            Label dynLabel = new Label()
+                            {
+                                ID = $"dynTitle6{i}",
+                                Text = titleText,
+                            };
+                            chkDynDetail.Controls.Add(dynLabel);
+
+                            //分行
+                            Label br3 = new Label() { ID = $"br{i}_5", Text = "<br/>", };
+                            chkDynDetail.Controls.Add(br3);
+
+                            //多選選項
+                            _QuestMgr.SplitSelectItem(AnswerList[i].Answer1, out int selectionCount, out string[] arrSelection);
+                            string answers = "";
+                            for (int j = 0; j < selectionCount; j++)
+                            {
+                                answers += $"{arrSelection[j]};";
+                            }
+                            answers = answers.TrimEnd(';');
+
+                            Label CBList = new Label()
+                            {
+                                ID = $"{i}",
+                                Text = answers,
+                            };
+                            chkDynDetail.Controls.Add(CBList);
+
+                            //分行
+                            Label br4 = new Label() { ID = $"br{i}_6", Text = "<br/>", };
+                            chkDynDetail.Controls.Add(br4);
+
+
+                        }
+                        //每題的結尾分行
+                        Label br5 = new Label() { ID = $"br{i}_next", Text = "<br/>", };
+                        chkDynDetail.Controls.Add(br5);
 
                     }
-
-                    //動態新增控制項(題號&題目(5:單選/6:多選/其他:文字方塊))
-                    else if (wholeQuestionnaire2[i].AnswerForm == 5)
-                    {
-                        string titleText = $"{i + 1} . {wholeQuestionnaire2[i].QuestContent}";
-                        if (wholeQuestionnaire2[i].Required == true)
-                        {
-                            titleText = $"{i + 1} . {wholeQuestionnaire2[i].QuestContent} (必填)";
-                        }
-                        Label dynLabel = new Label()//標題
-                        {
-                            ID = $"dynTitle5{i}",
-                            Text = titleText,
-                        };
-                        chkDynDetail.Controls.Add(dynLabel);
-
-                        //分行
-                        Label br3 = new Label() { ID = $"br{i}_br3", Text = "<br/>", };
-                        chkDynDetail.Controls.Add(br3);
-
-                        //單選選項
-                        Label RBList = new Label()
-                        {
-                            ID = $"{i}",
-                            Text = AnswerList[i].Answer1
-                        };
-                        chkDynDetail.Controls.Add(RBList);
-
-                        //分行
-                        Label br4 = new Label() { ID = $"br{i}_4", Text = "<br/>", };
-                        chkDynDetail.Controls.Add(br4);
-
-                    }
-                    else
-                    {
-                        //標題
-                        string titleText = $"{i + 1} . {wholeQuestionnaire2[i].QuestContent}";
-                        if (wholeQuestionnaire2[i].Required == true)
-                        {
-                            titleText = $"{i + 1} . {wholeQuestionnaire2[i].QuestContent} (必填)";
-                        }
-
-                        Label dynLabel = new Label()
-                        {
-                            ID = $"dynTitle6{i}",
-                            Text = titleText,
-                        };
-                        chkDynDetail.Controls.Add(dynLabel);
-
-                        //分行
-                        Label br3 = new Label() { ID = $"br{i}_5", Text = "<br/>", };
-                        chkDynDetail.Controls.Add(br3);
-
-                        //多選選項
-                        _QuestMgr.SplitSelectItem(AnswerList[i].Answer1, out int selectionCount, out string[] arrSelection);
-                        string answers = "";
-                        for (int j = 0; j < selectionCount; j++)
-                        {
-                            answers += $"{arrSelection[j]};";
-                        }
-                        answers = answers.TrimEnd(';');
-
-                        Label CBList = new Label()
-                        {
-                            ID = $"{i}",
-                            Text = answers,
-                        };
-                        chkDynDetail.Controls.Add(CBList);
-
-                        //分行
-                        Label br4 = new Label() { ID = $"br{i}_6", Text = "<br/>", };
-                        chkDynDetail.Controls.Add(br4);
-
-
-                    }
-                    //每題的結尾分行
-                    Label br5 = new Label() { ID = $"br{i}_next", Text = "<br/>", };
-                    chkDynDetail.Controls.Add(br5);
-
                 }
                 #endregion
 
@@ -650,6 +654,9 @@ namespace QuestionnaireSystem
         {
 
             _AnswerMgr.SaveAnswer(AnswerList, basicQnir);
+
+            basicQnir = new BasicAnswer();
+            AnswerList = new List<Answer>();
 
             HttpContext.Current.Session["MainMsg"] = "問卷已送出。";
             this.Response.Redirect("Index.aspx");

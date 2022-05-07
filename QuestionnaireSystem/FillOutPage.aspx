@@ -76,7 +76,7 @@
             </div>
             <div class="col-8">
                 <asp:PlaceHolder ID="plhCheckDetail" runat="server">
-                    <table style="border-color: aqua; border: 1px;" width="60%">
+                    <table >
                         <tr>
                             <td colspan="2">
                                 <asp:Label ID="Caption2" Style="font-size: 22px; text-align: center; line-height: 80px;" runat="server"></asp:Label>
